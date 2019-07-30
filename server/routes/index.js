@@ -1,8 +1,26 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const signupRouter = require('./signup');
+const app = express()
+const loginRouter = require('./login');
+const config = require('config');
 
-router.get("/welcome", function(req, res, next) {
-  res.status(200).send({ welcomeMessage: "Step 1 (completed)" });
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-module.exports = router;
+//setup jwtprivatekey in local environment, export chefsmenujwtprivatekey=placeholderkey
+if(!config.get('jwtprivatekey')) {
+    console.error("FATAL ERROR: jwtprivatekey is not defined");
+    process.exit(1);
+}
+
+app.use("/signup",signupRouter);
+app.use("/login",loginRouter);
+
+
+const port = process.env.PORT || 4000;
+app.listen(port,()=> console.log(`Listening on ${port}...`));
+
+
+
+
+
