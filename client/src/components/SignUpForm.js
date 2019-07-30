@@ -124,6 +124,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         name="name"
         value={name}
         onChange={onChange}
+        placeholder="Enter your name"
         helperText={errorMessages.name}
         error={!!errorMessages.name}
       />
@@ -135,6 +136,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         value={email}
         name="email"
         onChange={onChange}
+        placeholder="Enter your email address"
         onBlur={onBlur}
         helperText={errorMessages.email}
         error={!!errorMessages.email}
@@ -147,6 +149,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         name="password"
         value={password}
         onChange={onChange}
+        placeholder="Enter a password"
         helperText={errorMessages.password}
         error={!!errorMessages.password}
       />
@@ -158,6 +161,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         name="confirmPassword"
         value={confirmPassword}
         onChange={onChange}
+        placeholder=""
         helperText={errorMessages.confirmPassword}
         error={!!errorMessages.confirmPassword}
       />

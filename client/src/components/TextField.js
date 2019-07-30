@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
+import { colors, layout } from "../themes/theme";
+
 const Container = styled.div`
-  margin: 10px 0px;
+  margin: ${layout.spacing(2)} 0px;
   position: relative;
   label {
     text-transform: uppercase;
@@ -18,10 +20,13 @@ const Container = styled.div`
     width: 250px;
     margin: 5px 0px;
 
+    font-size: 0.75rem;
+
     ${({ error }) =>
       error &&
       `
-        border: 1px solid red;
+      box-shadow: inset 0px -5px 0px 0px ${colors.error};  
+      border: 1px solid ${colors.error};
     
     `}
   }
@@ -34,9 +39,13 @@ const Container = styled.div`
     ${({ error }) =>
       error &&
       `
-        color: red;
+        color: ${colors.error};
     
     `}
+  }
+
+  input::placeholder {
+    opacity: 0.5;
   }
 `;
 
