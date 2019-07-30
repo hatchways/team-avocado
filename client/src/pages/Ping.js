@@ -40,12 +40,11 @@ function Ping(props) {
       </Typography>
       <Typography>{result}</Typography>
 
-      <FormControl>
-        <TextField
-          label={"first name"}
-          onChange={e => setAnswer(e.target.value)}
-        />
-      </FormControl>
+      <TextField
+        label={"first name"}
+        onChange={e => setAnswer(e.target.value)}
+      />
+
       <Button onClick={submitAnswer}>Submit</Button>
     </div>
   );
