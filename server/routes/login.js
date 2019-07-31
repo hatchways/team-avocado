@@ -1,4 +1,4 @@
-const {Chef,Customer} = require('../models/index')
+const {User} = require('../models/index')
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
@@ -13,18 +13,13 @@ router.post('/', async (req,res)=>{
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
-    let user = await Chef.findOne({ email:req.body.email });
-    let usertype = "chef";
+    let user = await User.findOne({ email:req.body.email });
     if (!user) {
-        user = await Customer.findOne({ email:req.body.email });
-        usertype = "customer";
-        if (!user) {
-            return res.status(400).send("Invalid email or password");
-        }
+        return res.status(400).send("Invalid email or password");
     }
-    const isvalidpassword = await bcrypt.compare(req.body.password, user.password);
+    const isvalidpassword = await user.comparePassword(req.body.password);
     if (!isvalidpassword) return res.status(400).send("Invalid email or password");
-
+    const usertype = user.__t;
     const token = jwt.sign({_id:user._id}, config.get('jwtprivatekey'));
     res.status(200).send({token,user,usertype});
 });
