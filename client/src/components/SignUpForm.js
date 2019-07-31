@@ -30,17 +30,15 @@ const validators = {
     };
     if (password.length < 8) {
       update.password = "Password must be at least 8 characters";
-      console.log(update);
     }
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       update.confirmPassword = "Does not match";
     }
-    console.log(update);
     return update;
   },
   confirmPassword: function({ password, confirmPassword }) {
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       return { confirmPassword: "Does not match" };
     } else return { confirmPassword: "" };
   }
@@ -64,8 +62,6 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     });
 
   const { name, email, password, confirmPassword } = fieldValues;
-
-  console.log(userType);
 
   function formIsSubmittable() {
     const noErrors = Object.values(errorMessages).every(value => value === ""),
@@ -105,9 +101,12 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     e.preventDefault();
 
     if (formIsSubmittable()) {
-      fetch(API_URL, {
+      fetch(`${API_URL}/signup`, {
         method: "POST",
-        body: JSON.stringify({ name, email, password })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, password, type: userType })
       })
         .then(JSON.parse)
         .then(console.log);

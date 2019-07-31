@@ -21,22 +21,4 @@ const Button = styled.button`
   transition: background-color 100ms;
 `;
 
-//     ({ children }) => {
-//     return (
-//         <button
-//             style={{
-//                 padding: 15,
-//                 color: "white",
-//                 background: "#FF510C",
-//                 border: "none",
-//                 margin: "0px 5px",
-//                 fontFamily: "Montserrat",
-//                 cursor: "pointer"
-//             }}
-//         >
-//             {children}
-//         </button>
-//     );
-// };
-
 export default Button;
