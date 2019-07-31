@@ -16,9 +16,14 @@ const Button = styled.button`
   &:hover,
   &:active {
     background-color: ${brand};
+    ${({ outline }) => outline && `color: ${"white"};`}
   }
 
   transition: background-color 100ms;
+
+  ${({ outline }) =>
+    outline &&
+    `border: 1px solid ${brandLight}; color: ${brandLight}; background-color: white`}
 `;
 
 export default Button;
