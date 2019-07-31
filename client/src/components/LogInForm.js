@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
+import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
 import Button from "./Button";
@@ -10,7 +10,7 @@ export default function LogInForm() {
   let [formValues, setFormValues] = useState({ email: "", password: "" }),
     [formState, setFormState] = useState({
       isSubmittable: false,
-      error: ""
+      error: null
     });
   const { email, password } = formValues,
     { error, isSubmittable } = formState;
@@ -38,7 +38,7 @@ export default function LogInForm() {
         body: { email, password }
       });
     } catch (error) {
-      setFormState({ error });
+      setFormState({ ...formState, error });
     }
   }
 
@@ -61,7 +61,13 @@ export default function LogInForm() {
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign In
       </Button>
-      {/* {error && <span>{console.log(error)}</span>} */}
+
+      {formState.error && (
+        <Snackbar
+          className="formErrorMessage"
+          message={formState.error.message}
+        />
+      )}
     </form>
   );
 }

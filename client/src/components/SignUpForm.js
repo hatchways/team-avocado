@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { validate } from "email-validator";
 
 import { layout } from "../themes/theme";
+import Snackbar from "./Snackbar";
 import Button from "./Button";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -59,7 +60,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     [errorMessages, setErrorMessages] = useState({ ...fieldValues }),
     [formState, setFormState] = useState({
       isSubmittable: false,
-      errorMessage: ""
+      error: null
     });
 
   const { name, email, password, confirmPassword } = fieldValues;
@@ -102,16 +103,18 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     e.preventDefault();
 
     if (formIsSubmittable()) {
-      console.log(
-        await callAPI({
+      try {
+        const user = await callAPI({
           endpoint: "signup",
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: { username: name, email, password, type: userType }
-        })
-      );
+        });
+      } catch (error) {
+        setFormState(...formState, error);
+      }
     }
   }
 
@@ -157,6 +160,13 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign Up
       </Button>
+
+      {formState.error && (
+        <Snackbar
+          className="formErrorMessage"
+          message={formState.error.message}
+        />
+      )}
     </form>
   );
 }
