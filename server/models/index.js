@@ -4,8 +4,9 @@ mongoose.set("debug", true);
 
 // Connect to a local Mongo instance for testing purposes
 
-mongoose.connect(`mongodb://localhost:27017/test`, {
+mongoose.connect('mongodb://localhost:27017/test', {
   useNewUrlParser: true, // Use new url parser instead of default deprecated one
+  useCreateIndex:true,//ensure index is deprecated use createindex instead.
   keepAlive: true
 });
 
