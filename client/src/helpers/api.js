@@ -25,5 +25,8 @@ export async function callAPI({ method, endpoint, body = null, headers = {} }) {
 
   JWT = token || JWT;
 
+  console.log("API request returned:");
+  console.log(restOfBody);
+  console.log("====================");
   return restOfBody;
 }
