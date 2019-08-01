@@ -1,17 +1,20 @@
-const mongoose = require("mongoose"),
+const { Schema } = require("mongoose"),
   BaseUserModel = require("./user");
-
-// TODO: Flesh out Chef model.
 
 const ChefModel = BaseUserModel.discriminator(
   "Chef",
-  new mongoose.Schema(
+  new Schema(
     {
-      // This is just a placeholder property
       active: {
         type: Boolean,
         default: true
-      }
+      },
+      dishes: [{ type: Schema.Types.ObjectId, ref: "Dish" }],
+      description: {
+        type: String,
+        minlength: 50
+      },
+      avatar: String
     },
     { discriminatorKey: "kind" }
   )
