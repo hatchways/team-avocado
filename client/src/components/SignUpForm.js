@@ -8,6 +8,7 @@ import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
 import { callAPI } from "../helpers/api";
 
+
 // Each function is passed the object containing all field values in case of field interdependencies
 // Validators return an object containing updates for the error messages object.
 const validators = {
@@ -60,11 +61,13 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     [errorMessages, setErrorMessages] = useState({ ...fieldValues }),
     [formState, setFormState] = useState({
       isSubmittable: false,
+
       error: null,
       showingMessage: false
     });
 
   const { name, email, password, confirmPassword } = fieldValues;
+
 
   function displayErrorMessage(error){
       setFormState({...formState, error, showingMessage: true});
@@ -104,6 +107,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     });
   }
 
+
   async function onSubmitAttempt(e) {
     e.preventDefault();
 
@@ -120,6 +124,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       } catch (error) {
         displayErrorMessage(error);
       }
+
     }
   }
 
@@ -153,6 +158,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         helperText={errorMessages.password}
         error={!!errorMessages.password}
       />
+
       <PasswordInput
         label={"Confirm Password"}
         name="confirmPassword"
@@ -173,6 +179,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
           message={formState.error.message}
         />
       )}
+
     </form>
   );
 }
