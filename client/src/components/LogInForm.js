@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { layout } from "../themes/theme";
+import { Link } from "react-router-dom";
 import TextField from "./TextField";
 import Button from "./Button";
-import { makeStyles } from "@material-ui/core/styles";
-import { layout } from "../themes/theme";
 
 export default function LogInForm({ onSubmit }) {
   let [formValues, setFormValues] = useState({});
@@ -25,20 +25,17 @@ export default function LogInForm({ onSubmit }) {
         label={"Email"}
         value={email}
         name="email"
-        onChange={e => {
-          e.preventDefault();
-          setFormValues({ email: e.target.value });
-        }}
+        onChange={onChange}
       />
 
-      <TextField
-        label={"Password"}
-        value={password}
-        onChange={e => {
-          e.preventDefault();
-          setFormValues({ password: e.target.value });
-        }}
-      />
+      <TextField label={"Password"} value={password} onChange={onChange} />
+
+      <Link
+        to="/password-recovery"
+        style={{ display: "block", color: "inherit", fontSize: "0.75rem" }}
+      >
+        Forgot your password?
+      </Link>
 
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign In
