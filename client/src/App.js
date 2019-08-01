@@ -1,19 +1,28 @@
 import React from "react";
-import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
-import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
+import AuthPage from "./pages/AuthPage";
 
 import "./App.css";
 
+//TODO: Implement this
+function browserHasToken() {
+  return false;
+}
+
 function App() {
   return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Route path="/" component={LandingPage} />
-      </BrowserRouter>
-    </MuiThemeProvider>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" exact>
+          {browserHasToken() ? null : <Redirect to="signup/customer" />}
+        </Route>
+        <Route path="/(signup||login)" component={AuthPage} />
+        <Route path="/chef/:chef_id" />
+        <Route path="/customer/:customer_id" />
+        <Route path="/browse" />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
