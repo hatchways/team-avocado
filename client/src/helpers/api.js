@@ -17,8 +17,11 @@ export async function callAPI({ method, endpoint, body = null, headers = {} }) {
   });
 
   if (response.status >= 400) {
-    console.log(response);
-    // throw new Error("")
+    console.log("response was >= 400");
+    let {message} = await response.json();
+    
+    
+    throw new Error(message);
   }
 
   const { token, ...restOfBody } = await response.json();

@@ -5,21 +5,24 @@ const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
-var createError = require("http-errors");
+const createError = require("http-errors");
 const config = require("config");
 
 //handle request for /login
 //check user email password and return user, jwt token and user type
-router.post('/', async (req,res)=>{
+router.post('/', async (req,res, next)=>{
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return next(createError(400, (error.details[0].message)));
     
     let user = await User.findOne({ email:req.body.email });
     if (!user) {
-        return res.status(400).send("Invalid email or password");
+        
+        return next(createError(400, "Invalid email or password"));
+        // return res.status(400).send({message:"Invalid email or password"});
     }
     const isvalidpassword = await user.comparePassword(req.body.password);
-    if (!isvalidpassword) return res.status(400).send("Invalid email or password");
+    if (!isvalidpassword) return next(createError(400, "Invalid email or password"));
+    
     const usertype = user.__t;
     const token = jwt.sign({_id:user._id}, config.get('jwtprivatekey'));
     res.status(200).send({token,user,usertype});

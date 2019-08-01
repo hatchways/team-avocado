@@ -60,10 +60,15 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     [errorMessages, setErrorMessages] = useState({ ...fieldValues }),
     [formState, setFormState] = useState({
       isSubmittable: false,
-      error: null
+      error: null,
+      showingMessage: false
     });
 
   const { name, email, password, confirmPassword } = fieldValues;
+
+  function displayErrorMessage(error){
+      setFormState({...formState, error, showingMessage: true});
+    }
 
   function formIsSubmittable() {
     const noErrors = Object.values(errorMessages).every(value => value === ""),
@@ -113,7 +118,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
           body: { username: name, email, password, type: userType }
         });
       } catch (error) {
-        setFormState(...formState, error);
+        displayErrorMessage(error);
       }
     }
   }
@@ -161,9 +166,10 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         Sign Up
       </Button>
 
-      {formState.error && (
+      {formState.showingMessage && (
         <Snackbar
           className="formErrorMessage"
+          onClose={()=>setFormState({...formState, showingMessage: false})}
           message={formState.error.message}
         />
       )}

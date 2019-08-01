@@ -4,13 +4,14 @@ const router = express.Router();
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const createError = require("http-errors");
 const Joi = require('joi');
 
 //handle request for /signup
 //check if user exist and store new user info in db, return jwt token and user.
-router.post('/', async (req,res)=>{
+router.post('/', async (req,res,next)=>{
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return next(createError(400, error.details[0].message));
 
     if (req.body.type === 'chef'){
         usermodel = Chef;
@@ -18,7 +19,7 @@ router.post('/', async (req,res)=>{
         usermodel = Customer;
     }
 
-    return await storeUser(usermodel,req,res);
+    return await storeUser(usermodel,req,res, next);
 });
 
 
@@ -34,7 +35,7 @@ function validate(user){
 }
 
 //store user in db depends on user type. return bad request or token and user.
-async function storeUser(usermodel,req,res){
+async function storeUser(usermodel,req,res, next){
     
     try{
         user = new usermodel(_.pick(req.body,['username','email','password']));
@@ -42,7 +43,14 @@ async function storeUser(usermodel,req,res){
         const token = jwt.sign({_id:user._id}, config.get('jwtprivatekey'));
         return res.status(201).send({token,user});
     }catch (err){
-        return res.status(400).send(err.errmsg);
+        
+        if (err.name === 'MongoError' && err.code === 11000) {      
+            return next(createError(422, "Email already in use."));
+        }
+
+        else{
+            return next(createError(500, "Something went wrong."))
+        }
     }
     
 }

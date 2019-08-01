@@ -46,11 +46,13 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // Log error
-  console.dir(err);
+  console.log("In error handler...");
+  
+  console.dir(err.message);
 
   // render the error page
   res.status(err.status || 500);
-  res.json({ error: err });
+  res.json( err );
 });
 
 module.exports = app;

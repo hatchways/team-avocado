@@ -6,11 +6,12 @@ import {
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 
-export default function Snackbar({ message }) {
+export default function Snackbar({ message, onClose }) {
   const [isOpen, setOpen] = useState(true);
 
   function handleClose() {
     setOpen(false);
+    onClose();
   }
 
   return (
@@ -21,7 +22,7 @@ export default function Snackbar({ message }) {
           horizontal: "left"
         }}
         open={isOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleClose}
         ContentProps={{
           "aria-describedby": "message-id"

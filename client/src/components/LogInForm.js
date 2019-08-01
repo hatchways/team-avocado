@@ -10,10 +10,16 @@ export default function LogInForm() {
   let [formValues, setFormValues] = useState({ email: "", password: "" }),
     [formState, setFormState] = useState({
       isSubmittable: false,
-      error: null
+      error: null,
+      showingMessage: false
     });
   const { email, password } = formValues,
-    { error, isSubmittable } = formState;
+    { error, isSubmittable, showingMessage } = formState;
+
+
+  function displayErrorMessage(error){
+    setFormState({...formState, error, showingMessage: true});
+  }
 
   function onChange(e) {
     const {
@@ -38,7 +44,7 @@ export default function LogInForm() {
         body: { email, password }
       });
     } catch (error) {
-      setFormState({ ...formState, error });
+      displayErrorMessage(error);
     }
   }
 
@@ -62,9 +68,10 @@ export default function LogInForm() {
         Sign In
       </Button>
 
-      {formState.error && (
+      {formState.showingMessage && (
         <Snackbar
           className="formErrorMessage"
+          onClose={()=>setFormState({...formState, showingMessage: false})}
           message={formState.error.message}
         />
       )}
