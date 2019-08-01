@@ -12,7 +12,7 @@ const ChefModel = BaseUserModel.discriminator(
       dishes: [{ type: Schema.Types.ObjectId, ref: "Dish" }],
       description: {
         type: String,
-        minlength: 50
+        default: "This Chef has not added a description yet."
       },
       avatar: String
     },
