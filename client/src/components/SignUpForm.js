@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { validate } from "email-validator";
 
 import { layout } from "../themes/theme";
+import Snackbar from "./Snackbar";
 import Button from "./Button";
 import TextField from "./TextField";
-import { API_URL } from "../constants";
+import PasswordInput from "./PasswordInput";
+import { callAPI } from "../helpers/api";
+
 
 // Each function is passed the object containing all field values in case of field interdependencies
 // Validators return an object containing updates for the error messages object.
@@ -58,10 +61,17 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     [errorMessages, setErrorMessages] = useState({ ...fieldValues }),
     [formState, setFormState] = useState({
       isSubmittable: false,
-      errorMessage: ""
+
+      error: null,
+      showingMessage: false
     });
 
   const { name, email, password, confirmPassword } = fieldValues;
+
+
+  function displayErrorMessage(error){
+      setFormState({...formState, error, showingMessage: true});
+    }
 
   function formIsSubmittable() {
     const noErrors = Object.values(errorMessages).every(value => value === ""),
@@ -97,28 +107,30 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     });
   }
 
-  function onSubmitAttempt(e) {
+
+  async function onSubmitAttempt(e) {
     e.preventDefault();
 
     if (formIsSubmittable()) {
-      fetch(`${API_URL}/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name, email, password, type: userType })
-      })
-        .then(JSON.parse)
-        .then(console.log);
+      try {
+        const user = await callAPI({
+          endpoint: "signup",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: { username: name, email, password, type: userType }
+        });
+      } catch (error) {
+        displayErrorMessage(error);
+      }
+
     }
   }
 
   return (
     <form onSubmit={onSubmitAttempt}>
       <TextField
-        InputLabelProps={{
-          shrink: true
-        }}
         label={"Name"}
         name="name"
         value={name}
@@ -128,9 +140,6 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         error={!!errorMessages.name}
       />
       <TextField
-        InputLabelProps={{
-          shrink: true
-        }}
         label={"Email"}
         value={email}
         name="email"
@@ -141,9 +150,6 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         error={!!errorMessages.email}
       />
       <TextField
-        InputLabelProps={{
-          shrink: true
-        }}
         label={"Password"}
         name="password"
         value={password}
@@ -152,10 +158,8 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         helperText={errorMessages.password}
         error={!!errorMessages.password}
       />
-      <TextField
-        InputLabelProps={{
-          shrink: true
-        }}
+
+      <PasswordInput
         label={"Confirm Password"}
         name="confirmPassword"
         value={confirmPassword}
@@ -167,6 +171,15 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign Up
       </Button>
+
+      {formState.showingMessage && (
+        <Snackbar
+          className="formErrorMessage"
+          onClose={()=>setFormState({...formState, showingMessage: false})}
+          message={formState.error.message}
+        />
+      )}
+
     </form>
   );
 }

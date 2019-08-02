@@ -41,6 +41,7 @@ const PageContainer = styled.div`
   .image {
     height: 100%;
     width: 100%;
+    object-fit: cover;
   }
 
   nav span {

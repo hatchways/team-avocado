@@ -29,6 +29,9 @@ const Container = styled.div`
       border: 1px solid ${colors.error};
     
     `}
+
+    ${({ IconComponent }) => `padding-right: 3rem;`}
+
   }
 
   span {
@@ -59,9 +62,9 @@ export default function TextField({
 }) {
   return (
     <Container error={error}>
-      {IconComponent && <IconComponent />}
       <label htmlFor={name}>{label}</label>
       <input type="text" name={name} {...rest} />
+      {IconComponent ? IconComponent : null}
       <span>{helperText}</span>
     </Container>
   );
