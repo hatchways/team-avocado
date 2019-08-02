@@ -31,6 +31,7 @@ const Container = styled.div`
     `}
 
     ${({ IconComponent }) => `padding-right: 3rem;`}
+
   }
 
   span {
@@ -48,10 +49,6 @@ const Container = styled.div`
 
   input::placeholder {
     opacity: 0.5;
-  }
-
-  .adornment{
-    position
   }
 `;
 

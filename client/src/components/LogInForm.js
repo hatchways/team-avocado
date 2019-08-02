@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Link} from "react-router-dom";
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -21,6 +22,7 @@ export default function LogInForm() {
     setFormState({...formState, error, showingMessage: true});
   }
 
+
   function onChange(e) {
     const {
       target: { name, value }
@@ -31,6 +33,7 @@ export default function LogInForm() {
       [name]: value
     });
   }
+
 
   async function onSubmitAttempt(e) {
     e.preventDefault();
@@ -57,6 +60,7 @@ export default function LogInForm() {
         onChange={onChange}
       />
 
+
       <PasswordInput
         label={"Password"}
         value={password}
@@ -64,9 +68,18 @@ export default function LogInForm() {
         name="password"
       />
 
+      <Link
+        to="/password-recovery"
+        style={{ display: "block", color: "inherit", fontSize: "0.75rem" }}
+      >
+        Forgot your password?
+      </Link>
+
+
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign In
       </Button>
+
 
       {formState.showingMessage && (
         <Snackbar
@@ -75,6 +88,7 @@ export default function LogInForm() {
           message={formState.error.message}
         />
       )}
+
     </form>
   );
 }
