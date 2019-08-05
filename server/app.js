@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
@@ -47,12 +49,12 @@ app.use(function(err, req, res, next) {
 
   // Log error
   console.log("In error handler...");
-  
+
   console.dir(err.message);
 
   // render the error page
   res.status(err.status || 500);
-  res.json( err );
+  res.json(err);
 });
 
 module.exports = app;
