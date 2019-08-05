@@ -7,8 +7,12 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 
-const signupRouter = require("./routes/signup");
-const loginRouter = require("./routes/login");
+const {
+  signupRouter,
+  loginRouter,
+  chefRouter,
+  dishRouter
+} = require("./routes");
 const config = require("config");
 
 const app = express();
@@ -32,6 +36,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
+app.use("/chef", chefRouter);
+app.use("/dish", dishRouter);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening on ${port}...`));
@@ -48,9 +54,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // Log error
-  console.log("In error handler...");
-
-  console.dir(err.message);
+  console.error(err);
 
   // render the error page
   res.status(err.status || 500);
