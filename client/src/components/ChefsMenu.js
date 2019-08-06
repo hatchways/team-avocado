@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import DishCard from './DishCard';
 // import Typography from '@material-ui/core/Typography';
-
+import AddDishDialog from './AddDishDialog'
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
 const useStyles = makeStyles({
 
@@ -14,6 +15,7 @@ const useStyles = makeStyles({
     flexDirection:"column",
     alignItems:"center",
     background:"#f8f8fe",
+    justifyContent:"space-between",
     height:"100%",
     width:"100%",
     fontFamily: "Montserrat",
@@ -24,20 +26,20 @@ const useStyles = makeStyles({
     width:"80%",
     height:"83%",
     overflowY:"scroll",
-    position:"absolute",
-    bottom:"0px",
+
   },
 
   titlediv:{
-    height:"17%",
-  },
+    padding:10
+  }
 
-  title:{
-    lineHeight: "60px",
-    height:"60px",
-  },
+
 
 });
+
+
+
+
 
 export default function Chefsmenu() {
   const classes = useStyles();
@@ -47,9 +49,18 @@ export default function Chefsmenu() {
             <span className={classes.title}>Atsushi's Menu:</span>
 
         </div>
+        <Switch>
+            <Route path="/chef/edit/:chef_id">
+              <div>
+                <AddDishDialog/>
+              </div>
+            </Route>
+        </Switch>
         <div className={classes.scroll}>
+
             <DishCard/>
             <DishCard/>
+            
         </div>
     </Grid>
   );
