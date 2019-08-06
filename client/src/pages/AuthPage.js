@@ -110,7 +110,7 @@ function AuthPage({ classes, ...rest }) {
         </div>
       </div>
       <div className="paneRight">
-        <img className="image" src="/bg-img-sushi.png" />
+        <img className="image" alt="bg img" src="/bg-img-sushi.png" />
       </div>
     </PageContainer>
   );

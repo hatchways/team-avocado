@@ -2,13 +2,12 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import DishCard from './DishCard';
-import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
+// import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles({
 
-
+  
 
   menu:{
     display:"flex",
@@ -17,6 +16,7 @@ const useStyles = makeStyles({
     background:"#f8f8fe",
     height:"100%",
     width:"100%",
+    fontFamily: "Montserrat",
 
   },
 

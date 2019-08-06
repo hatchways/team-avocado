@@ -4,7 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 
-export default function SimpleMenu() {
+export default function Menubutton() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const useStyles = makeStyles(theme => ({
@@ -26,6 +26,7 @@ export default function SimpleMenu() {
   const classes = useStyles();
   return (
     <div>
+      {/* TODO Get the currentuser and display name in menu */}
     <Button className={classes.button} onClick={handleClick} color="primary">Default</Button>
       <Menu
         id="simple-menu"
