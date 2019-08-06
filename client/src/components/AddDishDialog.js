@@ -41,11 +41,19 @@ export default function AdddishDialog({  }) {
           <DialogContentText>
             To add a dish, please fill in the form and click submit button.
           </DialogContentText>
+          <input
+            accept="image/*"
+            className={classes.input}
+            id="dish-img-file"
+            multiple
+            type="file"
+          />
+
           <TextField
             autoFocus
             margin="dense"
             id="serve"
-            label="How many people will this dish serve."
+            label="How many people will this dish serve?"
             type="text"
             fullWidth
           />

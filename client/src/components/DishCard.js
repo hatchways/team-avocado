@@ -6,11 +6,12 @@ import { Route, Switch } from "react-router-dom";
 import Button from "./Button";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
-
+import { colors } from "../themes/theme";
+const { brand, brandLight } = colors;
 const SaveButton = styled(Button)`
   min-width: 100px;
 `;
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme =>({
   card: {
     minWidth: "70%",
     minHeight:"43%",
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
   },
 
   pplnum:{
-    backgroundColor: "#FF743D",
+    backgroundColor: brandLight,
     color:"white",
     padding:"10px",
     display:"inline",
@@ -48,14 +49,12 @@ const useStyles = makeStyles({
     cursor:"pointer",
   }
 
-});
+}));
 
 export default function SimpleCard() {
-  const classes = useStyles();
+  const classes = useStyles(brandLight);
 
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
-  };
+
 
   const [values, setValues] = React.useState({
     serve: 'MEAL FOR 2',
@@ -64,7 +63,10 @@ export default function SimpleCard() {
     ingred:'Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.',
     required:"Kitchen Table, Cooking plate",
   }); 
-
+  
+  const handleChange = name => event => {
+    setValues({ ...values, [name]: event.target.value });
+  };
 
 
   return (
@@ -74,7 +76,6 @@ export default function SimpleCard() {
       <Route path="/chef/edit/:chef_id">
         <Grid className={classes.info}>
           <TextField
-              id="outlined-name"
               label="How many people to serve."
               className="{classes.textField}"
               value={values.serve}
@@ -83,7 +84,6 @@ export default function SimpleCard() {
               variant="outlined"
           />
           <TextField
-              id="outlined-name"
               label="name"
               className="{classes.textField}"
               value={values.name}
@@ -92,7 +92,6 @@ export default function SimpleCard() {
               variant="outlined"
           />
           <TextField
-              id="outlined-price"
               label="Price"
               className="{classes.textField}"
               value={values.price}
@@ -101,7 +100,6 @@ export default function SimpleCard() {
               variant="outlined"
           />
           <TextField
-              id="outlined-ingred"
               label="Ingredients"
               multiline
               rowsMax="4"
@@ -113,7 +111,6 @@ export default function SimpleCard() {
           />
 
           <TextField
-              id="outlined-required"
               label="Required Stuff"
               className="{classes.textField}"
               value={values.required}
