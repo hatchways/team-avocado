@@ -6,6 +6,24 @@ const Joi = require("joi");
 const createError = require("http-errors");
 const { decodeToken, userIsAuthorized } = require("../middleware/auth");
 
+
+router.get("/", async (req,res,next) => {
+  let chefs;
+  
+  try {
+    if (req.query.location){
+      chefs = await Chef.findChefsForLocation(req.query.location);
+    } else{
+      chefs = await Chef.find();
+    }
+  } catch (error) {
+    next(createError(400, "Failed to retrieve chefs."));
+  }
+
+  res.status(200).send(chefs);
+})
+
+
 /**
  * GET a Chef
  */
@@ -17,7 +35,7 @@ router.get("/:userId", async (req, res, next) => {
   /**
    *    Attempt to retrieve Chef identified by :userId
    */
-  const chef = await Chef.findById(userId)
+  const chef =await Chef.findById(userId)
     .select("-password")
     .populate("dishes");
 
@@ -51,7 +69,7 @@ router.put(
     /**
      *  Attempt to apply updates
      */
-    const chef = await Chef.findByIdAndUpdate(userId, body, {
+    const chef =await Chef.findByIdAndUpdate(userId, body, {
       useFindAndModify: false
     });
     if (!chef) {
