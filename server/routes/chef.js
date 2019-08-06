@@ -1,10 +1,11 @@
+
+const createError = require("http-errors");
+const router = require("express").Router();
 const { Chef } = require("../models/index");
-const express = require("express");
-const router = express.Router();
-const _ = require("lodash");
 const Joi = require("joi");
 const createError = require("http-errors");
 const { decodeToken, userIsAuthorized } = require("../middleware/auth");
+const fileUploadService = require("../services/fileUploader");
 
 /**
  * GET a Chef
@@ -63,6 +64,19 @@ router.put(
     res.status(200).send("Update successful");
   }
 );
+
+router.post("/:userId/avatars", fileUploadService, async (req, res) => {
+
+
+  const fileURL = req.file.location;
+
+  // Add URL for uploaded photo to user document 
+  await Chef.findByIdAndUpdate(req.params.userId, {avatar: fileURL});
+
+
+  // Respond with 201
+  res.status(201).send("Image uploaded");
+})
 
 function validateChefProfileUpdate(update) {
   const schema = {
