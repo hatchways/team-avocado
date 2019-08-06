@@ -45,7 +45,7 @@ export default function AdddishDialog({  }) {
             autoFocus
             margin="dense"
             id="serve"
-            label="How many people will this dish serve."
+            label="How many people will this dish serve?"
             type="text"
             fullWidth
           />
