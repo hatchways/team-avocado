@@ -3,7 +3,6 @@ const createError = require("http-errors");
 const router = require("express").Router();
 const { Chef } = require("../models/index");
 const Joi = require("joi");
-const createError = require("http-errors");
 const { decodeToken, userIsAuthorized } = require("../middleware/auth");
 const fileUploadService = require("../services/fileUploader");
 
