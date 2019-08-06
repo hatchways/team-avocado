@@ -31,9 +31,8 @@ const userSchema = new Schema({
     require: true,
     default: new Date()
   },
-  updatedAt: {
-    type: Date
-  }
+  updatedAt:  Date,
+  avatar: String
 });
 
 // This "pre hook" lets us arrange for a function to be called

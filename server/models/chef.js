@@ -14,7 +14,6 @@ const ChefModel = BaseUserModel.discriminator(
         type: String,
         default: "This Chef has not added a description yet."
       },
-      avatar: String
     },
     { discriminatorKey: "kind" }
   )
