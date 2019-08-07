@@ -30,8 +30,7 @@ const Container = styled.div`
     
     `}
 
-    ${({ IconComponent }) => `padding-right: 3rem;`}
-
+    ${({ IconComponent }) => `padding-right: 2em;`}
   }
 
   span {
@@ -52,6 +51,10 @@ const Container = styled.div`
   }
 `;
 
+const InputContainer = styled.div`
+  position: relative;
+`;
+
 export default function TextField({
   label,
   name,
@@ -60,12 +63,34 @@ export default function TextField({
   IconComponent,
   ...rest
 }) {
-  return (
-    <Container error={error}>
-      <label htmlFor={name}>{label}</label>
-      <input type="text" name={name} {...rest} />
-      {IconComponent ? IconComponent : null}
-      <span>{helperText}</span>
-    </Container>
-  );
+  if (IconComponent) {
+    return (
+      <Container error={error}>
+        <label htmlFor={name}>{label}</label>
+
+        <InputContainer>
+          <input type="text" name={name} {...rest} style={{ width: "100%" }} />
+          <IconComponent
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "calc(50% - 0.5em)",
+              width: "1em",
+              color: colors.brandLight
+            }}
+          />
+        </InputContainer>
+
+        <span>{helperText}</span>
+      </Container>
+    );
+  } else
+    return (
+      <Container error={error}>
+        <label htmlFor={name}>{label}</label>
+        <input type="text" name={name} {...rest} />
+
+        <span>{helperText}</span>
+      </Container>
+    );
 }

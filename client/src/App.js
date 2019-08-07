@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import ChefPage from "./pages/ChefProfilePage";
 import "./App.css";
+import BrowseChefsPage from "./pages/BrowseChefsPage";
 
 //TODO: Implement this
 function browserHasToken() {
@@ -20,7 +21,7 @@ function App() {
         <Route path="/(signup||login)" component={AuthPage} />
         <Route path="/chef/:chef_id" component={ChefPage}/>
         <Route path="/customer/:customer_id" />
-        <Route path="/browse" />
+        <Route path="/browse/chefs" component={BrowseChefsPage}/>
       </Switch>
     </BrowserRouter>
   );
