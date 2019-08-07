@@ -35,7 +35,7 @@ const PageContainer = styled.div`
 
   nav span {
     margin-right: ${layout.spacing(4)};
-    
+    background: white;
   }
 
 `;
