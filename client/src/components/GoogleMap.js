@@ -13,9 +13,8 @@ const stylesout = {
   border: '2px solid #f44336',
   borderRadius: K_HEIGHT,
   backgroundColor: 'rgba(100,45,25,0.3)',
-
-
 }
+
 const stylesinner = {
 
   position: 'absolute',
@@ -35,21 +34,30 @@ const AnyReactComponent = ({ text }) =>
   <span style={stylesinner}></span>
   </div>;
 
+//TODO use an api to get position of specified location.
+const position = {
+  lat: 43.653225,
+  lng: -79.383186
+}
+const apikey = process.env.CHEF_MENU_GOOGLE_MAP;
+
+
 class SimpleMap extends Component {
+
   static defaultProps = {
     center: {
-      lat: 43.653225,
-      lng: -79.383186
+      lat: position.lat,
+      lng: position.lng
     },
     zoom: 13
   };
-
+  
   render() {
     return (
       // Important! Always set the container height explicitly
       <div style={{ height: '100%', width: '100%' }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key:"AIzaSyCxK8n6vXbRPszhiEJhbo5x9tNejni4qSU"}}
+          bootstrapURLKeys={apikey}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
         >

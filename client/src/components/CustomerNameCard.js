@@ -3,10 +3,10 @@ import styled from "styled-components";
 import Button from "./Button";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import GoogleMap from "./GoogleMap";
 
 const RequestButton = styled(Button)`
+  
   width:100%;
 `;
 const useStyles = makeStyles({
