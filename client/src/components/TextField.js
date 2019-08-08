@@ -61,6 +61,7 @@ export default function TextField({
   helperText,
   error,
   IconComponent,
+  onClickIcon,
   ...rest
 }) {
   if (IconComponent) {
@@ -68,9 +69,10 @@ export default function TextField({
       <Container error={error}>
         <label htmlFor={name}>{label}</label>
 
-        <InputContainer>
-          <input type="text" name={name} {...rest} style={{ width: "100%" }} />
+        <InputContainer style={{ width: "250px" }}>
+          <input type="text" name={name} {...rest} />
           <IconComponent
+            onClick={onClickIcon}
             style={{
               position: "absolute",
               right: "10px",
