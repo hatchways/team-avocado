@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 
 import Navbar from "../components/Navbar";
-import NameCard from "../components/NameCard";
+import NameCard from "../components/ChefNameCard";
 import SimpleMenu from "../components/MenuButton";
 import ChefsMenu from "../components/ChefsMenu";
 import { layout } from "../themes/theme";
