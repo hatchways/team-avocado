@@ -1,7 +1,6 @@
 const { Schema } = require("mongoose"),
   BaseUserModel = require("./user"),
-  {getDistance, getCoordinates} = require("../services/geo");
-
+  { getDistance, getCoordinates } = require("../services/geo");
 
 const chefSchema = new Schema({
   active: {
@@ -16,38 +15,34 @@ const chefSchema = new Schema({
   avatar: String,
   location: String,
   travelRadius: Number
-})
+});
 
 /**
- *  Retrieve all chefs within maximum travel radius from location arg. 
- *  Then, filter those chefs to remove all those whose stored travelRadius 
+ *  Retrieve all chefs within maximum travel radius from location arg.
+ *  Then, filter those chefs to remove all those whose stored travelRadius
  *  is too short.
  */
-chefSchema.methods.findChefsForLocation = function(customerLocation){
-  function isCoords(input){
+chefSchema.methods.findChefsForLocation = function(customerLocation) {
+  function isCoords(input) {
     //TODO: check whether input is already in coordinate form (e.g. for cases when customer
     // has used geolocation browser API rather than manual address input)
 
     return false;
   }
 
-  if (!isCoords(customerLocation)){
+  if (!isCoords(customerLocation)) {
     customerLocation = getCoordinates(customerLocation);
 
-    //TODO: store result on Customer document to avoid unnecessary recalculation 
+    //TODO: store result on Customer document to avoid unnecessary recalculation
   }
 
-  const chefsWillingToTravelToLocation = this.model("Chef").find({
+  const chefsWillingToTravelToLocation = this.model("Chef")
+    .find({})
+    .filter(chef => {});
+};
 
-  }).filter(chef => {
-
-  })
-}
-
-const ChefModel = BaseUserModel.discriminator(
-  "Chef",
-  chefSchema,
-  { discriminatorKey: "kind" }
-);
+const ChefModel = BaseUserModel.discriminator("Chef", chefSchema, {
+  discriminatorKey: "kind"
+});
 
 module.exports = ChefModel;

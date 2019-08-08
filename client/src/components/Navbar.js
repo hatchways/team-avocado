@@ -23,7 +23,7 @@ const Container = styled.nav`
 export default function Navbar({ children }) {
   return (
     <Container>
-      <img src="/logo.png" />
+      <img src="/logo.png" alt="logo" />
       <div>{children}</div>
     </Container>
   );
