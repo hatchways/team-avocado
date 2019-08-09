@@ -31,6 +31,10 @@ const useStyles = makeStyles({
 
   titlediv:{
     padding:10
+  },
+  title:{
+    fontSize:20,
+    fontWeight:"bold",
   }
 
 

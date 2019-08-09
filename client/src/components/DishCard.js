@@ -48,7 +48,21 @@ const useStyles = makeStyles(theme =>({
   },
   dishpic:{
     cursor:"pointer",
+  },
+  name:{
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  price:{
+    color:colors.brandLight,
+  },
+  bigbold:{
+    fontWeight:"bold",
+  },
+  grey:{
+    color:"grey",
   }
+
 
 }));
 
@@ -153,12 +167,12 @@ export default function SimpleCard() {
               <div>
                 <span className={classes.pplnum}> MEAL FOR 2</span>
               </div>
-              <p id="dishname"> 4 specialty rolls </p>
-              <span id="price"> $15.00 </span>
-              <span id="upperbig">INGREDIENTS</span>
-              <p id="greysmall">Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.</p>
-              <span id="upperbig">REQUIRED STUFF</span>
-              <p id="greysmall">Kitchen Table, Cooking plate</p>
+              <p className={classes.name}> 4 specialty rolls </p>
+              <span className={classes.price}> $15.00 </span>
+              <span className={classes.bigbold}>INGREDIENTS</span>
+              <p className={classes.grey}>Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.</p>
+              <span className={classes.bigbold}>REQUIRED STUFF</span>
+              <p className={classes.grey}>Kitchen Table, Cooking plate</p>
               
           </Grid>
 

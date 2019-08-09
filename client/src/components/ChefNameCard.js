@@ -26,9 +26,7 @@ const Container = styled.div`
         margin-right:auto;
     }
 
-    #name, #location, #desc, #email{
-        text-align:center;
-    }
+
 
 
 
@@ -77,6 +75,18 @@ const useStyles = makeStyles({
         display:"flex",
         flexDirection:"column",
         alignItems:"center",
+    },
+    name:{
+        textAlign:"center",
+        fontWeight: "bold",
+        fontSize: 20,
+    },
+    location:{
+        textAlign:"center",
+        color:"grey",
+    },
+    desc:{
+        textAlign:"center",
     }
 
 });
@@ -204,10 +214,13 @@ export default function Namecard({  }) {
             </Route>
             <Route path="/chef/:chef_id">
                 <img id="cover" alt="background" src="/cover-sushi.png" />
-                
-                <p id="name"> Atsushi Mikaki </p>
-                <p id="location"> Toronto Canada </p>
-                <p id="desc">Chef with 8 years in Japanese cuisine. Reciepient of awards and positive feedback </p>
+                <div>
+                    <p className={classes.name}> Atsushi Mikaki </p>
+                    <p className={classes.location}> Toronto Canada </p>
+                </div>
+                <div>
+                    <p className={classes.desc}>Chef with 8 years in Japanese cuisine. Reciepient of awards and positive feedback </p>
+                </div>
                 <RequestButton type="submit" >
                     Send Request
                 </RequestButton>
