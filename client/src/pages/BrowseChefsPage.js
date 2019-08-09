@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useMockedResource from "../hooks/useMockedResource";
 import styled from "styled-components";
 
 import { Route, Link, Switch } from "react-router-dom";
@@ -32,26 +33,26 @@ const cuisinesArray = [
 const PageContainer = styled.div`
   margin-top: ${layout.navHeight};
   display: flex;
-
+  overflow: hidden;
   .paneLeft {
     height: calc(100vh - ${layout.navHeight});
-    
     flex-basis: 30%;
     min-width: 375px;
     padding: ${layout.spacing(3)} ${layout.spacing(5)};
-    position: sticky;
-    top: ${layout.navHeight};
+    // position: sticky;
+    // top: ${layout.navHeight};
   }
 
   .paneRight {
-    /* height: calc(100vh - ${layout.navHeight}); */
-    /* flex-grow: 1; */
-    overflow: hidden;
-    padding: 0px ${layout.spacing(10)};
-    background-color: ${colors.bgcolor}
+    height: calc(100vh - ${layout.navHeight});
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 0px ${layout.spacing(5)};
+    background-color: ${colors.bgcolor};
   }
   .chef-container {
     display: flex;
+    // justify-content: center;
     flex-wrap: wrap;
     padding: 0px;
   }
@@ -66,8 +67,8 @@ const PageContainer = styled.div`
     color: white;
   }
 
-  #cuisine-label{
-      text-transform: uppercase;
+  #cuisine-label {
+    text-transform: uppercase;
     font-weight: bold;
     font-size: 0.75rem;
   }
@@ -80,14 +81,25 @@ const PageContainer = styled.div`
 `;
 
 function BrowseChefsPage({ classes, ...rest }) {
+  let [retrievedChefs] = useMockedResource();
+
   let [cuisines, setCuisines] = useState(
-    cuisinesArray.reduce((accum, cuisineName) => {
-      accum[cuisineName] = false;
-      return accum;
-    }, {})
+    cuisinesArray.reduce(
+      (accum, cuisineName) => {
+        accum[cuisineName] = false;
+        return accum;
+      },
+      { all: true }
+    )
   );
 
   function toggleCuisine(cuisineName) {
+    if (cuisineName !== "all" && cuisines.all) {
+      // When 'all' filter is selected, treat clicks on
+      // other cusine filters as deselecting 'all'
+      cuisines.all = false;
+    }
+
     setCuisines({
       ...cuisines,
       [cuisineName]: !cuisines[cuisineName]
@@ -140,83 +152,17 @@ function BrowseChefsPage({ classes, ...rest }) {
       <div className="paneRight">
         <h2>Available Chefs</h2>
         <ul className="chef-container">
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
-          <ChefCard
-            name="John Doe"
-            location="San Francisco, California"
-            cuisine="Thai Cuisine"
-            description="lorem ipsum dolor sit amet. In tres partes Gallia divisa est."
-            avatarUrl="https://picsum.photos/200"
-          />
+          {!retrievedChefs ? (
+            "loading..."
+          ) : (
+            <>
+              {cuisines["all"]
+                ? retrievedChefs.map(chef => <ChefCard {...chef} />)
+                : retrievedChefs
+                    .filter(chef => cuisines[chef.cuisine])
+                    .map(chef => <ChefCard {...chef} />)}
+            </>
+          )}
         </ul>
       </div>
     </PageContainer>
