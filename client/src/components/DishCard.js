@@ -7,6 +7,7 @@ import Button from "./Button";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
 import { colors } from "../themes/theme";
+import Tooltip from '@material-ui/core/Tooltip';
 const { brand, brandLight } = colors;
 const SaveButton = styled(Button)`
   min-width: 100px;
@@ -75,6 +76,7 @@ export default function SimpleCard() {
 
       <Route path="/chef/edit/:chef_id">
         <Grid className={classes.info}>
+        
           <TextField
               label="How many people to serve."
               className="{classes.textField}"
@@ -133,8 +135,10 @@ export default function SimpleCard() {
             type="file"
         />
         <label htmlFor="dish-img-file">
-          <img className={classes.dishpic} alt="dish" src="/img-sushi.png" />
+          <Tooltip title="Click to upload new profile" placement="top-start">
 
+            <img className={classes.dishpic} alt="dish" src="/img-sushi.png" />
+          </Tooltip>
         </label>
         </Grid>
         <SaveButton type="submit" >
