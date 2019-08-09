@@ -1,6 +1,9 @@
 const { Schema } = require("mongoose"),
   BaseUserModel = require("./user"),
-  { getDistance, getCoordinates } = require("../services/geo");
+  { getDistance, CoordPair } = require("../services/geo"),
+  config = require("config");
+
+const MAX_TRAVEL_RADIUS = config.get("MAX_TRAVEL_RADIUS");
 
 const chefSchema = new Schema({
   active: {
@@ -19,25 +22,37 @@ const chefSchema = new Schema({
 /**
  *  Retrieve all chefs within maximum travel radius from location arg.
  *  Then, filter those chefs to remove all those whose stored travelRadius
- *  is too short.
+ *  is less than travel distance that would be required.
  */
-chefSchema.methods.findChefsForLocation = function(customerLocation) {
-  function isCoords(input) {
-    //TODO: check whether input is already in coordinate form (e.g. for cases when customer
-    // has used geolocation browser API rather than manual address input)
+chefSchema.statics.findChefsForLocation = async function(customerCoordinates) {
+  // MongoDB expects coordinates in reverse of typical ordering
+  // i.e. <longitude, latitude> instead of <latitude, longitude>
+  // console.log(`customerCoordinates: ${customerCoordinates}`);
 
-    return false;
-  }
+  console.log(`customerCoordinates: ${customerCoordinates}`);
 
-  if (!isCoords(customerLocation)) {
-    customerLocation = getCoordinates(customerLocation);
+  const chefsWithinMaxTravelDistance = await this.find({
+    location: {
+      $geoWithin: {
+        $centerSphere: [
+          customerCoordinates.get().reverse(), // reversed for geoJson ordering
+          MAX_TRAVEL_RADIUS / 3963.2
+        ]
+      }
+    }
+  });
 
-    //TODO: store result on Customer document to avoid unnecessary recalculation
-  }
+  const chefsWillingToTravelToCustomer = Array.from(
+    chefsWithinMaxTravelDistance
+  ).filter(chef => {
+    const chefCoordinates = CoordPair.fromGeoJsonPoint(chef.location);
 
-  const chefsWillingToTravelToLocation = this.model("Chef")
-    .find({})
-    .filter(chef => {});
+    return (
+      chefCoordinates.getDistanceFrom(customerCoordinates) <= chef.travelRadius
+    );
+  });
+
+  return chefsWillingToTravelToCustomer;
 };
 
 const ChefModel = BaseUserModel.discriminator("Chef", chefSchema, {
