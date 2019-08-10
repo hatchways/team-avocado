@@ -1,10 +1,29 @@
+const createError = require("http-errors"),
+  router = require("express").Router(),
+  { Chef } = require("../models/index"),
+  Joi = require("joi"),
+  { decodeToken, userIsAuthorized } = require("../middleware/auth"),
+  { getCoordinates, CoordPair } = require("../services/geo"),
+  fileUploadService = require("../services/fileUploader");
 
-const createError = require("http-errors");
-const router = require("express").Router();
-const { Chef } = require("../models/index");
-const Joi = require("joi");
-const { decodeToken, userIsAuthorized } = require("../middleware/auth");
-const fileUploadService = require("../services/fileUploader");
+router.get("/", async (req, res, next) => {
+  let chefs;
+
+  try {
+    if (req.query.location) {
+      const normalizedLocation = await normalizeLocation(req.query.location);
+      chefs = await Chef.findChefsForLocation(normalizedLocation);
+    } else {
+      chefs = await Chef.find().select("-password");
+    }
+  } catch (error) {
+    console.log(error);
+
+    next(createError(400, "Failed to retrieve chefs."));
+  }
+
+  res.status(200).send(chefs);
+});
 
 /**
  * GET a Chef
@@ -65,17 +84,16 @@ router.put(
 );
 
 router.post("/:userId/avatars", fileUploadService, async (req, res) => {
-
-
   const fileURL = req.file.location;
 
-  // Add URL for uploaded photo to user document 
-  await Chef.findByIdAndUpdate(req.params.userId, {avatar: fileURL});
-
+  // Add URL for uploaded photo to user document
+  await Chef.findByIdAndUpdate(req.params.userId, { avatar: fileURL });
 
   // Respond with 201
   res.status(201).send("Image uploaded");
-})
+});
+
+module.exports = router;
 
 function validateChefProfileUpdate(update) {
   const schema = {
@@ -86,4 +104,17 @@ function validateChefProfileUpdate(update) {
   return Joi.validate(update, schema);
 }
 
-module.exports = router;
+async function normalizeLocation(location) {
+  if (!isURLEncodedCoordPair(location)) {
+    return await getCoordinates(location);
+  } else {
+    location = location.split(" ").map(substr => Number(substr));
+    return new CoordPair(location);
+  }
+}
+
+function isURLEncodedCoordPair(locationInput) {
+  // Check whether input is already in coordinate form (e.g. for cases when customer
+  // has used geolocation browser API rather than manual address input)
+  return /-?\d{1,3}(\.\d+)? -?\d{1,3}(\.\d+)?$/.test(locationInput);
+}

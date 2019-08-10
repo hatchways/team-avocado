@@ -1,6 +1,7 @@
 const mongoose = require("mongoose"),
   validator = require("validator"),
   bcrypt = require("bcrypt"),
+  pointSchema = require("./point"),
   { Schema } = mongoose;
 
 /**
@@ -26,13 +27,15 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  location: pointSchema,
+  avatar: String,
+
   createdAt: {
     type: Date,
     require: true,
     default: new Date()
   },
-  updatedAt:  Date,
-  avatar: String
+  updatedAt: Date
 });
 
 // This "pre hook" lets us arrange for a function to be called
