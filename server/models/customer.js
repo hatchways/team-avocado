@@ -5,7 +5,7 @@ const CustomerModel = BaseUserModel.discriminator(
   "Customer",
   new mongoose.Schema(
     {
-      location: String
+      placeholder: String
     },
     { discriminatorKey: "kind" }
   )
