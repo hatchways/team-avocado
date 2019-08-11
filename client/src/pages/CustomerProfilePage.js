@@ -39,13 +39,7 @@ const PageContainer = styled.div`
   }
 
 `;
-const useStyles = makeStyles({
 
-
-
-
-
-});
 
 function ChefPage() {
     const classes = useStyles();
