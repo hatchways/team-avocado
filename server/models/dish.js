@@ -10,6 +10,7 @@ const cuisinesArray = [
   "Greek",
   "Indian",
   "Italian",
+  "Japanese",
   "Mediterranean",
   "Mexican",
   "Morrocan",

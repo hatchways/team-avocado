@@ -4,6 +4,8 @@ import Button from "./Button";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import PickTagDialog from './PickTagDialog'
 
 
 const Container = styled.div`
@@ -24,9 +26,7 @@ const Container = styled.div`
         margin-right:auto;
     }
 
-    #name, #location, #desc, #email{
-        text-align:center;
-    }
+
 
 
 
@@ -53,14 +53,45 @@ const useStyles = makeStyles({
         maxWidth:"100%"
     },
     profile:{
+        position:"absolute",
+        top:"15%",
+        left:"30%",
         cursor:"pointer",
     },
 
     textField:{
         fontFamily: "Montserrat",
+    },
+    wrap:{
+        height:"100%",
+    },
+    profileimg:{
+        position:"absolute",
+        top:"15%",
+        left:"30%",
+        
+    },
+    info:{
+        display:"flex",
+        flexDirection:"column",
+        alignItems:"center",
+    },
+    name:{
+        textAlign:"center",
+        fontWeight: "bold",
+        fontSize: 20,
+    },
+    location:{
+        textAlign:"center",
+        color:"grey",
+    },
+    desc:{
+        textAlign:"center",
     }
 
 });
+const cuisines = ["Chinese","Indian","American","Japanese"];
+
 //TODO: pass in props and get data from props
 export default function Namecard({  }) {
 
@@ -79,7 +110,29 @@ export default function Namecard({  }) {
   
   
     return (
+    
 
+    <div className={classes.wrap}>
+        <Switch>
+            <Route path="/chef/edit/:chef_id">
+            <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="profile-img-file"
+                    multiple
+                    type="file"
+                />
+                <label htmlFor="background-img-file">
+                    <Tooltip title="Click to upload new profile" placement="top-start">
+
+                        <img className ={classes.profile} alt="profile" src="/userpic-6.png" />
+                    </Tooltip>
+                </label>
+            </Route>
+            <Route path="/chef/:chef_id">
+                <img className={classes.profileimg} alt="profile" src="/userpic-6.png" />
+            </Route>
+        </Switch>
     <Container>
         <Switch>
           {/* change to if else, if user is logged in and  */}
@@ -87,6 +140,7 @@ export default function Namecard({  }) {
           
             <Route path="/chef/edit/:chef_id">  
             <form className={classes.form}>
+                
                 <input
                     accept="image/*"
                     className={classes.input}
@@ -95,21 +149,15 @@ export default function Namecard({  }) {
                     type="file"
                 />
                 <label htmlFor="background-img-file">
-                    <img className={classes.cover} alt="background" src="/cover-sushi.png" />
+                    <Tooltip title="Click to upload new background" placement="top-start">
 
+                        <img className={classes.cover} alt="background" src="/cover-sushi.png" />
+                    </Tooltip>
                 </label>
-                <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="profile-img-file"
-                    multiple
-                    type="file"
-                />
-                <label htmlFor="background-img-file">
-                    <img className ={classes.profile} alt="profile" src="/userpic-6.png" />
 
-                </label>
                 {/* <form className={classes.form}> */}
+                <div className={classes.info}>
+                <PickTagDialog cuisines={cuisines} />
                 <TextField
                     id="outlined-name"
                     label="Name"
@@ -158,6 +206,7 @@ export default function Namecard({  }) {
                     margin="dense"
                     variant="outlined"
                 />
+                </div>
                 <RequestButton type="submit" >
                     Save Profile
                 </RequestButton>
@@ -165,10 +214,13 @@ export default function Namecard({  }) {
             </Route>
             <Route path="/chef/:chef_id">
                 <img id="cover" alt="background" src="/cover-sushi.png" />
-                <img id="profile" alt="profile" src="/userpic-6.png" />
-                <p id="name"> Atsushi Mikaki </p>
-                <p id="location"> Toronto Canada </p>
-                <p id="desc">Chef with 8 years in Japanese cuisine. Reciepient of awards and positive feedback </p>
+                <div>
+                    <p className={classes.name}> Atsushi Mikaki </p>
+                    <p className={classes.location}> Toronto Canada </p>
+                </div>
+                <div>
+                    <p className={classes.desc}>Chef with 8 years in Japanese cuisine. Reciepient of awards and positive feedback </p>
+                </div>
                 <RequestButton type="submit" >
                     Send Request
                 </RequestButton>
@@ -177,5 +229,6 @@ export default function Namecard({  }) {
          
         </Switch>
     </Container>
+    </div>
   );
 }
