@@ -3,7 +3,9 @@ export const colors = {
   brandLight: "#FF743D",
   secondary: "#1f1f1f",
   error: "#ff4444",
-  bgcolor: "#F8F8FE"
+  bgcolor: "#F8F8FE",
+  brandLightTransprt:"#FF743D4D",
+  background:"#f8f8fe"
 };
 
 export const typography = {

@@ -59,4 +59,5 @@ const ChefModel = BaseUserModel.discriminator("Chef", chefSchema, {
   discriminatorKey: "kind"
 });
 
+
 module.exports = ChefModel;

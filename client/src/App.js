@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
 import AuthPage from "./pages/AuthPage";
 import ChefPage from "./pages/ChefProfilePage";
+import CustomerPage from "./pages/CustomerProfilePage";
 import "./App.css";
 import BrowseChefsPage from "./pages/BrowseChefsPage";
 
@@ -20,6 +21,7 @@ function App() {
         </Route>
         <Route path="/(signup||login)" component={AuthPage} />
         <Route path="/chef/:chef_id" component={ChefPage}/>
+
         <Route path="/customer/:customer_id" />
         <Route path="/browse/chefs" component={BrowseChefsPage}/>
       </Switch>
