@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -17,11 +17,9 @@ export default function LogInForm() {
   const { email, password } = formValues,
     { error, isSubmittable, showingMessage } = formState;
 
-
-  function displayErrorMessage(error){
-    setFormState({...formState, error, showingMessage: true});
+  function displayErrorMessage(error) {
+    setFormState({ ...formState, error, showingMessage: true });
   }
-
 
   function onChange(e) {
     const {
@@ -33,7 +31,6 @@ export default function LogInForm() {
       [name]: value
     });
   }
-
 
   async function onSubmitAttempt(e) {
     e.preventDefault();
@@ -60,35 +57,35 @@ export default function LogInForm() {
         onChange={onChange}
       />
 
-
       <PasswordInput
         label={"Password"}
         value={password}
         onChange={onChange}
         name="password"
       />
-
-      <Link
-        to="/password-recovery"
-        style={{ display: "block", color: "inherit", fontSize: "0.75rem" }}
-      >
-        Forgot your password?
-      </Link>
-
+      <div>
+        <Link
+          to="/password-recovery"
+          style={{
+            color: "inherit",
+            fontSize: "0.75rem"
+          }}
+        >
+          Forgot your password?
+        </Link>
+      </div>
 
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign In
       </Button>
 
-
       {formState.showingMessage && (
         <Snackbar
           className="formErrorMessage"
-          onClose={()=>setFormState({...formState, showingMessage: false})}
+          onClose={() => setFormState({ ...formState, showingMessage: false })}
           message={formState.error.message}
         />
       )}
-
     </form>
   );
 }

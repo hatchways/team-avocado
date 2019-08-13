@@ -8,7 +8,6 @@ import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
 import { callAPI } from "../helpers/api";
 
-
 // Each function is passed the object containing all field values in case of field interdependencies
 // Validators return an object containing updates for the error messages object.
 const validators = {
@@ -68,10 +67,9 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
 
   const { name, email, password, confirmPassword } = fieldValues;
 
-
-  function displayErrorMessage(error){
-      setFormState({...formState, error, showingMessage: true});
-    }
+  function displayErrorMessage(error) {
+    setFormState({ ...formState, error, showingMessage: true });
+  }
 
   function formIsSubmittable() {
     const noErrors = Object.values(errorMessages).every(value => value === ""),
@@ -107,7 +105,6 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     });
   }
 
-
   async function onSubmitAttempt(e) {
     e.preventDefault();
 
@@ -124,7 +121,6 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       } catch (error) {
         displayErrorMessage(error);
       }
-
     }
   }
 
@@ -149,7 +145,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         helperText={errorMessages.email}
         error={!!errorMessages.email}
       />
-      <TextField
+      <PasswordInput
         label={"Password"}
         name="password"
         value={password}
@@ -175,11 +171,10 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       {formState.showingMessage && (
         <Snackbar
           className="formErrorMessage"
-          onClose={()=>setFormState({...formState, showingMessage: false})}
+          onClose={() => setFormState({ ...formState, showingMessage: false })}
           message={formState.error.message}
         />
       )}
-
     </form>
   );
 }

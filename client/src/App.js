@@ -5,6 +5,7 @@ import AuthPage from "./pages/AuthPage";
 import ChefPage from "./pages/ChefProfilePage";
 import CustomerPage from "./pages/CustomerProfilePage";
 import "./App.css";
+import BrowseChefsPage from "./pages/BrowseChefsPage";
 
 //TODO: Implement this
 function browserHasToken() {
@@ -20,8 +21,9 @@ function App() {
         </Route>
         <Route path="/(signup||login)" component={AuthPage} />
         <Route path="/chef/:chef_id" component={ChefPage}/>
-        <Route path="/customer/:customer_id" component={CustomerPage}/>
-        <Route path="/browse" />
+
+        <Route path="/customer/:customer_id" component={CustomerPage} />
+        <Route path="/browse/chefs" component={BrowseChefsPage}/>
       </Switch>
     </BrowserRouter>
   );
