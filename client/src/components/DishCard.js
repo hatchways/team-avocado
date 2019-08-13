@@ -7,6 +7,7 @@ import Button from "./Button";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
 import { colors } from "../themes/theme";
+import Tooltip from '@material-ui/core/Tooltip';
 const { brand, brandLight } = colors;
 const SaveButton = styled(Button)`
   min-width: 100px;
@@ -47,7 +48,21 @@ const useStyles = makeStyles(theme =>({
   },
   dishpic:{
     cursor:"pointer",
+  },
+  name:{
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  price:{
+    color:colors.brandLight,
+  },
+  bigbold:{
+    fontWeight:"bold",
+  },
+  grey:{
+    color:"grey",
   }
+
 
 }));
 
@@ -75,6 +90,7 @@ export default function SimpleCard() {
 
       <Route path="/chef/edit/:chef_id">
         <Grid className={classes.info}>
+        
           <TextField
               label="How many people to serve."
               className="{classes.textField}"
@@ -133,8 +149,10 @@ export default function SimpleCard() {
             type="file"
         />
         <label htmlFor="dish-img-file">
-          <img className={classes.dishpic} alt="dish" src="/img-sushi.png" />
+          <Tooltip title="Click to upload new profile" placement="top-start">
 
+            <img className={classes.dishpic} alt="dish" src="/img-sushi.png" />
+          </Tooltip>
         </label>
         </Grid>
         <SaveButton type="submit" >
@@ -149,12 +167,12 @@ export default function SimpleCard() {
               <div>
                 <span className={classes.pplnum}> MEAL FOR 2</span>
               </div>
-              <p id="dishname"> 4 specialty rolls </p>
-              <span id="price"> $15.00 </span>
-              <span id="upperbig">INGREDIENTS</span>
-              <p id="greysmall">Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.</p>
-              <span id="upperbig">REQUIRED STUFF</span>
-              <p id="greysmall">Kitchen Table, Cooking plate</p>
+              <p className={classes.name}> 4 specialty rolls </p>
+              <span className={classes.price}> $15.00 </span>
+              <span className={classes.bigbold}>INGREDIENTS</span>
+              <p className={classes.grey}>Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.</p>
+              <span className={classes.bigbold}>REQUIRED STUFF</span>
+              <p className={classes.grey}>Kitchen Table, Cooking plate</p>
               
           </Grid>
 
