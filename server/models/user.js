@@ -17,10 +17,9 @@ const userSchema = new Schema({
       return validator.isEmail(value);
     }
   },
-  username: {
+  name: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   password: {
     type: String,
@@ -31,7 +30,7 @@ const userSchema = new Schema({
     require: true,
     default: new Date()
   },
-  updatedAt:  Date,
+  updatedAt: Date,
   avatar: String
 });
 
@@ -57,12 +56,8 @@ userSchema.pre("save", function(next) {
 
 // A method wrapper for bcrypt comparison operation, used by auth middleware
 userSchema.methods.comparePassword = async function(candidatePassword, next) {
-  try {
-    let isMatch = await bcrypt.compare(candidatePassword, this.password);
-    return isMatch;
-  } catch (err) {
-    return next(err);
-  }
+  let isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
 };
 
 const UserModel = mongoose.model("User", userSchema);
