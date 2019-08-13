@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -9,7 +9,7 @@ import { callAPI } from "../helpers/api";
 
 import Context from "../store/createContext";
 
-export default function LogInForm() {
+function LogInForm(props) {
   let [formValues, setFormValues] = useState({ email: "", password: "" }),
     [formState, setFormState] = useState({
       isSubmittable: false,
@@ -50,6 +50,8 @@ export default function LogInForm() {
       console.log(user);
 
       setUser(user);
+
+      props.history.push(`${user.usertype}/${user.id}`);
     } catch (error) {
       displayErrorMessage(error);
     }
@@ -92,3 +94,5 @@ export default function LogInForm() {
     </form>
   );
 }
+
+export default withRouter(LogInForm);
