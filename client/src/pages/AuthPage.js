@@ -63,7 +63,7 @@ function AuthPage({ classes, ...rest }) {
 
   return (
     <PageContainer className="pageContainer">
-      <Navbar transparent={true }>
+      <Navbar transparent>
         <Switch>
           <Route path="/login">
             <span>Don't have an account?</span>
