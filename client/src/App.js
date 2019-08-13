@@ -22,7 +22,7 @@ function App() {
         <Route path="/(signup||login)" component={AuthPage} />
         <Route path="/chef/:chef_id" component={ChefPage}/>
 
-        <Route path="/customer/:customer_id" />
+        <Route path="/customer/:customer_id" component={CustomerPage} />
         <Route path="/browse/chefs" component={BrowseChefsPage}/>
       </Switch>
     </BrowserRouter>
