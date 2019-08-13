@@ -24,7 +24,7 @@ router.post("/", async (req, res, next) => {
 
 function validate(user) {
   const schema = {
-    username: Joi.string()
+    name: Joi.string()
       .max(255)
       .required(),
     email: Joi.string()
@@ -40,10 +40,13 @@ function validate(user) {
 //store user in db depends on user type. return bad request or token and user.
 async function storeUser(usermodel, req, res, next) {
   try {
-    user = new usermodel(_.pick(req.body, ["username", "email", "password"]));
+    user = new usermodel(_.pick(req.body, ["name", "email", "password"]));
     await user.save();
     const token = jwt.sign({ _id: user._id }, config.get("jwtprivatekey"));
-    return res.status(201).send({ token, user });
+
+    return res
+      .status(201)
+      .send({ token, usertype: user.__t, name: user.name, id: user._id });
   } catch (err) {
     console.dir(err);
     if (err.name === "MongoError" && err.code === 11000) {

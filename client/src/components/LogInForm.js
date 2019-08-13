@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
 import Button from "./Button";
 import { layout } from "../themes/theme";
 import { callAPI } from "../helpers/api";
+
+import Context from "../store/createContext";
 
 export default function LogInForm() {
   let [formValues, setFormValues] = useState({ email: "", password: "" }),
@@ -17,11 +19,11 @@ export default function LogInForm() {
   const { email, password } = formValues,
     { error, isSubmittable, showingMessage } = formState;
 
+  const { setUser } = useContext(Context);
 
-  function displayErrorMessage(error){
-    setFormState({...formState, error, showingMessage: true});
+  function displayErrorMessage(error) {
+    setFormState({ ...formState, error, showingMessage: true });
   }
-
 
   function onChange(e) {
     const {
@@ -34,7 +36,6 @@ export default function LogInForm() {
     });
   }
 
-
   async function onSubmitAttempt(e) {
     e.preventDefault();
     try {
@@ -46,6 +47,9 @@ export default function LogInForm() {
         },
         body: { email, password }
       });
+      console.log(user);
+
+      setUser(user);
     } catch (error) {
       displayErrorMessage(error);
     }
@@ -59,7 +63,6 @@ export default function LogInForm() {
         name="email"
         onChange={onChange}
       />
-
 
       <PasswordInput
         label={"Password"}
@@ -75,20 +78,17 @@ export default function LogInForm() {
         Forgot your password?
       </Link>
 
-
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign In
       </Button>
 
-
       {formState.showingMessage && (
         <Snackbar
           className="formErrorMessage"
-          onClose={()=>setFormState({...formState, showingMessage: false})}
+          onClose={() => setFormState({ ...formState, showingMessage: false })}
           message={formState.error.message}
         />
       )}
-
     </form>
   );
 }

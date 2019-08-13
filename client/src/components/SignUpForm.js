@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { validate } from "email-validator";
 
+import Context from "../store/createContext";
 import { layout } from "../themes/theme";
 import Snackbar from "./Snackbar";
 import Button from "./Button";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
 import { callAPI } from "../helpers/api";
-
 
 // Each function is passed the object containing all field values in case of field interdependencies
 // Validators return an object containing updates for the error messages object.
@@ -66,12 +66,13 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       showingMessage: false
     });
 
+  const { setUser } = useContext(Context);
+
   const { name, email, password, confirmPassword } = fieldValues;
 
-
-  function displayErrorMessage(error){
-      setFormState({...formState, error, showingMessage: true});
-    }
+  function displayErrorMessage(error) {
+    setFormState({ ...formState, error, showingMessage: true });
+  }
 
   function formIsSubmittable() {
     const noErrors = Object.values(errorMessages).every(value => value === ""),
@@ -107,7 +108,6 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     });
   }
 
-
   async function onSubmitAttempt(e) {
     e.preventDefault();
 
@@ -119,12 +119,13 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
           headers: {
             "Content-Type": "application/json"
           },
-          body: { username: name, email, password, type: userType }
+          body: { name, email, password, type: userType }
         });
+
+        setUser(user);
       } catch (error) {
         displayErrorMessage(error);
       }
-
     }
   }
 
@@ -175,11 +176,10 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       {formState.showingMessage && (
         <Snackbar
           className="formErrorMessage"
-          onClose={()=>setFormState({...formState, showingMessage: false})}
+          onClose={() => setFormState({ ...formState, showingMessage: false })}
           message={formState.error.message}
         />
       )}
-
     </form>
   );
 }

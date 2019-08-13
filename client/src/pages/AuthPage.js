@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { Route, Link, Switch } from "react-router-dom";
 
+import Context from "../store/createContext";
 import { layout } from "../themes/theme";
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
@@ -61,9 +62,13 @@ function AuthPage({ classes, ...rest }) {
    *  ... depending on the URL
    */
 
+  const { user } = useContext(Context);
+
   return (
     <PageContainer className="pageContainer">
       <Navbar>
+        {user ? user.name : "No User"}
+
         <Switch>
           <Route path="/login">
             <span>Don't have an account?</span>
