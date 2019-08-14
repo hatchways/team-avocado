@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useMockedResource from "../hooks/useMockedResource";
+import useResource from "../hooks/useResource";
 import styled from "styled-components";
 
 import { Route, Link, Switch } from "react-router-dom";
@@ -81,7 +81,7 @@ const PageContainer = styled.div`
 `;
 
 function BrowseChefsPage({ classes, ...rest }) {
-  let [retrievedChefs] = useMockedResource();
+  let [retrievedChefs] = useResource("chef");
 
   let [cuisines, setCuisines] = useState(
     cuisinesArray.reduce(
