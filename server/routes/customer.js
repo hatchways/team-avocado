@@ -14,8 +14,8 @@ const { decodeToken, userIsAuthorized } = require("../middleware/auth");
  */
 router.get(
   "/:userId",
-  decodeToken,
-  userIsAuthorized,
+  // decodeToken,
+  // userIsAuthorized,
   async (req, res, next) => {
     const {
       params: { userId }
