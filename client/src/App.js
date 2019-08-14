@@ -22,9 +22,24 @@ function App() {
             {browserHasToken() ? null : <Redirect to="signup/customer" />}
           </Route>
           <Route path="/(signup||login)" component={AuthPage} />
-          <Route path="/chef/:chef_id" component={ChefPage} />
-          <Route path="/customer/:customer_id" component={CustomerPage} />
-          <Route path="/browse" />
+          <Route
+            path="/chef/:chef_id"
+            render={({
+              match: {
+                params: { chef_id }
+              }
+            }) => <ChefPage chefId={chef_id} />}
+          />
+
+          <Route
+            path="/customer/:customer_id"
+            render={({
+              match: {
+                params: { customer_id }
+              }
+            }) => <CustomerPage customerId={customer_id} />}
+          />
+          <Route path="/browse/chefs" component={BrowseChefsPage} />
         </Switch>
       </BrowserRouter>
     </ContextProvider>
