@@ -20,7 +20,7 @@ let chefId = null,
   token = null;
 
 const testChef = {
-  username: "Test Chef",
+  name: "Test Chef",
   email: "testchef@email.com",
   password: "password",
   type: "chef"
@@ -42,7 +42,7 @@ describe("POST to /signup with valid new Chef user.", () => {
         console.dir(res.body);
 
         // Collect id of created test chef
-        chefId = res.body.user._id;
+        chefId = res.body.id;
         token = res.body.token;
         done();
       });

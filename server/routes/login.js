@@ -2,19 +2,29 @@ const { User } = require("../models/index");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
-const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
 const config = require("config");
 
-//handle request for /login
-//check user email password and return user, jwt token and user type
+/**
+ * Search DB for document matching body.email. If found return JSON of the following structure:
+ *
+ *  {
+ *    token: <token string>
+ *    name: <name>
+ *    id: <user id>
+ *    userType: "Customer" || "Chef"
+ *  }
+ *
+ */
+
 router.post("/", async (req, res, next) => {
   const { error } = validate(req.body);
   if (error) return next(createError(400, error.details[0].message));
 
   let user = await User.findOne({ email: req.body.email });
+
   if (!user) {
     return next(createError(400, "Invalid email or password"));
   }
@@ -24,7 +34,8 @@ router.post("/", async (req, res, next) => {
 
   const usertype = user.__t;
   const token = jwt.sign({ _id: user._id }, config.get("jwtprivatekey"));
-  res.status(200).send({ token, user, usertype });
+
+  res.status(200).send({ token, usertype, name: user.name, id: user._id });
 });
 
 function validate(user) {

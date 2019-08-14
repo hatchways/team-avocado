@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, withRouter } from "react-router-dom";
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -7,7 +7,9 @@ import Button from "./Button";
 import { layout } from "../themes/theme";
 import { callAPI } from "../helpers/api";
 
-export default function LogInForm() {
+import Context from "../store/createContext";
+
+function LogInForm(props) {
   let [formValues, setFormValues] = useState({ email: "", password: "" }),
     [formState, setFormState] = useState({
       isSubmittable: false,
@@ -16,6 +18,8 @@ export default function LogInForm() {
     });
   const { email, password } = formValues,
     { error, isSubmittable, showingMessage } = formState;
+
+  const { setUser } = useContext(Context);
 
   function displayErrorMessage(error) {
     setFormState({ ...formState, error, showingMessage: true });
@@ -43,6 +47,11 @@ export default function LogInForm() {
         },
         body: { email, password }
       });
+      console.log(user);
+
+      setUser(user);
+
+      props.history.push(`${user.usertype}/${user.id}`);
     } catch (error) {
       displayErrorMessage(error);
     }
@@ -89,3 +98,5 @@ export default function LogInForm() {
     </form>
   );
 }
+
+export default withRouter(LogInForm);
