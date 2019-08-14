@@ -6,6 +6,7 @@ import AuthPage from "./pages/AuthPage";
 import ChefPage from "./pages/ChefProfilePage";
 import CustomerPage from "./pages/CustomerProfilePage";
 import "./App.css";
+import BrowseChefsPage from "./pages/BrowseChefsPage";
 
 //TODO: Implement this
 function browserHasToken() {

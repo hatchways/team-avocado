@@ -2,8 +2,16 @@ require("dotenv").config();
 
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const _ = require("lodash");
 const app = require("../app.js");
 const { User, Chef } = require("../models");
+const faker = require("faker");
+const {
+  insertNewChef,
+  insertNewCustomer,
+  generateRelativeCoordinates
+} = require("./helpers");
+const { getRandomCoordPair, CoordPair } = require("../services/geo");
 
 chai.should();
 chai.use(chaiHttp);
@@ -21,7 +29,7 @@ const testChef = {
 /**
  *  Attempt to create test chef
  */
-describe("/POST to /signup with valid new Chef user.", () => {
+describe("POST to /signup with valid new Chef user.", () => {
   it("it should return a token, and have status 201", done => {
     chai
       .request(app)
@@ -41,7 +49,7 @@ describe("/POST to /signup with valid new Chef user.", () => {
   });
 });
 
-describe("/PUT to /chef/:chefId with valid update and authentic token.", () => {
+describe("PUT to /chef/:chefId with valid update and authentic token.", () => {
   it("it should have status 200", done => {
     chai
       .request(app)
@@ -56,7 +64,7 @@ describe("/PUT to /chef/:chefId with valid update and authentic token.", () => {
   });
 });
 
-describe("/POST to /signup with duplicate email.", () => {
+describe("POST to /signup with duplicate email.", () => {
   it("it should fail with a status of 422", done => {
     chai
       .request(app)
@@ -64,9 +72,23 @@ describe("/POST to /signup with duplicate email.", () => {
       .send(testChef)
       .end(async (err, res) => {
         res.should.have.status(422);
-
         // Delete testChef document
         await Chef.findByIdAndRemove(chefId);
+        done();
+      });
+  });
+});
+
+describe("GET to /chef with no query parameters.", () => {
+  it("should return all chefs.", done => {
+    chai
+      .request(app)
+      .get("/chef")
+      .send()
+      .end(async (err, res) => {
+        const allChefs = await Chef.find();
+        console.log(allChefs);
+        res.body.length.should.equal(allChefs.length);
         done();
       });
   });

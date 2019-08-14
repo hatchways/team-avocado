@@ -150,7 +150,7 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         helperText={errorMessages.email}
         error={!!errorMessages.email}
       />
-      <TextField
+      <PasswordInput
         label={"Password"}
         name="password"
         value={password}

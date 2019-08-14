@@ -1,5 +1,7 @@
+
 import React, { useState, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
+
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -18,6 +20,7 @@ function LogInForm(props) {
     });
   const { email, password } = formValues,
     { error, isSubmittable, showingMessage } = formState;
+
 
   const { setUser } = useContext(Context);
 
@@ -73,12 +76,17 @@ function LogInForm(props) {
         name="password"
       />
 
-      <Link
-        to="/password-recovery"
-        style={{ display: "block", color: "inherit", fontSize: "0.75rem" }}
-      >
-        Forgot your password?
-      </Link>
+      <div>
+        <Link
+          to="/password-recovery"
+          style={{
+            color: "inherit",
+            fontSize: "0.75rem"
+          }}
+        >
+          Forgot your password?
+        </Link>
+      </div>
 
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign In
