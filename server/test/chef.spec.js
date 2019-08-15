@@ -20,7 +20,7 @@ let chefId = null,
   token = null;
 
 const testChef = {
-  username: "Test Chef",
+  name: "Test Chef",
   email: "testchef@email.com",
   password: "password",
   type: "chef"
@@ -42,7 +42,7 @@ describe("POST to /signup with valid new Chef user.", () => {
         console.dir(res.body);
 
         // Collect id of created test chef
-        chefId = res.body.user._id;
+        chefId = res.body.id;
         token = res.body.token;
         done();
       });
@@ -72,7 +72,6 @@ describe("POST to /signup with duplicate email.", () => {
       .send(testChef)
       .end(async (err, res) => {
         res.should.have.status(422);
-
         // Delete testChef document
         await Chef.findByIdAndRemove(chefId);
         done();
@@ -88,11 +87,8 @@ describe("GET to /chef with no query parameters.", () => {
       .send()
       .end(async (err, res) => {
         const allChefs = await Chef.find();
-
         console.log(allChefs);
-
         res.body.length.should.equal(allChefs.length);
-
         done();
       });
   });

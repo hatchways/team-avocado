@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { validate } from "email-validator";
 
+import Context from "../store/createContext";
 import { layout } from "../themes/theme";
 import Snackbar from "./Snackbar";
 import Button from "./Button";
@@ -65,6 +66,8 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
       showingMessage: false
     });
 
+  const { setUser } = useContext(Context);
+
   const { name, email, password, confirmPassword } = fieldValues;
 
   function displayErrorMessage(error) {
@@ -116,8 +119,10 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
           headers: {
             "Content-Type": "application/json"
           },
-          body: { username: name, email, password, type: userType }
+          body: { name, email, password, type: userType }
         });
+
+        setUser(user);
       } catch (error) {
         displayErrorMessage(error);
       }
