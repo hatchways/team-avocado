@@ -6,7 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import PickTagDialog from './PickTagDialog'
-
+import { callAPI } from "../helpers/api";
+import { useState, useEffect, useContext } from "react";
+import AuthContext from "../store/createContext";
 
 const Container = styled.div`
 
@@ -93,21 +95,41 @@ const useStyles = makeStyles({
 const cuisines = ["Chinese","Indian","American","Japanese"];
 
 //TODO: pass in props and get data from props
-export default function Namecard({  }) {
+ export default function Namecard({ user_id }) {
 
     const classes = useStyles();
 
+    const [values, setValues] = React.useState({
+        name: "",
+        location: '',
+        description:'', 
+    }); 
+
+    const {user,setUser} = useContext(AuthContext);
+    console.log("Context user is:",user);
+    const endpoint = `chef/${user_id}`;
+    
+    useEffect(async () => {
+        const chef= await callAPI({
+            endpoint: endpoint,
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            });
+            console.log('GETCHEF get:',chef);
+            setValues({name:chef.name, location:chef.strlocation, description:chef.description});
+        },[]);
+
+
+    
+
     const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value });
-      };
+    };
     
-    const [values, setValues] = React.useState({
-        name: 'Atsushi Mikaki',
-        location: 'Toronto, Canada',
-        desc:'Chef with 8 years in Japanese cuisine. Reciepient of awards and positive feedback ',
-        
-    }); 
-  
+
+    
   
     return (
     
@@ -215,11 +237,11 @@ export default function Namecard({  }) {
             <Route path="/chef/:chef_id">
                 <img id="cover" alt="background" src="/cover-sushi.png" />
                 <div>
-                    <p className={classes.name}> Atsushi Mikaki </p>
-                    <p className={classes.location}> Toronto Canada </p>
+                    <p className={classes.name}>{values.name}</p>
+                    <p className={classes.location}> {values.location}</p>
                 </div>
                 <div>
-                    <p className={classes.desc}>Chef with 8 years in Japanese cuisine. Reciepient of awards and positive feedback </p>
+                    <p className={classes.desc}>{values.description}</p>
                 </div>
                 <RequestButton type="submit" >
                     Send Request
@@ -231,4 +253,7 @@ export default function Namecard({  }) {
     </Container>
     </div>
   );
+
+
+
 }

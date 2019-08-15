@@ -32,7 +32,6 @@ router.get("/:userId", async (req, res, next) => {
   const {
     params: { userId }
   } = req;
-
   /**
    *    Attempt to retrieve Chef identified by :userId
    */
