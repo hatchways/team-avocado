@@ -10,6 +10,12 @@ export async function callAPI({ method, endpoint, body = null, headers = {} }) {
     };
   }
 
+  console.log({
+    method,
+    headers: headers,
+    body: body && JSON.stringify(body)
+  });
+
   const response = await fetch(`${API_URL}/${endpoint}`, {
     method,
     headers: headers,
