@@ -35,14 +35,16 @@ const PageContainer = styled.div`
   }
 `;
 
-function CustomerPage() {
+function CustomerPage(props) {
+  const customer_id=props.match.params.customer_id;
+
   return (
     <PageContainer>
       <Navbar>
         <SimpleMenu />
       </Navbar>
 
-      <NameCard />
+      <NameCard user_id={customer_id}/>
     </PageContainer>
   );
 }
