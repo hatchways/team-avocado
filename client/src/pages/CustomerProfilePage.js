@@ -35,7 +35,7 @@ const PageContainer = styled.div`
   }
 `;
 
-function ChefPage() {
+function CustomerPage() {
   return (
     <PageContainer>
       <Navbar>
@@ -47,4 +47,4 @@ function ChefPage() {
   );
 }
 
-export default ChefPage;
+export default CustomerPage;
