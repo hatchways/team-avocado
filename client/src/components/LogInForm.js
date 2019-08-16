@@ -50,7 +50,6 @@ function LogInForm(props) {
         },
         body: { email, password }
       });
-      console.log(user);
 
       setUser(user);
 

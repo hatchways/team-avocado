@@ -28,7 +28,7 @@ const userSchema = new Schema({
   },
   location: pointSchema,
   avatar: String,
-
+  strlocation: String,
   createdAt: {
     type: Date,
     require: true,

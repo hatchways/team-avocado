@@ -41,8 +41,6 @@ const PageContainer = styled.div`
 `;
 
 function ChefPage(props) {
-  console.log(props);
-  console.log(props.match.params.chef_id);
   const chef_id=props.match.params.chef_id;
   return (
     <PageContainer className="pageContainer">
@@ -55,7 +53,7 @@ function ChefPage(props) {
         <NameCard user_id={chef_id}/>
       </div>
       <div className="paneRight">
-        <ChefsMenu/>
+        <ChefsMenu user_id={chef_id}/>
       </div>
     </PageContainer>
   );

@@ -65,20 +65,21 @@ router.put(
     if (!validateChefProfileUpdate(body)) {
       return next(createError(400, "Invalid profile update."));
     }
-
     /**
      *  Attempt to apply updates
      */
     const chef = await Chef.findByIdAndUpdate(userId, body, {
-      useFindAndModify: false
+      useFindAndModify: false,
+      new:true
     });
     if (!chef) {
       return next(
         createError(400, `Chef with id ${userId} could not be found.`)
       );
     }
+    const token = req.headers.authorization.split(" ")[1];
 
-    res.status(200).send("Update successful");
+    res.status(200).send({token, usertype:"chef", name: chef.name, id: chef._id});
   }
 );
 

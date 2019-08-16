@@ -101,12 +101,11 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
 
     const [values, setValues] = React.useState({
         name: "",
-        location: '',
+        strlocation: '',
         description:'', 
     }); 
 
     const {user,setUser} = useContext(AuthContext);
-    console.log("Context user is:",user);
     const endpoint = `chef/${user_id}`;
     
     useEffect(async () => {
@@ -117,8 +116,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
               "Content-Type": "application/json"
             },
             });
-            console.log('GETCHEF get:',chef);
-            setValues({name:chef.name, location:chef.strlocation, description:chef.description});
+            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description});
         },[]);
 
 
@@ -128,7 +126,24 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         setValues({ ...values, [name]: event.target.value });
     };
     
-
+    async function onSubmitAttempt(e) {
+        e.preventDefault();
+        try {
+          const chef = await callAPI({
+            endpoint: `chef/${user_id}`,
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: values,
+            token: user.token,
+          });
+          
+          setUser(chef);
+        } catch (error) {
+          console.log(error);
+        }
+      }
     
   
     return (
@@ -136,7 +151,8 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
 
     <div className={classes.wrap}>
         <Switch>
-            <Route path="/chef/edit/:chef_id">
+    
+            <Route path="/chef/:chef_id/edit">
             <input
                     accept="image/*"
                     className={classes.input}
@@ -160,8 +176,8 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
           {/* change to if else, if user is logged in and  */}
           {/* this is user's profile page, show edit button */}
           
-            <Route path="/chef/edit/:chef_id">  
-            <form className={classes.form}>
+            <Route path="/chef/:chef_id/edit">  
+            <form className={classes.form} onSubmit={onSubmitAttempt} >
                 
                 <input
                     accept="image/*"
@@ -193,8 +209,8 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                     id="outlined-location"
                     label="Location"
                     className="{classes.textField}"
-                    value={values.location}
-                    onChange={handleChange('location')}
+                    value={values.strlocation}
+                    onChange={handleChange('strlocation')}
                     margin="dense"
                     variant="outlined"
                 />
@@ -204,8 +220,8 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                     className="{classes.textField}"
                     multiline
                     rowsMax="4"
-                    value={values.desc}
-                    onChange={handleChange('desc')}
+                    value={values.description}
+                    onChange={handleChange('description')}
                     margin="dense"
                     variant="outlined"
                 />
@@ -238,7 +254,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                 <img id="cover" alt="background" src="/cover-sushi.png" />
                 <div>
                     <p className={classes.name}>{values.name}</p>
-                    <p className={classes.location}> {values.location}</p>
+                    <p className={classes.location}> {values.strlocation}</p>
                 </div>
                 <div>
                     <p className={classes.desc}>{values.description}</p>

@@ -16,7 +16,6 @@ const useStyles = makeStyles({
 });
 
 export default function PickdishDialog(props ) {
-    console.log(props)
     const [open, setOpen] = React.useState(false);
     const classes = useStyles();
     const PickTagBtn = styled(Button)`

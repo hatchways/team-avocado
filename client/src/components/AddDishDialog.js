@@ -9,14 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "./Button";
 import styled from "styled-components";
 
-const useStyles = makeStyles({
-
-
-});
-
 export default function AdddishDialog({  }) {
     const [open, setOpen] = React.useState(false);
-    const classes = useStyles();
     const AddDishBtn = styled(Button)`
         display:block;
         width:100%;
@@ -43,7 +37,6 @@ export default function AdddishDialog({  }) {
           </DialogContentText>
           <input
             accept="image/*"
-            className={classes.input}
             id="dish-img-file"
             multiple
             type="file"

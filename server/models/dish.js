@@ -55,7 +55,10 @@ const DishSchema = mongoose.Schema({
     required: true
   },
 
-  requirements: [String]
+  requirements: {
+    type: [String],
+    requried: true
+  }
 });
 
 /**
@@ -63,12 +66,15 @@ const DishSchema = mongoose.Schema({
  */
 
 DishSchema.pre("save", async function() {
-  console.dir(this);
-  const chef = await Chef.findById(this.chef);
+  try{
+    console.dir(this);
+    let chef = await Chef.findById(this.chef);
+    chef.dishes.push(this._id);
 
-  chef.dishes.push(this._id);
-
-  chef.save();
+    chef.save();
+  }catch(err){
+    console.log(err);
+  }
 });
 
 /**
