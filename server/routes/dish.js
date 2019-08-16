@@ -28,6 +28,7 @@ router.get("/", async (req, res, next) => {
 router.post("/", decodeToken, async (req, res, next) => {
   const { body, decoded } = req;
   const { error } = validateDish(body);
+  console.log(body);
   if (error) return next(createError(400, error.details[0].message));
 
   /**

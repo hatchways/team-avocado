@@ -8,6 +8,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "./Button";
 import styled from "styled-components";
+import { useState, useEffect, useContext } from "react";
+import AuthContext from "../store/createContext";
+import { callAPI } from "../helpers/api";
+
 
 export default function AdddishDialog({  }) {
     const [open, setOpen] = React.useState(false);
@@ -25,6 +29,42 @@ export default function AdddishDialog({  }) {
       }
   
   
+
+      const {user,setUser} = useContext(AuthContext);
+      console.log("Context user:",user);
+
+      const [values, setValues] = React.useState({
+        numPeopleServed: 0,
+        name: "",
+        price: 0,
+        ingredients: "",
+        requirements: "",
+        cuisine:"Japanese",
+        chef: user.id,
+      }); 
+      const handleChange = name => event => {
+        setValues({ ...values, [name]: event.target.value });
+      };
+
+      async function onSubmitAttempt(e) {
+        e.preventDefault();
+        try {
+          const newdish = await callAPI({
+            endpoint: "dish",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: values,
+            token: user.token,
+          });
+          console.log("New dish from put",newdish);
+          
+        } catch (error) {
+          console.log(error);
+        }
+        setOpen(false);
+      }
     return (
 
     <div>
@@ -47,7 +87,9 @@ export default function AdddishDialog({  }) {
             margin="dense"
             id="serve"
             label="How many people will this dish serve?"
-            type="text"
+            type="number"
+            value={values.numPeopleServed}
+            onChange={handleChange('numPeopleServed')}
             fullWidth
           />
           <TextField
@@ -56,6 +98,8 @@ export default function AdddishDialog({  }) {
             id="name"
             label="Dish's name"
             type="text"
+            value={values.name}
+            onChange={handleChange('name')}
             fullWidth
           />
           <TextField
@@ -64,6 +108,8 @@ export default function AdddishDialog({  }) {
             id="price"
             label="Price($)"
             type="number"
+            onChange={handleChange('price')}
+            value={values.price}
             fullWidth
           />
             <TextField
@@ -74,6 +120,8 @@ export default function AdddishDialog({  }) {
             id="ingred"
             label="Ingredients"
             type="text"
+            onChange={handleChange('ingredients')}
+            value={values.ingredients}
             fullWidth
           />
           <TextField
@@ -84,6 +132,8 @@ export default function AdddishDialog({  }) {
             id="required"
             label="Required Stuff"
             type="text"
+            onChange={handleChange('requirements')}
+            value={values.requirements}
             fullWidth
           />
         </DialogContent>
@@ -91,7 +141,7 @@ export default function AdddishDialog({  }) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={onSubmitAttempt} color="primary">
             Submit
           </Button>
         </DialogActions>
