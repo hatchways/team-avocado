@@ -1,24 +1,15 @@
-import React from "react";
-import { Elements } from "react-stripe-elements";
+import React, { useState, useContext } from "react";
+import useToggle from "../hooks/useToggle";
+import { Elements, injectStripe } from "react-stripe-elements";
 import styled from "styled-components";
 
+import Context from "../store/createContext";
+import { callAPI } from "../helpers/api";
 import { layout, colors } from "../themes/theme";
+import Snackbar from "../components/Snackbar";
 import Navbar from "../components/Navbar";
 import CheckoutForm from "../components/CheckoutForm";
 import OrderDetails from "../components/OrderDetails";
-
-const mockOrderItems = [
-  {
-    name: "2 yakisoba dishes, 6 something else, 4 something else",
-    price: 30,
-    imageURL: "https://picsum.photos/200"
-  },
-  {
-    name: "5 specialty sushi rolls",
-    price: 23.5,
-    imageURL: "https://picsum.photos/200"
-  }
-];
 
 const PageContainer = styled.div`
   display: flex;
@@ -46,11 +37,6 @@ const PageContainer = styled.div`
     & > div {
       padding: ${layout.spacing(3)} ${layout.spacing(7)};
     }
-
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; */
   }
   .paneRight {
     height: calc(100vh - ${layout.navHeight});
@@ -58,7 +44,50 @@ const PageContainer = styled.div`
     overflow: hidden;
   }
 `;
-const CheckoutPage = () => {
+
+function withStripe(Component) {
+  const Injected = injectStripe(Component);
+
+  return () => (
+    <Elements>
+      <Injected />
+    </Elements>
+  );
+}
+
+const CheckoutPage = ({ stripe }) => {
+  const [loading, toggleLoading] = useToggle(false),
+    [paymentComplete, togglePaymentComplete] = useToggle(false),
+    [error, setError] = useState(null),
+    { cart, addToCart, removeFromCart, getCurrentTotal } = useContext(Context);
+
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    toggleLoading();
+
+    let { token } = await stripe.createToken({ name: "Test User" });
+
+    // token will be 'undefined' if
+    if (token) {
+      let response = await callAPI({
+        endpoint: "payment",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: { tokenId: token.id, totalPrice: getCurrentTotal() * 100 }
+      });
+
+      if (response.status === "succeeded") {
+        togglePaymentComplete();
+        toggleLoading();
+      }
+    } else {
+      setError("All form fields are required.");
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -66,17 +95,22 @@ const CheckoutPage = () => {
         <div className="paneLeft">
           <h1>Checkout</h1>
           <div>
-            <Elements>
-              <CheckoutForm />
-            </Elements>
+            {paymentComplete ? <h2>Purchase Complete</h2> : <CheckoutForm />}
           </div>
+
+          {error && <Snackbar message={error} onClose={() => setError(null)} />}
         </div>
         <div className="paneRight">
-          <OrderDetails items={mockOrderItems} arrivalTime={new Date()} />
+          <OrderDetails
+            items={cart}
+            arrivalTime={new Date()}
+            onSubmit={onSubmit}
+          />
         </div>
       </PageContainer>
     </>
   );
 };
 
-export default CheckoutPage;
+// export default CheckoutPage;
+export default withStripe(CheckoutPage);

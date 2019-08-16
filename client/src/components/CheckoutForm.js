@@ -2,13 +2,11 @@ import React, { Component } from "react";
 import {
   CardNumberElement,
   CardExpiryElement,
-  CardCVCElement,
-  injectStripe
+  CardCVCElement
 } from "react-stripe-elements";
 import styled from "styled-components";
 
 import Button from "./Button";
-import { callAPI } from "../helpers/api";
 
 const StyledForm = styled.form`
   width: 300px;
@@ -55,27 +53,7 @@ const StyledForm = styled.form`
 `;
 
 class CheckoutForm extends Component {
-  state = { paymentComplete: false };
-
-  onSubmit = async e => {
-    let { token } = await this.props.stripe.createToken({ name: "Name" });
-
-    let response = await callAPI({
-      endpoint: "payment",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: { tokenId: token.id }
-    });
-
-    if (response.status === "succeeded")
-      this.setState({ paymentComplete: true });
-  };
-
   render() {
-    if (this.state.paymentComplete) return <h2>Purchase Complete</h2>;
-
     return (
       <StyledForm className="checkout">
         <p>Enter your payment details:</p>
@@ -93,11 +71,9 @@ class CheckoutForm extends Component {
           <label>CVC</label>
           <CardCVCElement />
         </div>
-
-        <Button onClick={this.onSubmit}>Send</Button>
       </StyledForm>
     );
   }
 }
 
-export default injectStripe(CheckoutForm);
+export default CheckoutForm;

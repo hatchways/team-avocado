@@ -88,11 +88,12 @@ const Container = styled.div`
 function getArrivalTimeString(date) {
   const split = date.toDateString().split(" ");
 
-  let hours = date.getHours();
+  const [time, amOrPm] = date.toLocaleTimeString().split(" ");
 
-  return `${split[1]} ${split[2]} at ${
-    hours === 0 ? 12 : hours % 12
-  }:${date.getMinutes()} ${hours < 12 ? "am" : "pm"}`;
+  return `${split[1]} ${split[2]} at ${time.slice(
+    0,
+    -3
+  )}${amOrPm.toLowerCase()}`;
 }
 
 const OrderItem = ({ imageURL, name, price }) => (
@@ -106,7 +107,7 @@ const OrderItem = ({ imageURL, name, price }) => (
   </li>
 );
 
-const OrderDetails = ({ items, arrivalTime }) => {
+const OrderDetails = ({ items, arrivalTime, onSubmit }) => {
   const orderItems = items.map(item => <OrderItem {...item} />);
 
   const total = priceHelpers.numToString(
@@ -131,7 +132,7 @@ const OrderDetails = ({ items, arrivalTime }) => {
           <span id="total">{total}</span>
         </div>
       </div>
-      <Button>Checkout</Button>
+      <Button onClick={onSubmit}>Checkout</Button>
     </Container>
   );
 };
