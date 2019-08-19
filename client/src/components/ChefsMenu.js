@@ -67,8 +67,8 @@ export default function Chefsmenu({user_id}) {
         setDishes(chef.dishes);
 
     },[]);
-        let dishCardComponent = dishes.map((dish,i) =>{
-          return <DishCard dish_id={dishes[i]._id} name={dishes[i].name} serve={dishes[i].numPeopleServed} price={dishes[i].price} ingred={dishes[i].ingredients} required={dishes[i].requirements}/>;
+      let dishCardComponent = dishes.map((dish,i) =>{
+          return <DishCard setDishes={setDishes} currdishes={dishes} dish_id={dishes[i]._id} name={dishes[i].name} serve={dishes[i].numPeopleServed} price={dishes[i].price} ingred={dishes[i].ingredients} required={dishes[i].requirements}/>;
       });
   const classes = useStyles();
   return (
@@ -80,7 +80,7 @@ export default function Chefsmenu({user_id}) {
         <Switch>
             <Route path="/chef/:chef_id/edit">
               <div>
-                <AddDishDialog/>
+                <AddDishDialog setDishes={setDishes} dishes={dishes}/>
               </div>
             </Route>
         </Switch>

@@ -11,9 +11,30 @@ import styled from "styled-components";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import DateFnsUtils from '@date-io/date-fns';
 
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+  } from '@material-ui/pickers';
+  
+  const useStyles = makeStyles(theme => ({
+    root: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      padding: theme.spacing(0.5),
+    },
+    chip: {
+      margin: theme.spacing(0.5),
+    },
+  }));
+export default function AdddishDialog({  }) {
+    const classes = useStyles();
 
-export default function AdddishDialog({ setDishes, dishes }) {
     const [open, setOpen] = React.useState(false);
     const AddDishBtn = styled(Button)`
         display:block;
@@ -29,7 +50,11 @@ export default function AdddishDialog({ setDishes, dishes }) {
       }
   
   
+      const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
+      function handleDateChange(date) {
+        setSelectedDate(date);
+      }
       const {user,setUser} = useContext(AuthContext);
       console.log("Context user:",user);
 
@@ -46,6 +71,18 @@ export default function AdddishDialog({ setDishes, dishes }) {
         setValues({ ...values, [name]: event.target.value });
       };
 
+
+      const [chipData, setChipData] = React.useState([
+        { key: 0, label: 'beloved sushi 5' },
+        { key: 1, label: 'new dish' },
+        { key: 2, label: 'family size dishes' },
+        { key: 3, label: 'lucky dish' },
+        { key: 4, label: 'Six dish' },
+      ]);
+      const handleDelete = chipToDelete => () => {
+    
+        setChipData(chips => chips.filter(chip => chip.key !== chipToDelete.key));
+      };
       async function onSubmitAttempt(e) {
         e.preventDefault();
         try {
@@ -59,86 +96,71 @@ export default function AdddishDialog({ setDishes, dishes }) {
             token: user.token,
           });
           console.log("New dish from put",newdish);
-          setDishes([...dishes,newdish]
-          );
-          console.log("Here are the new dishes",dishes);
-          setOpen(false);
+          
         } catch (error) {
-          console.log("THERE IS A ERRRO",error);
+          console.log(error);
         }
         
       }
     return (
 
     <div>
-        <AddDishBtn onClick={handleClickOpen}> Add New Dish</AddDishBtn>
+        <AddDishBtn onClick={handleClickOpen}> Send Request</AddDishBtn>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">New Dish</DialogTitle>
+        <DialogTitle id="form-dialog-title">Send Request</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To add a dish, please fill in the form and click submit button.
+            To request a chef, please fill in the form and click submit button.
           </DialogContentText>
-          <input
-            accept="image/*"
-            id="dish-img-file"
-            multiple
-            type="file"
-          />
 
-          <TextField
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          margin="normal"
+          id="date-picker-dialog"
+          label="Date picker dialog"
+          format="MM/dd/yyyy"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        <KeyboardTimePicker
+          margin="normal"
+          id="time-picker"
+          label="Time picker"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+        />
+        </MuiPickersUtilsProvider>
+        <TextField
             autoFocus
             margin="dense"
             id="serve"
-            label="How many people will this dish serve?"
+            label="How many people will the chef serve?"
             type="number"
             value={values.numPeopleServed}
             onChange={handleChange('numPeopleServed')}
             fullWidth
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Dish's name"
-            type="text"
-            value={values.name}
-            onChange={handleChange('name')}
-            fullWidth
+             <Paper className={classes.root}>
+      {chipData.map(data => {
+        let icon;
+
+        return (
+          <Chip
+            key={data.key}
+            icon={icon}
+            label={data.label}
+            onDelete={handleDelete(data)}
+            className={classes.chip}
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="price"
-            label="Price($)"
-            type="number"
-            onChange={handleChange('price')}
-            value={values.price}
-            fullWidth
-          />
-            <TextField
-            autoFocus
-            margin="dense"
-            multiline
-            rowsMax="4"
-            id="ingred"
-            label="Ingredients"
-            type="text"
-            onChange={handleChange('ingredients')}
-            value={values.ingredients}
-            fullWidth
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            multiline
-            rowsMax="4"
-            id="required"
-            label="Required Stuff"
-            type="text"
-            onChange={handleChange('requirements')}
-            value={values.requirements}
-            fullWidth
-          />
+        );
+      })}
+    </Paper>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

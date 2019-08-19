@@ -9,7 +9,8 @@ import PickTagDialog from './PickTagDialog'
 import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
-
+import { Link, withRouter } from "react-router-dom";
+import SendRequestDialog from "./SendRequestDialog";
 const Container = styled.div`
 
 
@@ -125,7 +126,6 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
     const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value });
     };
-    
     async function onSubmitAttempt(e) {
         e.preventDefault();
         try {
@@ -145,7 +145,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         }
       }
     
-  
+
     return (
     
 
@@ -245,10 +245,20 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                     variant="outlined"
                 />
                 </div>
+                <Link
+                to={endpoint}
+                style={{
+                    color: "black",
+                    fontSize: "0.25rem"
+                }}
+                >
+                Simulate
+                </Link>
                 <RequestButton type="submit" >
                     Save Profile
                 </RequestButton>
                 </form>
+
             </Route>
             <Route path="/chef/:chef_id">
                 <img id="cover" alt="background" src="/cover-sushi.png" />
@@ -259,9 +269,12 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                 <div>
                     <p className={classes.desc}>{values.description}</p>
                 </div>
-                <RequestButton type="submit" >
+                {/* <RequestButton type="submit" >
                     Send Request
                 </RequestButton>
+                <div> */}
+                <SendRequestDialog/>
+
             </Route>
  
          

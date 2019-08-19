@@ -25,6 +25,7 @@ function App() {
           <Route path="/chef/:chef_id" component={ChefPage} />
           <Route path="/customer/:customer_id" component={CustomerPage}/>
           <Route path="/browse" component={BrowseChefsPage}/>
+
         </Switch>
       </BrowserRouter>
     </ContextProvider>

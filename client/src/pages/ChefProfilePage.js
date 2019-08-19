@@ -42,6 +42,7 @@ const PageContainer = styled.div`
 
 function ChefPage(props) {
   const chef_id=props.match.params.chef_id;
+
   return (
     <PageContainer className="pageContainer">
 

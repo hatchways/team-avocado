@@ -74,9 +74,8 @@ const useStyles = makeStyles(theme =>({
 
 }));
 
-export default function SimpleCard({dish_id,name,serve,price,ingred,required}) {
+export default function SimpleCard({dish_id,name,serve,price,ingred,required, setDishes, currdishes}) {
   const classes = useStyles(brandLight);
-
 
   const {user,setUser} = useContext(AuthContext);
   console.log("Context user:",user);
@@ -86,6 +85,7 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required}) {
     price: price,
     ingredients: ingred,
     requirements: required,
+    cuisine: "Japanese",
     chef: user.id,
   }); 
   
@@ -105,7 +105,10 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required}) {
         body: values,
         token: user.token,
       });
-      console.log("New dish from put",newdish);
+      const index = currdishes.findIndex(obj => obj.id === dish_id);
+      currdishes[index] = newdish;
+      setDishes(currdishes)
+      console.log("New dish from put",currdishes);
     } catch (error) {
       console.log(error);
     }
@@ -195,6 +198,7 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required}) {
         </Route>
 
         <Route path="/chef/:chef_id">
+        <div className={classes.form}>
           <Grid className={classes.info}>
 
               <div>
@@ -212,6 +216,7 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required}) {
           <Grid className={classes.image}>
               <img className="dishpic" alt="dish" src="/img-sushi.png" />
           </Grid>
+          </div>
         </Route>
               {/* change to if else, if user is logged in and  */}
               {/* this is user's profile page, show edit button */}

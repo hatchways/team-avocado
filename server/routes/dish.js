@@ -40,7 +40,7 @@ router.post("/", decodeToken, async (req, res, next) => {
   /**
    *    Return success message
    */
-  res.status(201).send("Dish created successfully");
+  res.status(201).send(dish);
 });
 
 
