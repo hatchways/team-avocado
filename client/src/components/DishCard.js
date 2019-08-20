@@ -74,11 +74,13 @@ const useStyles = makeStyles(theme =>({
 
 }));
 
-export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,required, setDishes, currdishes}) {
+export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ingred,required, setDishes, currdishes}) {
   const classes = useStyles(brandLight);
 
   const {user,setUser} = useContext(AuthContext);
-  console.log("Context user:",user);
+  // console.log("Context user:",user);
+  console.log("What is key",index);
+  console.log("Same id?",dish_id);
   const [values, setValues] = React.useState({
     numPeopleServed: serve,
     name: name,
@@ -98,6 +100,7 @@ export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,req
   
   async function onSubmitAttempt(e) {
     e.preventDefault();
+    console.log("Dish_id correct", dish_id);
     try {
       const newdish = await callAPI({
         endpoint: `dish/${dish_id}/${user.id}`,
@@ -118,7 +121,7 @@ export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,req
   }
 
   async function handleClick(event){
-        
+    event.preventDefault();
     const fileObj = event.target.files[0];
     let formData = new FormData();
     formData.append("image", fileObj);
@@ -132,7 +135,8 @@ export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,req
         });
         console.log("url returned",imgURL);
         console.log("Dishes:",currdishes);
-        const index = currdishes.findIndex(obj => obj.id === dish_id);
+        console.log("My dish_id is:",dish_id);
+        const index = currdishes.findIndex(obj => obj._id === dish_id);
         console.log("What is index",index);
         currdishes[index].dishImg = imgURL;
         setDishes(currdishes)
@@ -205,12 +209,12 @@ export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,req
         <input
             accept="image/*"
             className={classes.input}
-            id="dish-img-file"
+            id={dish_id}
             multiple
             type="file"
             onChange={handleClick}
         />
-        <label htmlFor="dish-img-file">
+        <label htmlFor={dish_id}>
           <Tooltip title="Click to upload new profile" placement="top-start">
 
             <img className={classes.dishpic}  alt="dish" src={dishImg} />
