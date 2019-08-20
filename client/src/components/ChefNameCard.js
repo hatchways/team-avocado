@@ -108,6 +108,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         strlocation: '',
         description:'', 
         avatar:"",
+        background:"",
     }); 
 
     const {user,setUser} = useContext(AuthContext);
@@ -153,41 +154,35 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         const fileObj = event.target.files[0];
         console.log("FileObj",fileObj);
         let formData = new FormData();
+        console.log("target.id",event.target.id);
+
         formData.append("image", fileObj);
-
+        const id = event.target.id;
+        if(id === "profile-img-file" ){
+            var imgAlt = "avatar";
+        }else if(id === "background-img-file" ){
+            var imgAlt = "chef_background";
+        }
         try {
-
-        const endpoint =  `chef/${user_id}/avatars`;
+            console.log("What's wrong",imgAlt);
+          const endpoint = `chef/${user_id}/${imgAlt}`
           const imgURL = await callAPI({
                 endpoint: endpoint,
                 method:"POST",
-                // headers: {
-                //     'Content-Type': 'multipart/form-data'
-                //   },
-                body: formData
+                body: formData,
+                isForm: true,
             });
-          setValues({...values, avatar:imgURL});
+            console.log("url returned",imgURL);
+            console.log("NMSL",imgAlt === "chef_background");
+            if (imgAlt === "chef_background"){
+                setValues({...values, background:imgURL});
+            }else if (imgAlt === "avatar"){
+                setValues({...values, avatar:imgURL});
+            }
         } catch (error) {
           console.log(error);
         }
       };
-    //   function submitFile(event){
-    //     event.preventDefault();
-    //     const formData = new FormData();
-        
-    //     formData.append('file', event.target.files[0]);
-    //     .post(`http://localhost:4000/chef/${user_id}/test-upload`, formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //       }
-    //     }).then(response => {
-    //       // handle your response;
-    //       console.log("res",response);
-    //     }).catch(error => {
-    //       // handle your error
-    //       console.log(error);
-    //     });
-    //   }
 
 
       
@@ -215,7 +210,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                 </label>
             </Route>
             <Route path="/chef/:chef_id">
-                <img className={classes.profileimg} alt="profile" src="/userpic-6.png" />
+                <img className={classes.profileimg} alt="profile" src={values.avatar}/>
             </Route>
         </Switch>
     <Container>
@@ -232,11 +227,12 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                     id="background-img-file"
                     multiple
                     type="file"
+                    onChange={handleClick}
                 />
                 <label htmlFor="background-img-file">
                     <Tooltip title="Click to upload new background" placement="top-start">
 
-                        <img className={classes.cover} alt="background" src="/cover-sushi.png" />
+                        <img className={classes.cover} alt="background" src={values.background} />
                     </Tooltip>
                 </label>
 

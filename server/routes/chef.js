@@ -94,14 +94,14 @@ router.post("/:userId/avatars", fileUploadService, async (req, res) => {
 });
 
 
-router.post("/:userId/background", fileUploadService, async (req, res) => {
+router.post("/:userId/chef_background", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
-
+  console.log("bg url",fileURL);
   // Add URL for uploaded photo to user document
   await Chef.findByIdAndUpdate(req.params.userId, { background: fileURL });
 
   // Respond with 201
-  res.status(201).send("Image uploaded");
+  res.status(201).send(JSON.stringify(fileURL));
 });
 module.exports = router;
 
