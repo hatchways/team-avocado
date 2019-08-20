@@ -93,6 +93,24 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required, se
     setValues({ ...values, [name]: event.target.value });
   };
   
+  const [img,setImg] = useState();
+  async function handleClick(event){
+    // let filelocation = URL.createObjectURL(event.target.files[0])
+    console.log("files",event.target.files[0]);
+    let formData = new FormData();
+    formData.append('image', event.target.files[0]);
+    try {
+      const imgURL = await callAPI({
+        endpoint: `chef/${user.id}/avatars`,
+        method: "POST",
+        body: formData,
+      });
+      setImg(imgURL);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   async function onSubmitAttempt(e) {
     e.preventDefault();
     try {
@@ -182,11 +200,12 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required, se
             id="dish-img-file"
             multiple
             type="file"
+            onChange={handleClick}
         />
         <label htmlFor="dish-img-file">
           <Tooltip title="Click to upload new profile" placement="top-start">
 
-            <img className={classes.dishpic} alt="dish" src="/img-sushi.png" />
+            <img className={classes.dishpic}  alt="dish" src={img} />
           </Tooltip>
         </label>
         </Grid>

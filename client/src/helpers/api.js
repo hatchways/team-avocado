@@ -33,8 +33,8 @@ export async function callAPI({
       Authorization: `Bearer ${token}`
     };
   }
-  console.log(API_URL,endpoint);
-  console.log(headers,body);
+  console.log("What is body",body);
+  console.log(headers);
   const response = await fetch(`${API_URL}/${endpoint}`, {
     method,
     headers: headers,

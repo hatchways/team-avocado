@@ -14,6 +14,7 @@ const upload = multer({
       cb(null, { fieldName: "image" });
     },
     key: function(req, file, cb) {
+      console.log("Come ot Here -----------",file);
       cb(null, Date.now().toString());
     }
   })

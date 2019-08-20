@@ -11,6 +11,9 @@ import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
 import { Link, withRouter } from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
+import { API_URL } from "../constants";
+import axios from "axios";
+
 const Container = styled.div`
 
 
@@ -104,6 +107,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         name: "",
         strlocation: '',
         description:'', 
+        avatar:"",
     }); 
 
     const {user,setUser} = useContext(AuthContext);
@@ -117,7 +121,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
               "Content-Type": "application/json"
             },
             });
-            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description});
+            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description, avatar:chef.avatar});
         },[]);
 
 
@@ -144,8 +148,49 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
           console.log(error);
         }
       }
-    
+      async function handleClick(event){
+        
+        const fileObj = event.target.files[0];
+        console.log("FileObj",fileObj);
+        let formData = new FormData();
+        formData.append("image", fileObj);
 
+        try {
+
+        const endpoint =  `chef/${user_id}/avatars`;
+          const imgURL = await callAPI({
+                endpoint: endpoint,
+                method:"POST",
+                // headers: {
+                //     'Content-Type': 'multipart/form-data'
+                //   },
+                body: formData
+            });
+          setValues({...values, avatar:imgURL});
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    //   function submitFile(event){
+    //     event.preventDefault();
+    //     const formData = new FormData();
+        
+    //     formData.append('file', event.target.files[0]);
+    //     .post(`http://localhost:4000/chef/${user_id}/test-upload`, formData, {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data'
+    //       }
+    //     }).then(response => {
+    //       // handle your response;
+    //       console.log("res",response);
+    //     }).catch(error => {
+    //       // handle your error
+    //       console.log(error);
+    //     });
+    //   }
+
+
+      
     return (
     
 
@@ -153,17 +198,19 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         <Switch>
     
             <Route path="/chef/:chef_id/edit">
+            <form enctype="multipart/form-data">
             <input
                     accept="image/*"
                     className={classes.input}
                     id="profile-img-file"
-                    multiple
                     type="file"
+                    onChange={handleClick}
                 />
-                <label htmlFor="background-img-file">
+                </form>
+                <label htmlFor="profile-img-file">
                     <Tooltip title="Click to upload new profile" placement="top-start">
 
-                        <img className ={classes.profile} alt="profile" src="/userpic-6.png" />
+                        <img className ={classes.profile} alt="profile" src={values.avatar} />
                     </Tooltip>
                 </label>
             </Route>
