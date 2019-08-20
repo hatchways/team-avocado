@@ -5,6 +5,7 @@ const _ = require("lodash");
 const Joi = require("joi");
 const createError = require("http-errors");
 const { decodeToken, userIsAuthorized } = require("../middleware/auth");
+const fileUploadService = require("../services/fileUploader");
 
 /**
  * GET all dishes
@@ -56,8 +57,6 @@ router.put(
       params: { dishId,userId },
       body
     } = req;
-    console.log("---------------");
-    console.log("Body in route:",body);
     const { error } = validateDish(body);
     if (error) return next(createError(400, error.details[0].message));
     /**
@@ -77,6 +76,15 @@ router.put(
   }
 );
 
+router.post("/:dishId/dishImg", fileUploadService, async (req, res) => {
+  const fileURL = req.file.location;
+  console.log("bg url",fileURL);
+  // Add URL for uploaded photo to user document
+  await Dish.findByIdAndUpdate(req.params.dishId, { dishImg: fileURL });
+
+  // Respond with 201
+  res.status(201).send(JSON.stringify(fileURL));
+});
 
 const dishSchema = Joi.compile({
   name: Joi.string().required(),

@@ -23,7 +23,7 @@ export async function callAPI({
   endpoint,
   token,
   body = null,
-  isForm,
+  isForm = false,
   headers = {}
 }) {
   // If token has been passed, create appropriate

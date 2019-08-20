@@ -90,7 +90,7 @@ router.post("/:userId/avatars", fileUploadService, async (req, res) => {
   await Chef.findByIdAndUpdate(req.params.userId, { avatar: fileURL });
 
   // Respond with 201
-  res.status(201).send(fileURL);
+  res.status(201).send(JSON.stringify(fileURL));
 });
 
 
@@ -103,6 +103,9 @@ router.post("/:userId/chef_background", fileUploadService, async (req, res) => {
   // Respond with 201
   res.status(201).send(JSON.stringify(fileURL));
 });
+
+
+
 module.exports = router;
 
 function validateChefProfileUpdate(update) {

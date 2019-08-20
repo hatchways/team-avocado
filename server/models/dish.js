@@ -58,7 +58,9 @@ const DishSchema = mongoose.Schema({
   requirements: {
     type: [String],
     requried: true
-  }
+  },
+
+  dishImg: String
 });
 
 /**

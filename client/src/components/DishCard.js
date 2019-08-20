@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme =>({
 
 }));
 
-export default function SimpleCard({dish_id,name,serve,price,ingred,required, setDishes, currdishes}) {
+export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,required, setDishes, currdishes}) {
   const classes = useStyles(brandLight);
 
   const {user,setUser} = useContext(AuthContext);
@@ -87,29 +87,14 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required, se
     requirements: required,
     cuisine: "Japanese",
     chef: user.id,
+    dishImg: dishImg
   }); 
   
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
   
-  const [img,setImg] = useState();
-  async function handleClick(event){
-    // let filelocation = URL.createObjectURL(event.target.files[0])
-    console.log("files",event.target.files[0]);
-    let formData = new FormData();
-    formData.append('image', event.target.files[0]);
-    try {
-      const imgURL = await callAPI({
-        endpoint: `chef/${user.id}/avatars`,
-        method: "POST",
-        body: formData,
-      });
-      setImg(imgURL);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   
   async function onSubmitAttempt(e) {
     e.preventDefault();
@@ -132,6 +117,29 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required, se
     }
   }
 
+  async function handleClick(event){
+        
+    const fileObj = event.target.files[0];
+    let formData = new FormData();
+    formData.append("image", fileObj);
+    try {
+      const endpoint = `dish/${dish_id}/dishImg`
+      const imgURL = await callAPI({
+            endpoint: endpoint,
+            method:"POST",
+            body: formData,
+            isForm: true,
+        });
+        console.log("url returned",imgURL);
+        console.log("Dishes:",currdishes);
+        const index = currdishes.findIndex(obj => obj.id === dish_id);
+        console.log("What is index",index);
+        currdishes[index].dishImg = imgURL;
+        setDishes(currdishes)
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Card className={classes.card}>
       <Switch>
@@ -205,7 +213,7 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required, se
         <label htmlFor="dish-img-file">
           <Tooltip title="Click to upload new profile" placement="top-start">
 
-            <img className={classes.dishpic}  alt="dish" src={img} />
+            <img className={classes.dishpic}  alt="dish" src={dishImg} />
           </Tooltip>
         </label>
         </Grid>
@@ -233,7 +241,7 @@ export default function SimpleCard({dish_id,name,serve,price,ingred,required, se
           </Grid>
 
           <Grid className={classes.image}>
-              <img className="dishpic" alt="dish" src="/img-sushi.png" />
+              <img className="dishpic" alt="dish" src={dishImg}/>
           </Grid>
           </div>
         </Route>

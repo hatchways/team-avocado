@@ -122,7 +122,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
               "Content-Type": "application/json"
             },
             });
-            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description, avatar:chef.avatar});
+            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description, avatar:chef.avatar, background:chef.background});
         },[]);
 
 
@@ -304,7 +304,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
 
             </Route>
             <Route path="/chef/:chef_id">
-                <img id="cover" alt="background" src="/cover-sushi.png" />
+                <img id="cover" alt="background" src={values.background} />
                 <div>
                     <p className={classes.name}>{values.name}</p>
                     <p className={classes.location}> {values.strlocation}</p>
