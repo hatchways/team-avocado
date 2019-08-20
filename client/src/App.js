@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import { Elements, StripeProvider } from "react-stripe-elements";
 
+
 import CheckoutPage from "./pages/CheckoutPage";
 import ContextProvider from "./store/Provider";
 import AuthPage from "./pages/AuthPage";

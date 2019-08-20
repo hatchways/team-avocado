@@ -72,7 +72,6 @@ describe("POST to /signup with duplicate email.", () => {
       .send(testChef)
       .end(async (err, res) => {
         res.should.have.status(422);
-
         // Delete testChef document
         await Chef.findByIdAndRemove(chefId);
         done();
@@ -88,11 +87,8 @@ describe("GET to /chef with no query parameters.", () => {
       .send()
       .end(async (err, res) => {
         const allChefs = await Chef.find();
-
         console.log(allChefs);
-
         res.body.length.should.equal(allChefs.length);
-
         done();
       });
   });

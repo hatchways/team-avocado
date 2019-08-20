@@ -1,5 +1,7 @@
+
 import React, { useState, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
+
 import Snackbar from "./Snackbar";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
@@ -72,6 +74,7 @@ function LogInForm(props) {
         onChange={onChange}
         name="password"
       />
+
       <div>
         <Link
           to="/password-recovery"
