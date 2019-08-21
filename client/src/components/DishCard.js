@@ -8,7 +8,13 @@ import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
 import { colors } from "../themes/theme";
 import Tooltip from '@material-ui/core/Tooltip';
-const { brand, brandLight } = colors;
+import { callAPI } from "../helpers/api";
+import { useContext } from "react";
+import AuthContext from "../store/createContext";
+
+
+
+const { brandLight } = colors;
 const SaveButton = styled(Button)`
   min-width: 100px;
 `;
@@ -16,21 +22,23 @@ const useStyles = makeStyles(theme =>({
   card: {
     minWidth: "70%",
     minHeight:"43%",
-    display:'flex',
-    justifyContent:"space-between",
-    margin:10,
+    margin:5,
   },
 
   image:{
     padding:40,
   },
 
+  form:{
+    width:"100%",
+    display: 'flex',
+    flexDirection:"row",
+    justifyContent:"space-between",
+  },
   info:{
     display: 'flex',
     flexDirection:"column",
-    paddingLeft:40,
-    paddingTop:40,
-    paddingBottom:40,
+    padding:40,
   },
 
   pplnum:{
@@ -60,44 +68,90 @@ const useStyles = makeStyles(theme =>({
     fontWeight:"bold",
   },
   grey:{
-    color:"grey",
+    color:"grey"
   }
 
 
 }));
 
-export default function SimpleCard() {
+export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,required,  storeUpdatedDish,storeDishImg}) {
+
   const classes = useStyles(brandLight);
 
-
-
+  const {user,setUser} = useContext(AuthContext);
+  // console.log("Context user:",user);
   const [values, setValues] = React.useState({
-    serve: 'MEAL FOR 2',
-    name: '4 Specialty Roll',
-    price:'$15.00',
-    ingred:'Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.',
-    required:"Kitchen Table, Cooking plate",
+    numPeopleServed: serve,
+    name: name,
+    price: price,
+    ingredients: ingred,
+    requirements: required,
+    cuisine: "Japanese",
+    chef: user.id,
+    dishImg: dishImg
   }); 
   
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
+  
 
+  
+  async function onSubmitAttempt(e) {
+    e.preventDefault();
+    try {
+      const newdish = await callAPI({
+        endpoint: `dish/${dish_id}/${user.id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: values,
+        token: user.token,
+      });
 
+      storeUpdatedDish(newdish);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleClick(event){
+    event.preventDefault();
+    const fileObj = event.target.files[0];
+    let formData = new FormData();
+    formData.append("image", fileObj);
+    try {
+      const endpoint = `dish/${dish_id}/dishImg`
+      const imgURL = await callAPI({
+            endpoint: endpoint,
+            method:"POST",
+            body: formData,
+            isForm: true,
+        });
+        setValues({...values, dishImg:imgURL});
+        storeDishImg(imgURL, dish_id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Card className={classes.card}>
       <Switch>
 
-      <Route path="/chef/edit/:chef_id">
+      <Route path="/chef/:chef_id/edit">
+      <form  className={classes.form} onSubmit={onSubmitAttempt} >
+
         <Grid className={classes.info}>
-        
+
           <TextField
               label="How many people to serve."
               className="{classes.textField}"
-              value={values.serve}
-              onChange={handleChange('serve')}
+              value={values.numPeopleServed}
+              onChange={handleChange('numPeopleServed')}
               margin="dense"
               variant="outlined"
+              type="number"
           />
           <TextField
               label="name"
@@ -114,14 +168,15 @@ export default function SimpleCard() {
               onChange={handleChange('price')}
               margin="dense"
               variant="outlined"
+              type="number"
           />
           <TextField
               label="Ingredients"
               multiline
               rowsMax="4"
               className="{classes.textField}"
-              value={values.ingred}
-              onChange={handleChange('ingred')}
+              value={values.ingredients}
+              onChange={handleChange('ingredients')}
               margin="dense"
               variant="outlined"
           />
@@ -129,13 +184,14 @@ export default function SimpleCard() {
           <TextField
               label="Required Stuff"
               className="{classes.textField}"
-              value={values.required}
+              value={values.requirements}
               multiline
               rowsMax="4"
-              onChange={handleChange('required')}
+              onChange={handleChange('requirements')}
               margin="dense"
               variant="outlined"
           />
+          
         </Grid>
 
         <Grid className={classes.image}>
@@ -144,41 +200,45 @@ export default function SimpleCard() {
         <input
             accept="image/*"
             className={classes.input}
-            id="dish-img-file"
+            id={dish_id}
             multiple
             type="file"
+            onChange={handleClick}
         />
-        <label htmlFor="dish-img-file">
+        <label htmlFor={dish_id}>
           <Tooltip title="Click to upload new profile" placement="top-start">
 
-            <img className={classes.dishpic} alt="dish" src="/img-sushi.png" />
+            <img className={classes.dishpic}  alt="dish" src={values.dishImg} />
           </Tooltip>
         </label>
         </Grid>
-        <SaveButton type="submit" >
-          Save Item
-        </SaveButton>
-          
+        
+          <SaveButton type="submit" >
+            Save Item
+          </SaveButton>
+        </form>
         </Route>
 
         <Route path="/chef/:chef_id">
+        <div className={classes.form}>
           <Grid className={classes.info}>
 
               <div>
-                <span className={classes.pplnum}> MEAL FOR 2</span>
+                <span className={classes.pplnum}> MEAL FOR {serve}</span>
               </div>
-              <p className={classes.name}> 4 specialty rolls </p>
-              <span className={classes.price}> $15.00 </span>
+              <p className={classes.name}> {name} </p>
+              <span className={classes.price}> ${price} </span>
               <span className={classes.bigbold}>INGREDIENTS</span>
-              <p className={classes.grey}>Rice, nori, avacado, crab, cucumber, wasabi, rice vinegar, soy sauce, salt, sugar.</p>
+              <p className={classes.grey}>{ingred.join(", ")}</p>
               <span className={classes.bigbold}>REQUIRED STUFF</span>
-              <p className={classes.grey}>Kitchen Table, Cooking plate</p>
+              <p className={classes.grey}>{required.join(", ")}</p>
               
           </Grid>
 
           <Grid className={classes.image}>
-              <img className="dishpic" alt="dish" src="/img-sushi.png" />
+              <img className="dishpic" alt="dish" src={values.dishImg}/>
           </Grid>
+          </div>
         </Route>
               {/* change to if else, if user is logged in and  */}
               {/* this is user's profile page, show edit button */}

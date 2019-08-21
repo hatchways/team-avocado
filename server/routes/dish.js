@@ -1,10 +1,11 @@
-const { Chef, Dish } = require("../models/index");
+const { Dish } = require("../models/index");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 const Joi = require("joi");
 const createError = require("http-errors");
-const { decodeToken } = require("../middleware/auth");
+const { decodeToken, userIsAuthorized } = require("../middleware/auth");
+const fileUploadService = require("../services/fileUploader");
 
 /**
  * GET all dishes
@@ -27,8 +28,8 @@ router.get("/", async (req, res, next) => {
  */
 router.post("/", decodeToken, async (req, res, next) => {
   const { body, decoded } = req;
-
   const { error } = validateDish(body);
+  console.log(body);
   if (error) return next(createError(400, error.details[0].message));
 
   /**
@@ -40,17 +41,70 @@ router.post("/", decodeToken, async (req, res, next) => {
   /**
    *    Return success message
    */
-  res.status(201).send("Dish created successfully");
+  res.status(201).send(dish);
+});
+
+
+/**
+ *  Set a dish's fields
+ */
+router.put(
+  "/:dishId/:userId",
+  decodeToken,
+  userIsAuthorized,
+  async (req, res, next) => {
+    const {
+      params: { dishId,userId },
+      body
+    } = req;
+    const { error } = validateDish(body);
+    if (error) return next(createError(400, error.details[0].message));
+    /**
+     *  Attempt to apply updates
+     */
+    const dish = await Dish.findByIdAndUpdate(dishId, body, {
+      useFindAndModify: false,
+      new:true
+    });
+    console.log("Dish in route:",dish);
+    if (!dish) {
+      return next(
+        createError(400, `Dish with id ${userId} could not be found.`)
+      );
+    }
+    res.status(200).send(dish);
+  }
+);
+
+router.post("/:dishId/dishImg", fileUploadService, async (req, res) => {
+  const fileURL = req.file.location;
+  console.log("bg url",fileURL);
+  // Add URL for uploaded photo to user document
+  await Dish.findByIdAndUpdate(req.params.dishId, { dishImg: fileURL });
+
+  // Respond with 201
+  res.status(201).send(JSON.stringify(fileURL));
+});
+
+router.post("/dishImg", fileUploadService, async (req, res) => {
+  const fileURL = req.file.location;
+  console.log("bg url",fileURL);
+  // Add URL for uploaded photo to user document
+  await Dish.findByIdAndUpdate(req.params.dishId, { dishImg: fileURL });
+
+  // Respond with 201
+  res.status(201).send(JSON.stringify(fileURL));
 });
 
 const dishSchema = Joi.compile({
   name: Joi.string().required(),
-  numPeopleServed: Joi.number().required(),
-  price: Joi.number().required(),
-  cuisine: Joi.string().required(),
-  ingredients: Joi.array()
-    .items(Joi.string())
-    .required()
+  numPeopleServed: Joi.required(),
+  price: Joi.required(),
+  cuisine: Joi.string(),
+  chef:Joi.required(),
+  ingredients: Joi.required(),
+  requirements: Joi.required(),
+  dishImg: Joi.string(),
 });
 function validateDish(dish) {
   return Joi.validate(dish, dishSchema);

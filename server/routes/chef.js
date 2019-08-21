@@ -32,7 +32,6 @@ router.get("/:userId", async (req, res, next) => {
   const {
     params: { userId }
   } = req;
-
   /**
    *    Attempt to retrieve Chef identified by :userId
    */
@@ -66,32 +65,46 @@ router.put(
     if (!validateChefProfileUpdate(body)) {
       return next(createError(400, "Invalid profile update."));
     }
-
     /**
      *  Attempt to apply updates
      */
     const chef = await Chef.findByIdAndUpdate(userId, body, {
-      useFindAndModify: false
+      useFindAndModify: false,
+      new:true
     });
     if (!chef) {
       return next(
         createError(400, `Chef with id ${userId} could not be found.`)
       );
     }
+    const token = req.headers.authorization.split(" ")[1];
 
-    res.status(200).send("Update successful");
+    res.status(200).send({token, usertype:"chef", name: chef.name, id: chef._id});
   }
 );
 
-router.post("/:userId/avatars", fileUploadService, async (req, res) => {
+router.post("/:userId/avatar", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
 
   // Add URL for uploaded photo to user document
   await Chef.findByIdAndUpdate(req.params.userId, { avatar: fileURL });
 
   // Respond with 201
-  res.status(201).send("Image uploaded");
+  res.status(201).send(JSON.stringify(fileURL));
 });
+
+
+router.post("/:userId/chef_background", fileUploadService, async (req, res) => {
+  const fileURL = req.file.location;
+  console.log("bg url",fileURL);
+  // Add URL for uploaded photo to user document
+  await Chef.findByIdAndUpdate(req.params.userId, { background: fileURL });
+
+  // Respond with 201
+  res.status(201).send(JSON.stringify(fileURL));
+});
+
+
 
 module.exports = router;
 

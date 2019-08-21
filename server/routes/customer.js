@@ -60,7 +60,8 @@ router.put(
      *  Attempt to apply updates
      */
     const customer = await Customer.findByIdAndUpdate(userId, body, {
-      useFindAndModify: false
+      useFindAndModify: false,
+      new:true
     });
     if (!customer) {
       return next(
@@ -68,7 +69,7 @@ router.put(
       );
     }
 
-    res.status(200).send("Update successful");
+    res.status(200).send(customer);
   }
 );
 
