@@ -21,8 +21,7 @@ function LogInForm(props) {
   const { email, password } = formValues,
     { error, isSubmittable, showingMessage } = formState;
 
-
-  const {user, setUser } = useContext(Context);
+  const { setUser } = useContext(Context);
 
   function displayErrorMessage(error) {
     setFormState({ ...formState, error, showingMessage: true });

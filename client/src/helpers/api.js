@@ -34,6 +34,7 @@ export async function callAPI({
       Authorization: `Bearer ${token}`
     };
   }
+
   const response = await fetch(`${API_URL}/${endpoint}`, {
     method,
     headers: headers,
