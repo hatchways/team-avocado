@@ -28,3 +28,4 @@ module.exports.User = User;
 module.exports.Chef = require("./chef");
 module.exports.Customer = require("./customer");
 module.exports.Dish = require("./dish");
+module.exports.Order = require("./order");
