@@ -86,6 +86,16 @@ router.post("/:dishId/dishImg", fileUploadService, async (req, res) => {
   res.status(201).send(JSON.stringify(fileURL));
 });
 
+router.post("/dishImg", fileUploadService, async (req, res) => {
+  const fileURL = req.file.location;
+  console.log("bg url",fileURL);
+  // Add URL for uploaded photo to user document
+  await Dish.findByIdAndUpdate(req.params.dishId, { dishImg: fileURL });
+
+  // Respond with 201
+  res.status(201).send(JSON.stringify(fileURL));
+});
+
 const dishSchema = Joi.compile({
   name: Joi.string().required(),
   numPeopleServed: Joi.required(),
@@ -94,6 +104,7 @@ const dishSchema = Joi.compile({
   chef:Joi.required(),
   ingredients: Joi.required(),
   requirements: Joi.required(),
+  dishImg: Joi.string(),
 });
 function validateDish(dish) {
   return Joi.validate(dish, dishSchema);

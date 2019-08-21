@@ -133,16 +133,10 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
             body: formData,
             isForm: true,
         });
-        console.log("url returned",imgURL);
-        console.log("Dishes:",currdishes);
-        console.log("My dish_id is:",dish_id);
         const index = currdishes.findIndex(obj => obj._id === dish_id);
-        console.log("What is index",index);
         currdishes[index].dishImg = imgURL;
         setValues({...values, dishImg:imgURL});
-        console.log("Values:",values);
         setDishes(currdishes)
-        console.log(currdishes);
 
     } catch (error) {
       console.log(error);

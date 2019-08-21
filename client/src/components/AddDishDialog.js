@@ -13,7 +13,7 @@ import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
 
 
-export default function AdddishDialog({ setDishes, dishes }) {
+export default function AdddishDialog({ setDishes, dishes, dish_id,  }) {
     const [open, setOpen] = React.useState(false);
     const AddDishBtn = styled(Button)`
         display:block;
@@ -41,6 +41,7 @@ export default function AdddishDialog({ setDishes, dishes }) {
         requirements: "",
         cuisine:"Japanese",
         chef: user.id,
+        dishImg: ""
       }); 
       const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value });
@@ -58,15 +59,35 @@ export default function AdddishDialog({ setDishes, dishes }) {
             body: values,
             token: user.token,
           });
-          console.log("New dish from put",newdish);
-          setDishes([...dishes,newdish]
-          );
-          console.log("Here are the new dishes",dishes);
+          console.log("New dish from put",dishes);
+          setDishes([...dishes,newdish]);
+          // console.log("Here are the new dishes",dishes);
           setOpen(false);
         } catch (error) {
           console.log("THERE IS A ERRRO",error);
         }
         
+      }
+
+      async function handleClick(event){
+        event.preventDefault();
+        const fileObj = event.target.files[0];
+        let formData = new FormData();
+        formData.append("image", fileObj);
+        try {
+          const endpoint = `dish/dishImg`
+          const imgURL = await callAPI({
+                endpoint: endpoint,
+                method:"POST",
+                body: formData,
+                isForm: true,
+                tokan: user.token,
+            });
+            console.log(imgURL);
+            setValues({...values, dishImg:imgURL});    
+        } catch (error) {
+          console.log(error);
+        }
       }
     return (
 
@@ -83,6 +104,7 @@ export default function AdddishDialog({ setDishes, dishes }) {
             id="dish-img-file"
             multiple
             type="file"
+            onChange={handleClick}
           />
 
           <TextField
