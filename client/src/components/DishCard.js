@@ -139,7 +139,11 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
         const index = currdishes.findIndex(obj => obj._id === dish_id);
         console.log("What is index",index);
         currdishes[index].dishImg = imgURL;
+        setValues({...values, dishImg:imgURL});
+        console.log("Values:",values);
         setDishes(currdishes)
+        console.log(currdishes);
+
     } catch (error) {
       console.log(error);
     }
@@ -217,7 +221,7 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
         <label htmlFor={dish_id}>
           <Tooltip title="Click to upload new profile" placement="top-start">
 
-            <img className={classes.dishpic}  alt="dish" src={dishImg} />
+            <img className={classes.dishpic}  alt="dish" src={values.dishImg} />
           </Tooltip>
         </label>
         </Grid>
@@ -245,7 +249,7 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
           </Grid>
 
           <Grid className={classes.image}>
-              <img className="dishpic" alt="dish" src={dishImg}/>
+              <img className="dishpic" alt="dish" src={values.dishImg}/>
           </Grid>
           </div>
         </Route>
