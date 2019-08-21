@@ -1,18 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "./Button";
-import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import PickTagDialog from './PickTagDialog'
 import { callAPI } from "../helpers/api";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
-import { Link, withRouter } from "react-router-dom";
+import { Link} from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
-import { API_URL } from "../constants";
-import axios from "axios";
 
 const Container = styled.div`
 
@@ -114,7 +112,8 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
     const {user,setUser} = useContext(AuthContext);
     const endpoint = `chef/${user_id}`;
     
-    useEffect(async () => {
+    useEffect(() => {
+        async function getChef(){
         const chef= await callAPI({
             endpoint: endpoint,
             method: "GET",
@@ -123,7 +122,10 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
             },
             });
             setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description, avatar:chef.avatar, background:chef.background});
-        },[]);
+        }
+        getChef();
+    }
+        ,[]);
 
 
     
@@ -193,7 +195,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         <Switch>
     
             <Route path="/chef/:chef_id/edit">
-            <form enctype="multipart/form-data">
+            <form encType="multipart/form-data">
             <input
                     accept="image/*"
                     className={classes.input}

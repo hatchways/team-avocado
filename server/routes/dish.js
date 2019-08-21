@@ -1,4 +1,4 @@
-const { Chef, Dish } = require("../models/index");
+const { Dish } = require("../models/index");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");

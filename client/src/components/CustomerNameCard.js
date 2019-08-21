@@ -9,7 +9,7 @@ import CuisineList from "./CuisineList";
 import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
-const { brand, brandLight } = colors;
+const { brandLight } = colors;
 
 
 const RequestButton = styled(Button)`
@@ -114,9 +114,10 @@ export default function Namecard({user_id}) {
         favorite:[],
     }); 
     const endpoint = `customer/${user_id}`;
-    const {user,setUser} = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
 
-    useEffect(async () => {
+    useEffect(() => {
+        async function getCustomer(){
         const customer= await callAPI({
             endpoint: endpoint,
             method: "GET",
@@ -126,7 +127,9 @@ export default function Namecard({user_id}) {
             token:user.token,
             });
             setValues({name:customer.name, strlocation:customer.strlocation, description:customer.description, favorite:customer.favorite});
-        },[]);
+        }
+        getCustomer()
+    },[]);
 
     return (
     <div className={classes.cardContainer}>

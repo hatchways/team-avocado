@@ -22,7 +22,7 @@ function LogInForm(props) {
     { error, isSubmittable, showingMessage } = formState;
 
 
-  const {chef, setUser } = useContext(Context);
+  const {user, setUser } = useContext(Context);
 
   function displayErrorMessage(error) {
     setFormState({ ...formState, error, showingMessage: true });

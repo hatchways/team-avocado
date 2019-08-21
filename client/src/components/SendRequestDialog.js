@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "./Button";
 import styled from "styled-components";
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
 import Chip from '@material-ui/core/Chip';
@@ -32,7 +32,7 @@ import {
       margin: theme.spacing(0.5),
     },
   }));
-export default function AdddishDialog({  }) {
+export default function SendRequestDialog() {
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
@@ -55,7 +55,7 @@ export default function AdddishDialog({  }) {
       function handleDateChange(date) {
         setSelectedDate(date);
       }
-      const {user,setUser} = useContext(AuthContext);
+      const {user} = useContext(AuthContext);
       console.log("Context user:",user);
 
       const [values, setValues] = React.useState({

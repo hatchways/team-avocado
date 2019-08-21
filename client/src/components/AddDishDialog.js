@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,12 +7,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "./Button";
 import styled from "styled-components";
-import { useState, useEffect, useContext } from "react";
+import {  useContext } from "react";
 import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
 
 
-export default function AdddishDialog({ setDishes, dishes, dish_id,  }) {
+export default function AdddishDialog({ storeNewDish  }) {
     const [open, setOpen] = React.useState(false);
     const AddDishBtn = styled(Button)`
         display:block;
@@ -30,7 +29,7 @@ export default function AdddishDialog({ setDishes, dishes, dish_id,  }) {
   
   
 
-      const {user,setUser} = useContext(AuthContext);
+      const {user} = useContext(AuthContext);
       console.log("Context user:",user);
 
       const [values, setValues] = React.useState({
@@ -59,8 +58,7 @@ export default function AdddishDialog({ setDishes, dishes, dish_id,  }) {
             body: values,
             token: user.token,
           });
-          console.log("New dish from put",dishes);
-          setDishes([...dishes,newdish]);
+          storeNewDish(newdish);
           // console.log("Here are the new dishes",dishes);
           setOpen(false);
         } catch (error) {

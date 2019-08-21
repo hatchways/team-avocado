@@ -9,12 +9,12 @@ import TextField from '@material-ui/core/TextField';
 import { colors } from "../themes/theme";
 import Tooltip from '@material-ui/core/Tooltip';
 import { callAPI } from "../helpers/api";
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import AuthContext from "../store/createContext";
 
 
 
-const { brand, brandLight } = colors;
+const { brandLight } = colors;
 const SaveButton = styled(Button)`
   min-width: 100px;
 `;
@@ -74,13 +74,12 @@ const useStyles = makeStyles(theme =>({
 
 }));
 
-export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ingred,required, setDishes, currdishes}) {
+export default function SimpleCard({dishImg ,dish_id,name,serve,price,ingred,required,  storeUpdatedDish,storeDishImg}) {
+
   const classes = useStyles(brandLight);
 
   const {user,setUser} = useContext(AuthContext);
   // console.log("Context user:",user);
-  console.log("What is key",index);
-  console.log("Same id?",dish_id);
   const [values, setValues] = React.useState({
     numPeopleServed: serve,
     name: name,
@@ -100,7 +99,6 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
   
   async function onSubmitAttempt(e) {
     e.preventDefault();
-    console.log("Dish_id correct", dish_id);
     try {
       const newdish = await callAPI({
         endpoint: `dish/${dish_id}/${user.id}`,
@@ -111,10 +109,8 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
         body: values,
         token: user.token,
       });
-      const index = currdishes.findIndex(obj => obj.id === dish_id);
-      currdishes[index] = newdish;
-      setDishes(currdishes)
-      console.log("New dish from put",currdishes);
+
+      storeUpdatedDish(newdish);
     } catch (error) {
       console.log(error);
     }
@@ -133,11 +129,8 @@ export default function SimpleCard({index, dishImg ,dish_id,name,serve,price,ing
             body: formData,
             isForm: true,
         });
-        const index = currdishes.findIndex(obj => obj._id === dish_id);
-        currdishes[index].dishImg = imgURL;
         setValues({...values, dishImg:imgURL});
-        setDishes(currdishes)
-
+        storeDishImg(imgURL, dish_id);
     } catch (error) {
       console.log(error);
     }

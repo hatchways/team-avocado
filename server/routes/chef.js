@@ -83,7 +83,7 @@ router.put(
   }
 );
 
-router.post("/:userId/avatars", fileUploadService, async (req, res) => {
+router.post("/:userId/avatar", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
 
   // Add URL for uploaded photo to user document

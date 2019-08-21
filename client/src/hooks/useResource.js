@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect} from "react";
 import { callAPI } from "../helpers/api";
 
 export default function useResource(endpoint) {
