@@ -8,6 +8,7 @@ import Button from "./Button";
 import TextField from "./TextField";
 import PasswordInput from "./PasswordInput";
 import { callAPI } from "../helpers/api";
+import { Link, withRouter } from "react-router-dom";
 
 // Each function is passed the object containing all field values in case of field interdependencies
 // Validators return an object containing updates for the error messages object.
@@ -51,7 +52,7 @@ function validateField(fieldName, fieldValues) {
   return validators[fieldName](fieldValues);
 }
 
-export default function SignUpForm({ onSubmit: submitForm, userType }) {
+function SignUpForm({ onSubmit: submitForm, userType, history}) {
   let [fieldValues, setFieldValues] = useState({
       name: "",
       email: "",
@@ -123,12 +124,16 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         });
 
         setUser(user);
+        console.log(userType);
+        console.log(user);
+        history.push(`/${userType}/${user.id}/edit`);
       } catch (error) {
         displayErrorMessage(error);
       }
     }
   }
-
+  const otherUser = userType==="chef" ? "customer":"chef"; 
+  const endpoint = `/signup/${otherUser}`;
   return (
     <form onSubmit={onSubmitAttempt}>
       <TextField
@@ -169,6 +174,12 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
         helperText={errorMessages.confirmPassword}
         error={!!errorMessages.confirmPassword}
       />
+      <div  style={{
+            color: "inherit",
+            fontSize: "0.75rem"
+          }}>
+      <Link to={endpoint}> Register as a {otherUser} </Link>
+      </div>
       <Button type="submit" style={{ marginTop: layout.spacing(4) }}>
         Sign Up
       </Button>
@@ -183,3 +194,5 @@ export default function SignUpForm({ onSubmit: submitForm, userType }) {
     </form>
   );
 }
+
+export default withRouter(SignUpForm);

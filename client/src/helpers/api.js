@@ -23,6 +23,7 @@ export async function callAPI({
   endpoint,
   token,
   body = null,
+  isForm = false,
   headers = {}
 }) {
   // If token has been passed, create appropriate
@@ -33,13 +34,11 @@ export async function callAPI({
       Authorization: `Bearer ${token}`
     };
   }
-
   const response = await fetch(`${API_URL}/${endpoint}`, {
     method,
     headers: headers,
-    body: body && JSON.stringify(body)
+    body: body && (!isForm ?JSON.stringify(body):body)
   });
-
   if (response.status >= 400) {
     console.log("response was >= 400");
     let { message } = await response.json();

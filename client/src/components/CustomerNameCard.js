@@ -6,7 +6,10 @@ import Card from '@material-ui/core/Card';
 import GoogleMap from "./GoogleMap";
 import { colors } from "../themes/theme";
 import CuisineList from "./CuisineList";
-const { brand, brandLight } = colors;
+import { callAPI } from "../helpers/api";
+import { useState, useEffect, useContext } from "react";
+import AuthContext from "../store/createContext";
+const { brandLight } = colors;
 
 
 const RequestButton = styled(Button)`
@@ -101,16 +104,33 @@ const useStyles = makeStyles({
 
 });
 //TODO: pass in props and get data from props
-export default function Namecard({}) {
+export default function Namecard({user_id}) {
 
     const classes = useStyles();
+    const [values, setValues] = useState({
+        name: "",
+        strlocation: '',
+        description:'', 
+        favorite:[],
+    }); 
+    const endpoint = `customer/${user_id}`;
+    const {user} = useContext(AuthContext);
 
-    const customer = {
-        name: 'Christine Wilson',
-        location: 'Toronto, Canada',
-        aboutme:'Hi everyone! I am a foodie and I love to eat healthy and tasty meals. Also I am a mom of two beautiful babies.',
-        favorite:["Japanese", "Chinese", "Mediterrane", "Thai"]
-    }
+    useEffect(() => {
+        async function getCustomer(){
+        const customer= await callAPI({
+            endpoint: endpoint,
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            token:user.token,
+            });
+            setValues({name:customer.name, strlocation:customer.strlocation, description:customer.description, favorite:customer.favorite});
+        }
+        getCustomer()
+    },[]);
+
     return (
     <div className={classes.cardContainer}>
         <Card className={classes.card}>
@@ -118,8 +138,8 @@ export default function Namecard({}) {
                 <div className={classes.leftpane}>
                     <div className={classes.wrap}>
                         <img className={classes.profile} alt="profile" src="/userpic-6.png" />
-                        <span className={classes.name}> {customer.name} </span>
-                        <p className={classes.grey}> {customer.location} </p>
+                        <span className={classes.name}> {values.name} </span>
+                        <p className={classes.grey}> {values.strlocation} </p>
                         <RequestButton type="submit" >
                             Send Message
                         </RequestButton>
@@ -128,9 +148,9 @@ export default function Namecard({}) {
                 <div className={classes.rightpane}>
                     <div className={classes.descwrap}>
                         <span className={classes.boldbig}>ABOUT ME:</span>
-                        <p className={classes.grey}>{customer.aboutme}</p>
+                        <p className={classes.grey}>{values.description}</p>
                         <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-                        <CuisineList cuisineList={customer.favorite} />
+                        <CuisineList cuisineList={values.favorite} />
                     </div>
                 </div>
             </div>

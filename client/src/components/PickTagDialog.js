@@ -1,6 +1,5 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,15 +9,9 @@ import Button from "./Button";
 import styled from "styled-components";
 import TransferList from "./TransferList";
 
-const useStyles = makeStyles({
-
-
-});
 
 export default function PickdishDialog(props ) {
-    console.log(props)
     const [open, setOpen] = React.useState(false);
-    const classes = useStyles();
     const PickTagBtn = styled(Button)`
         display:block;
         width:100%;

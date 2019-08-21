@@ -1,5 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { colors } from "../themes/theme";
 import CuisineTag from "./CuisineTag"
 import React from "react";
 

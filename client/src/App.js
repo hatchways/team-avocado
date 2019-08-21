@@ -23,8 +23,9 @@ function App() {
           </Route>
           <Route path="/(signup||login)" component={AuthPage} />
           <Route path="/chef/:chef_id" component={ChefPage} />
-          <Route path="/customer/:customer_id" component={CustomerPage} />
-          <Route path="/browse" />
+          <Route path="/customer/:customer_id" component={CustomerPage}/>
+          <Route path="/browse" component={BrowseChefsPage}/>
+
         </Switch>
       </BrowserRouter>
     </ContextProvider>

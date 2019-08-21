@@ -22,7 +22,7 @@ function LogInForm(props) {
     { error, isSubmittable, showingMessage } = formState;
 
 
-  const { setUser } = useContext(Context);
+  const {user, setUser } = useContext(Context);
 
   function displayErrorMessage(error) {
     setFormState({ ...formState, error, showingMessage: true });
@@ -50,11 +50,10 @@ function LogInForm(props) {
         },
         body: { email, password }
       });
-      console.log(user);
 
       setUser(user);
 
-      props.history.push(`${user.usertype}/${user.id}`);
+      props.history.push(`${user.usertype}/${user.id}/edit`);
     } catch (error) {
       displayErrorMessage(error);
     }
