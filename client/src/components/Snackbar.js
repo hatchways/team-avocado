@@ -11,7 +11,10 @@ export default function Snackbar({ message, onClose }) {
 
   function handleClose() {
     setOpen(false);
-    onClose();
+
+    if (onClose) {
+      onClose();
+    }
   }
 
   return (
