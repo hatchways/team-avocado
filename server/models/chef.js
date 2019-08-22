@@ -16,7 +16,14 @@ const chefSchema = new Schema({
     default: "This Chef has not added a description yet."
   },
   cuisine: String,
-  travelRadius: Number
+  travelRadius: Number,
+  availability:{"Monday":[{type:String}],
+                "Tuesday": [{type:String}],
+                "Wednesday": [{type:String}],
+                "Thursday":[{type:String}],
+                "Friday":[{type:String}],
+                "Saturday":[{type:String}],
+                "Sunday": [{type:String}]}
 });
 
 /**

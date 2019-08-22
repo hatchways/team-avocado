@@ -50,6 +50,27 @@ router.get("/:userId", async (req, res, next) => {
 });
 
 /**
+ * GET a Chef's availability, if its not needed, just delete this route.
+ */
+router.get("/:userId/availability", async (req, res, next) => {
+  const {
+    params: { userId }
+  } = req;
+  /**
+   *    Attempt to retrieve Chef identified by :userId
+   */
+  const chef = await Chef.findById(userId);
+
+  if (!chef) {
+    return next(createError(400, `Chef with id ${userId} could not be found.`));
+  }
+
+
+  res.status(200).send(chef.availability);
+});
+
+
+/**
  *  Set a Chef's profile fields
  */
 router.put(
@@ -82,6 +103,38 @@ router.put(
     res.status(200).send({token, usertype:"chef", name: chef.name, id: chef._id});
   }
 );
+
+/**
+ *  Set a Chef's profile fields
+ */
+router.put(
+  "/:userId/availability",
+  decodeToken,
+  userIsAuthorized,
+  async (req, res, next) => {
+    const {
+      params: { userId },
+      body
+    } = req;
+
+    /**
+     *  Attempt to apply updates
+     */
+    const chef = await Chef.findByIdAndUpdate(userId, body, {
+      useFindAndModify: false,
+      new:true
+    });
+    if (!chef) {
+      return next(
+        createError(400, `Chef with id ${userId} could not be found.`)
+      );
+    }
+    const token = req.headers.authorization.split(" ")[1];
+
+    res.status(200).send({availability:chef.availability,token, usertype:"chef", name: chef.name, id: chef._id});
+  }
+);
+
 
 router.post("/:userId/avatar", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
