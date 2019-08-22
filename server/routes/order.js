@@ -35,6 +35,17 @@ router.post("/:chef_id/:customer_id", async (req, res, next) => {
   res.status(200).send(order);
 });
 
+/**
+ * PUT chef's or customer's orders, and change the order status
+ */
+router.put("/:order_id", async (req, res, next) => {
+
+    const order = await Order.findById(req.params.order_id);
+    order.status = req.body.status;
+    order.save();
+  res.status(200).send(order);
+});
+
 
 const orderSchema = Joi.compile({
   price: Joi.required(),

@@ -2,9 +2,10 @@ const { Schema } = require("mongoose");
 const mongoose = require("mongoose");
 
 const orderSchema = new Schema({
-  active: {
-    type: Boolean,
-    default: true
+  status: {
+    type: String,
+    enum: ["open","closed"],
+    default: "open"
   },
   dishes: [{ type: Schema.Types.ObjectId, ref: "Dish" }],
   price: Number,
