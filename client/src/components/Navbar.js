@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
+import AuthContext from "../store/createContext";
 import { layout, colors } from "../themes/theme";
 const { spacing, navHeight } = layout;
 
@@ -28,6 +29,8 @@ const Container = styled.nav`
 `;
 
 export default function Navbar({ children, transparent }) {
+  const { user, setUser } = useContext(AuthContext);
+
   return (
     <Container transparent={transparent}>
       <img src="/logo.png" alt="logo" />

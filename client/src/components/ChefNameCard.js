@@ -63,7 +63,7 @@ const Container = styled.div`
   }
 
   .button-container {
-    flex-grow: 0.5;
+    height: 150px;
   }
   button {
     height: 100%;
