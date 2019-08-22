@@ -36,11 +36,7 @@ export default function SendRequestDialog() {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
-  const AddDishBtn = styled(Button)`
-    display: block;
-    width: 100%;
-    margin: 10px;
-  `;
+
   function handleClickOpen() {
     setOpen(true);
   }
@@ -94,8 +90,8 @@ export default function SendRequestDialog() {
     }
   }
   return (
-    <div>
-      <AddDishBtn onClick={handleClickOpen}> Send Request</AddDishBtn>
+    <>
+      <Button onClick={handleClickOpen}> Send Request</Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -165,6 +161,6 @@ export default function SendRequestDialog() {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

@@ -4,30 +4,33 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import NameCard from "../components/ChefNameCard";
 import SimpleMenu from "../components/MenuButton";
-import ChefsMenu from "../components/ChefsMenu";
+import ChefDashboard from "../components/Menu/ChefDashboard";
+import ReadOnlyMenu from "../components/Menu/ReadOnlyMenu";
 import { layout } from "../themes/theme";
 import { useContext } from "react";
 import AuthContext from "../store/createContext";
+import useResource from "../hooks/useResource";
 
 const PageContainer = styled.div`
   display: flex;
   align-items: stretch;
-  height: 100vh;
+  max-height: 100vh;
+
+  .pane {
+    height: calc(100vh - ${layout.navHeight});
+    margin-top: ${layout.navHeight};
+  }
 
   .paneLeft {
-    position: relative;
-    top: 12%;
-    width: 24%;
-    height: 88%;
     display: flex;
     flex-direction: column;
+    width: 25%;
+
+    z-index: 10;
   }
 
   .paneRight {
-    position: relative;
-    top: 12%;
-    width: 76%;
-    height: 88%;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -38,11 +41,14 @@ const PageContainer = styled.div`
   }
 `;
 
-function ChefPage(props) {
-  const { user } = useContext(AuthContext);
+function ChefPage({ chefId }) {
+  // Determine whether logged in user owns this
+  // profile page
+  const { user } = useContext(AuthContext),
+    userIsOwner = user && user.id === chefId;
 
-  const chef_id = props.match.params.chef_id,
-    userIsOwner = user.id === chef_id;
+  // Get the ID'd Chef document from API
+  const [chef] = useResource(`chef/${chefId}`);
 
   return (
     <PageContainer className="pageContainer">
@@ -50,12 +56,22 @@ function ChefPage(props) {
         <SimpleMenu />
       </Navbar>
 
-      <div className="paneLeft">
-        <NameCard user_id={chef_id} userIsOwner={userIsOwner} />
-      </div>
-      <div className="paneRight">
-        <ChefsMenu user_id={chef_id} userIsOwner={userIsOwner} />
-      </div>
+      {!chef ? (
+        "Loading..."
+      ) : (
+        <>
+          <div className="pane paneLeft">
+            <NameCard chef={chef} userIsOwner={userIsOwner} />
+          </div>
+          <div className="pane paneRight">
+            {userIsOwner ? (
+              <ChefDashboard chef={chef} />
+            ) : (
+              <ReadOnlyMenu chef={chef} />
+            )}
+          </div>
+        </>
+      )}
     </PageContainer>
   );
 }

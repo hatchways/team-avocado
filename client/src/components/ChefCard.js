@@ -50,7 +50,7 @@ const Container = styled.li`
   }
 `;
 
-const ChefCard = ({ username: name, avatar, city, description, cuisine }) => {
+const ChefCard = ({ name, avatar, strlocation, description, cuisine }) => {
   return (
     <Container>
       <img src={avatar} alt="Chef" />

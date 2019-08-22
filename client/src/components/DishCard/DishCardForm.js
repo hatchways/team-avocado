@@ -3,14 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import { Route, Switch } from "react-router-dom";
-import Button from "./Button";
+import Button from "../Button";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
-import { colors } from "../themes/theme";
+import { colors } from "../../themes/theme";
 import Tooltip from "@material-ui/core/Tooltip";
-import { callAPI } from "../helpers/api";
+import { callAPI } from "../../helpers/api";
 import { useContext } from "react";
-import AuthContext from "../store/createContext";
+import AuthContext from "../../store/createContext";
 
 const { brandLight } = colors;
 const SaveButton = styled(Button)`

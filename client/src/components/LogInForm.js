@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
 
@@ -21,8 +20,7 @@ function LogInForm(props) {
   const { email, password } = formValues,
     { error, isSubmittable, showingMessage } = formState;
 
-
-  const {user, setUser } = useContext(Context);
+  const { user, setUser } = useContext(Context);
 
   function displayErrorMessage(error) {
     setFormState({ ...formState, error, showingMessage: true });
@@ -53,7 +51,7 @@ function LogInForm(props) {
 
       setUser(user);
 
-      props.history.push(`${user.usertype}/${user.id}/edit`);
+      props.history.push(`${user.usertype}/${user.id}`);
     } catch (error) {
       displayErrorMessage(error);
     }
