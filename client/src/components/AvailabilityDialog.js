@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,7 +6,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { useContext } from "react";
 import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
 import { colors } from "../themes/theme";
@@ -104,7 +103,9 @@ const AvailabilityDialog = ({
   endHourMilitary,
   handleSubmit
 }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const { user } = useContext(AuthContext);
+
   function handleClickOpen() {
     setOpen(true);
   }
@@ -114,17 +115,18 @@ const AvailabilityDialog = ({
   }
   async function onSubmitAttempt(e) {
     e.preventDefault();
+
     try {
-      alert("submit attempted", daysOfTheWeek);
-      // const newdish = await callAPI({
-      //   endpoint: "dish",
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: values,
-      //   token: user.token
-      // });
+      const res = await callAPI({
+        endpoint: `chef`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: convert(daysOfTheWeek, startHourMilitary),
+        token: user.token,
+        isForm: true
+      });
     } catch (error) {
       console.log(error);
     }
@@ -259,24 +261,35 @@ function militaryToStandardTimeString(h) {
   return h < 12 ? returnStr + "am" : returnStr + "pm";
 }
 
-function convertToAvailabilityRanges(hourFlagFormat) {
+function convert(week, startHourMilitary) {
+  return JSON.stringify(
+    Object.entries(week).map(([key, val]) => {
+      return {
+        day: key,
+        availability: convertDayToAvailabilityRanges(val, startHourMilitary)
+      };
+    })
+  );
+}
+
+function convertDayToAvailabilityRanges(hourFlagFormat, startHourMilitary) {
+  function toHour(flagIndex) {
+    return flagIndex + startHourMilitary;
+  }
+
   const returnArr = [];
 
   let buffer = [];
   for (let i = 0; i < hourFlagFormat.length; i++) {
-    // console.log(buffer);
-    // console.log(returnArr);
     if (hourFlagFormat[i]) {
       if (buffer.length > 1) {
-        buffer[buffer.length - 1] = i;
+        buffer[buffer.length - 1] = toHour(i);
       } else {
-        buffer.push(i);
+        buffer.push(toHour(i));
       }
-    } else {
-      if (buffer.length > 0) {
-        returnArr.push([...buffer]);
-        buffer = [];
-      }
+    } else if (buffer.length > 0) {
+      returnArr.push([...buffer]);
+      buffer = [];
     }
   }
 
