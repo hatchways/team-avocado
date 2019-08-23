@@ -96,7 +96,7 @@ const useStyles = makeStyles({
 });
 //TODO: pass in props and get data from props
 
-export default function Namecard({ user_id }) {
+export default function Namecard({ customer }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     name: "",
@@ -104,57 +104,34 @@ export default function Namecard({ user_id }) {
     description: "",
     favorite: []
   });
-  const endpoint = `customer/${user_id}`;
-  const { user } = useContext(AuthContext);
-  const [location,setLocation] = useState({
-        lat:"",
-        lng:""
-  })
-    
+
+  const [location, setLocation] = useState({
+    lat: "",
+    lng: ""
+  });
+
   useEffect(() => {
-    async function getCustomer() {
-      const customer = await callAPI({
-        endpoint: endpoint,
+    async function getLatlnt() {
+      const address = values.strlocation;
+      const key = process.env.CHEF_MENU_GOOGLE_MAP;
+      const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+      console.log(values);
+      console.log("key", key);
+      const results = await callAPI({
+        endpoint: googleapi,
         method: "GET",
         headers: {
           "Content-Type": "application/json"
-        },
-        token: user.token
-      });
-      setValues({
-        name: customer.name,
-        strlocation: customer.strlocation,
-        description: customer.description,
-        favorite: customer.favorite
-      });
-    }
-    getCustomer();
-  }, []);
-   
-    useEffect(() => {
-      async function getLatlnt(){
-        const address = values.strlocation;
-        const key = process.env.CHEF_MENU_GOOGLE_MAP;
-        const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-        console.log(values);
-        console.log("key",key);
-        const results= await callAPI({
-            endpoint: googleapi,
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            });
-            setLocation(results.geometry.location)
-        } 
-        try{
-        getLatlnt();
-        }catch(err){
-            console.log(err);
         }
-    },[values]);
-
-
+      });
+      setLocation(results.geometry.location);
+    }
+    try {
+      getLatlnt();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [values]);
 
   return (
     <div className={classes.cardContainer}>
@@ -171,7 +148,6 @@ export default function Namecard({ user_id }) {
               <p className={classes.grey}> {values.strlocation} </p>
               <RequestButton type="submit">Send Message</RequestButton>
             </div>
-
           </div>
           <div className={classes.rightpane}>
             <div className={classes.descwrap}>
@@ -179,9 +155,9 @@ export default function Namecard({ user_id }) {
               <p className={classes.grey}>{values.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
               <CuisineList cuisineList={values.favorite} />
-            <div className={classes.lower}>
-                <GoogleMap location={location}/>
-            </div>
+              <div className={classes.lower}>
+                <GoogleMap location={location} />
+              </div>
             </div>
           </div>
         </div>
