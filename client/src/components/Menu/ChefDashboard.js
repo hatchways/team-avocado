@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Grid from "@material-ui/core/Grid";
 
+import Order from "../Order";
 import DishCard from "../DishCard/DishCard";
 import DishCardForm from "../DishCard/DishCardForm";
 import AddDishDialog from "../AddDishDialog";
@@ -155,13 +156,11 @@ export default function ChefDashboard({ chef }) {
 
       {activeTab === ORDERS_TAB ? (
         <>
-          <p>as;ldkfjasd</p>
-          <div>
-            <div>Order</div>
-            <div>Order</div>
-            <div>Order</div>
-            <div>Order</div>
-          </div>
+          <Order />
+          <Order />
+          <Order />
+          <Order />
+          <Order />
         </>
       ) : (
         <>
