@@ -26,6 +26,7 @@
     "multer-s3": "^2.9.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^1.19.1",
+    "stripe": "^7.8.0",
     "validator": "^11.1.0"
   },
   "devDependencies": {

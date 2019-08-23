@@ -56,7 +56,7 @@ const ChefCard = ({ name, avatar, strlocation, description, cuisine }) => {
       <img src={avatar} alt="Chef" />
       <div>
         <h1>{name}</h1>
-        <h3>San Francisco, California</h3>
+        <h3>{strlocation}</h3>
       </div>
       <Chip style={{ margin: "0px" }}>{cuisine}</Chip>
       <p>{description}</p>

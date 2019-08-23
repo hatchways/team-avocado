@@ -20,8 +20,7 @@ const config = require("config");
  */
 
 router.post("/", async (req, res, next) => {
-  const { error } = validate(req.body);
-  if (error) return next(createError(400, error.details[0].message));
+  console.log(req.body);
 
   let user = await User.findOne({ email: req.body.email });
 
