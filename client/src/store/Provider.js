@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Context from "./createContext";
 
+import useCachedState from "../hooks/useCachedState";
+
 const mockOrderItems = [
   {
     name: "2 yakisoba dishes, 6 something else, 4 something else",
@@ -13,9 +15,8 @@ const mockOrderItems = [
     imageURL: "https://picsum.photos/200"
   }
 ];
-
 export default function Provider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useCachedState(null, "user");
   const [cart, setCart] = useState(mockOrderItems);
   const [order, setOrder] = useState({});
 
