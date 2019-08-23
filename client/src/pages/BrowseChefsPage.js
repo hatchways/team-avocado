@@ -92,7 +92,7 @@ function BrowseChefsPage({ classes, ...rest }) {
       { all: true }
     )
   );
-
+  
   function toggleCuisine(cuisineName) {
     if (cuisineName !== "all" && cuisines.all) {
       // When 'all' filter is selected, treat clicks on
