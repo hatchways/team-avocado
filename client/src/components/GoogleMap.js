@@ -28,6 +28,8 @@ const stylesinner = {
   backgroundColor: 'rgba(100,45,25,0.3)',
 
 }
+
+
 const AnyReactComponent = ({ text }) => 
 <div>
   <span style={stylesout}></span>
@@ -35,12 +37,12 @@ const AnyReactComponent = ({ text }) =>
   </div>;
 
 //TODO use an api to get position of specified location.
+
+const apikey = process.env.CHEF_MENU_GOOGLE_MAP;
 const position = {
   lat: 43.653225,
   lng: -79.383186
 }
-const apikey = process.env.CHEF_MENU_GOOGLE_MAP;
-
 
 class SimpleMap extends Component {
 
@@ -51,7 +53,7 @@ class SimpleMap extends Component {
     },
     zoom: 13
   };
-  
+
   render() {
     return (
       <div style={{ height: '100%', width: '100%' }}>
