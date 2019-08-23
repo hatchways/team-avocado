@@ -13,6 +13,7 @@ import { useContext } from "react";
 import AuthContext from "../store/createContext";
 import { Link } from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
+import AvailabilityDialog from "./AvailabilityDialog";
 
 const Container = styled.div`
   height: 100%;
@@ -278,6 +279,7 @@ export default function Namecard({ chef, userIsOwner }) {
             <img src={values.avatar} alt="" id="profile" />
           </ImageUploader>
           <PickTagDialog cuisines={cuisines} />
+          <AvailabilityDialog />
           <TextField
             className="form-field"
             label="Name"

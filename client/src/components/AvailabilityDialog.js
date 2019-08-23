@@ -6,6 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { AVAIL_START_HOUR, AVAIL_END_HOUR } from "../constants/index";
 import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
 import { colors } from "../themes/theme";
@@ -98,15 +99,12 @@ const PickerContainer = styled.ul`
   }
 `;
 
-const AvailabilityDialog = ({
-  startHourMilitary,
-  endHourMilitary,
-  handleSubmit
-}) => {
+const AvailabilityDialog = () => {
   const [open, setOpen] = useState(false);
   const { user } = useContext(AuthContext);
 
-  function handleClickOpen() {
+  function handleClickOpen(e) {
+    e.preventDefault();
     setOpen(true);
   }
 
@@ -118,21 +116,23 @@ const AvailabilityDialog = ({
 
     try {
       const res = await callAPI({
-        endpoint: `chef`,
+        endpoint: `chef/${user.id}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: convert(daysOfTheWeek, startHourMilitary),
+        body: convert(daysOfTheWeek, AVAIL_START_HOUR),
         token: user.token,
         isForm: true
       });
+
+      handleClose();
     } catch (error) {
       console.log(error);
     }
   }
 
-  const initialAvailability = Array(endHourMilitary - startHourMilitary)
+  const initialAvailability = Array(AVAIL_END_HOUR - AVAIL_START_HOUR)
     .fill(0)
     .map(() => false);
 
@@ -149,7 +149,7 @@ const AvailabilityDialog = ({
   const [isDeselecting, setDeselecting] = useState(false);
 
   const indexToHour = i => {
-    return startHourMilitary + i;
+    return AVAIL_START_HOUR + i;
   };
 
   const onMouseDown = e => {
@@ -226,7 +226,9 @@ const AvailabilityDialog = ({
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>Set Weekly Availability</Button>
+      <Button onClick={handleClickOpen} outline>
+        Set Weekly Availability
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -261,20 +263,20 @@ function militaryToStandardTimeString(h) {
   return h < 12 ? returnStr + "am" : returnStr + "pm";
 }
 
-function convert(week, startHourMilitary) {
-  return JSON.stringify(
-    Object.entries(week).map(([key, val]) => {
-      return {
-        day: key,
-        availability: convertDayToAvailabilityRanges(val, startHourMilitary)
-      };
-    })
-  );
+function convert(week, AVAIL_START_HOUR) {
+  return JSON.stringify({
+    availability: Object.entries(week).reduce((accum, entry) => {
+      const [key, val] = entry;
+
+      accum[key] = convertDayToAvailabilityRanges(val, AVAIL_START_HOUR);
+      return accum;
+    }, {})
+  });
 }
 
-function convertDayToAvailabilityRanges(hourFlagFormat, startHourMilitary) {
+function convertDayToAvailabilityRanges(hourFlagFormat, AVAIL_START_HOUR) {
   function toHour(flagIndex) {
-    return flagIndex + startHourMilitary;
+    return flagIndex + AVAIL_START_HOUR;
   }
 
   const returnArr = [];
