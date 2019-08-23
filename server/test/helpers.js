@@ -49,7 +49,7 @@ function generateFullName() {
 }
 function generateUser() {
   let uniqueUser = {
-    username: generateFullName(),
+    name: generateFullName(),
     email: faker.internet.email(),
     password: "password",
     location: generateNearbyPoint(),
@@ -68,9 +68,36 @@ function generateChef() {
   };
 }
 
+function generateNChefs(n) {
+  returnArr = [];
+
+  _.times(() => returnArr.push(generateChef()), n);
+  return returnArr;
+}
+function generateNCustomers(n) {
+  returnArr = [];
+
+  _.times(() => returnArr.push(generateCustomer()), n);
+
+  return returnArr;
+}
+
 function generateCustomer() {
   return {
     ...generateUser()
+  };
+}
+
+function generateDish(chefId) {
+  return {
+    name: faker.commerce.product(),
+    price: faker.commerce.price(),
+    numPeopleServed: _.random(1, 25),
+    chef: chefId,
+    cuisine: _.sample(cuisinesArray),
+    ingredients: faker.random.words(),
+    requirements: faker.random.words(),
+    dishImg: faker.image.food()
   };
 }
 
@@ -86,29 +113,40 @@ async function insertNewCustomer(override = {}) {
   return await Customer.create(newCustomer);
 }
 
-function writeToMockDataDirectory(data) {
-  fs.writeFileSync("./mockData.json", data, { flag: "w" });
+async function insertNewDishForChef(chefId) {
+  return await Dish.create(generateDish(chefId));
+}
+
+function writeToMockDataDirectory(data, filename) {
+  fs.writeFileSync(`./${filename}.json`, data, { flag: "w" });
 }
 
 module.exports.generateMockDataJSON = function() {
-  const mockUsers = [];
+  const chefs = generateNChefs(20),
+    customers = generateNCustomers(20);
 
-  _.times(100, () => {
-    const mockUser = generateChef();
+  const dishes = chefs.reduce((accum, chef) => {
+    const newDishes = _.times(() => generateDish(chef.id), _.random(5, 15));
+    accum.concat(newDishes);
 
-    mockUsers.push(mockUser);
+    return accum;
+  }, []);
 
-    // mockUsers += generate
-  });
-  console.log("writing...\n", mockUsers);
-
-  writeToMockDataDirectory(JSON.stringify(mockUsers));
+  writeToMockDataDirectory(JSON.stringify(chefs), "./test/chefs");
+  writeToMockDataDirectory(JSON.stringify(customers), "./test/customers");
+  writeToMockDataDirectory(JSON.stringify(dishes), "./test/dishes");
 };
 
 module.exports.populateDB = async function(count) {
+  const createdChefs = [];
+  const createdCustomers = [];
+
   for (let i of _.range(count)) {
-    await insertNewChef();
-    await insertNewCustomer();
+    createdChefs.push(await insertNewChef({ email: `chef${i}@email.com` }));
+    createdCustomers.push(await insertNewCustomer());
+  }
+  for (let i of _.range(count)) {
+    _.times(() => insertNewDishForChef(createdChefs[i]._id), _.random(5, 15));
   }
 };
 
@@ -118,3 +156,4 @@ module.exports.dropUsers = async function() {
 module.exports.generateRelativeCoordinates = generateRelativeCoordinates;
 module.exports.insertNewChef = insertNewChef;
 module.exports.insertNewCustomer = insertNewCustomer;
+module.exports.insertNewDishForChef = insertNewDishForChef;

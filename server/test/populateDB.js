@@ -1,3 +1,3 @@
-const { populateDB } = require("./helpers");
+const { dropUsers, populateDB } = require("./helpers");
 
-populateDB(20);
+dropUsers().then(() => populateDB(2));
