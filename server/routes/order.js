@@ -12,7 +12,7 @@ const fileUploadService = require("../services/fileUploader");
  */
 router.get("/:user_id", async (req, res, next) => {
 
-    const user = await User.findById(req.params.user_id);
+    const user = await User.findById(req.params.user_id).populate("orders");
 
   res.status(200).send(user.orders);
 });

@@ -13,7 +13,7 @@ const orderSchema = new Schema({
   chef: { type: Schema.Types.ObjectId, ref:"Chef"},
   customer: { type: Schema.Types.ObjectId, ref:"Customer"},
 },
-{timestamp: true}
+{timestamps: true}
 );
 
 const OrderModel = mongoose.model("Order", orderSchema);
