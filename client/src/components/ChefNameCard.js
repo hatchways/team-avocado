@@ -7,11 +7,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import PickTagDialog from './PickTagDialog'
 import { callAPI } from "../helpers/api";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import AuthContext from "../store/createContext";
 import { Link} from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
-
+import {totalCuisines} from "../constants/cuisines"
 const Container = styled.div`
 
 
@@ -94,9 +94,9 @@ const useStyles = makeStyles({
     }
 
 });
-const cuisines = ["Chinese","Indian","American","Japanese"];
 
-//TODO: pass in props and get data from props
+
+
  export default function Namecard({ user_id }) {
 
     const classes = useStyles();
@@ -107,11 +107,18 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
         description:'', 
         avatar:"",
         background:"",
+        cuisines:[],
     }); 
 
     const {user,setUser} = useContext(AuthContext);
     const endpoint = `chef/${user_id}`;
-    
+    const [restCuisines, setRestCuisines] = useState([]);
+    function setCuisines(cuisines, chefsCuisines){
+        console.log(cuisines, chefsCuisines);
+        let difference = cuisines.filter(x => !chefsCuisines.includes(x));
+        console.log(difference);
+        return difference;
+    }
     useEffect(() => {
         async function getChef(){
         const chef= await callAPI({
@@ -121,15 +128,21 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
               "Content-Type": "application/json"
             },
             });
-            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description, avatar:chef.avatar, background:chef.background});
+            setValues({name:chef.name, strlocation:chef.strlocation, description:chef.description, avatar:chef.avatar, background:chef.background,cuisines:chef.cuisines});
+
+            
         }
         getChef();
-    }
-        ,[]);
+    },[]);
+    
+    useEffect(()=>{
+        const rest = setCuisines(totalCuisines, values.cuisines);
+        setRestCuisines(rest);
+    },[values])
 
 
     
-
+    
     const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value });
     };
@@ -166,7 +179,6 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
             var imgAlt = "chef_background";
         }
         try {
-            console.log("What's wrong",imgAlt);
           const endpoint = `chef/${user_id}/${imgAlt}`
           const imgURL = await callAPI({
                 endpoint: endpoint,
@@ -174,8 +186,6 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
                 body: formData,
                 isForm: true,
             });
-            console.log("url returned",imgURL);
-            console.log("NMSL",imgAlt === "chef_background");
             if (imgAlt === "chef_background"){
                 setValues({...values, background:imgURL});
             }else if (imgAlt === "avatar"){
@@ -240,7 +250,7 @@ const cuisines = ["Chinese","Indian","American","Japanese"];
 
                 {/* <form className={classes.form}> */}
                 <div className={classes.info}>
-                <PickTagDialog cuisines={cuisines} />
+                <PickTagDialog cuisines={values.cuisines} restCuisines={restCuisines} />
                 <TextField
                     id="outlined-name"
                     label="Name"

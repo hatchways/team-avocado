@@ -8,9 +8,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "./Button";
 import styled from "styled-components";
 import TransferList from "./TransferList";
+import { callAPI } from "../helpers/api";
+import {  useState,useContext } from "react";
+import AuthContext from "../store/createContext";
 
 
-export default function PickdishDialog(props ) {
+export default function PickTagDialog(props ) {
+  console.log("PTD props",props);
     const [open, setOpen] = React.useState(false);
     const PickTagBtn = styled(Button)`
         display:block;
@@ -24,8 +28,31 @@ export default function PickdishDialog(props ) {
       function handleClose() {
         setOpen(false);
       }
-  
-  
+      const [chefcuisines, setchefCuisines] = useState([]);
+      const {user} = useContext(AuthContext);
+
+      async function handleClick(event){
+        event.preventDefault();
+        try {
+          console.log(chefcuisines)
+          const cuisinesBody = {
+            "cuisines":chefcuisines
+          }
+          const endpoint = `chef/${user.id}`
+          const newchef = await callAPI({
+                endpoint: endpoint,
+                method:"PUT",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: cuisinesBody,
+                token: user.token,
+            });
+            handleClose();
+        } catch (error) {
+          console.log(error);
+        }
+      }
     return (
 
     <div>
@@ -36,13 +63,13 @@ export default function PickdishDialog(props ) {
           <DialogContentText>
             To select tags, please check tags and click &lt; or &gt; to move tags.
           </DialogContentText>
-            <TransferList cuisines={props.cuisines}/>
+            <TransferList setchefCuisines={setchefCuisines} cuisines={props.cuisines} restCuisines={props.restCuisines}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClick} color="primary">
             Submit
           </Button>
         </DialogActions>

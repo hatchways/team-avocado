@@ -8,6 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import { useEffect, useContext, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,13 +32,27 @@ function intersection(a, b) {
   return a.filter(value => b.indexOf(value) !== -1);
 }
 
-export default function TransferList(props) {
-  const list = props.cuisines;
-
+export default function TransferList({cuisines, restCuisines,setchefCuisines}) {
+  if (cuisines === undefined){
+    var cuisines = [];
+  }else{
+    var cuisines = cuisines;
+  }
+  const restcuiIndex = restCuisines.length;
+  const list = restCuisines.concat(cuisines);
+  
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([0, 1, 2]);
-  const [right, setRight] = React.useState([3]);
+  const [left, setLeft] = React.useState([...Array(restcuiIndex).keys()]);
+  console.log("Left and list:",left, list);
+  if(list.length === restcuiIndex){
+    var numArray = [];
+  } else{
+    var numArray = Array.from([...Array(list.length-restcuiIndex).keys()],x=>x+restcuiIndex);
+  }
+  console.log("numArray:",numArray);
+  const [right, setRight] = React.useState(numArray);
+  console.log("Right",right);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
@@ -66,6 +81,15 @@ export default function TransferList(props) {
     setRight(not(right, rightChecked));
     setChecked(not(checked, rightChecked));
   };
+
+  useEffect(()=>{
+    const rightArray = []
+    right.forEach((index)=>{
+      rightArray.push(list[index]);
+    });
+    setchefCuisines(rightArray);
+  },[right]);
+
   const customList = items =>(
     <Paper className={classes.paper}>
       <List dense component="div" role="list">

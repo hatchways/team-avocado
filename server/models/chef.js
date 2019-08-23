@@ -15,7 +15,7 @@ const chefSchema = new Schema({
     type: String,
     default: "This Chef has not added a description yet."
   },
-  cuisine: String,
+  cuisines: [{type:String}],
   travelRadius: Number
 });
 
