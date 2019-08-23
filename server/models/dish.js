@@ -68,14 +68,16 @@ const DishSchema = mongoose.Schema({
  */
 
 DishSchema.pre("save", async function() {
-  try{
-    console.dir(this);
-    let chef = await Chef.findById(this.chef);
-    chef.dishes.push(this._id);
+  if (this.isNew) {
+    try {
+      console.dir(this);
+      let chef = await Chef.findById(this.chef);
+      chef.dishes.push(this._id);
 
-    chef.save();
-  }catch(err){
-    console.log(err);
+      chef.save();
+    } catch (err) {
+      console.log(err);
+    }
   }
 });
 

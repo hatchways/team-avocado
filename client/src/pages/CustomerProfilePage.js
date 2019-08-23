@@ -4,7 +4,10 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import NameCard from "../components/CustomerNameCard";
 import SimpleMenu from "../components/MenuButton";
-import { layout } from "../themes/theme";
+import { layout, colors } from "../themes/theme";
+import { useContext } from "react";
+import AuthContext from "../store/createContext";
+import useResource from "../hooks/useResource";
 
 const PageContainer = styled.div`
   display: flex;
@@ -35,8 +38,14 @@ const PageContainer = styled.div`
   }
 `;
 
-function CustomerPage(props) {
-  const customer_id=props.match.params.customer_id;
+function CustomerPage({ customerId }) {
+  // Determine whether logged in user owns this
+  // profile page
+  const { user } = useContext(AuthContext),
+    userIsOwner = user && user.id === customerId;
+
+  // Get the ID'd Customer document from API
+  const [customer] = useResource(`customer/${customerId}`, user.token);
 
   return (
     <PageContainer>
@@ -44,7 +53,7 @@ function CustomerPage(props) {
         <SimpleMenu />
       </Navbar>
 
-      <NameCard user_id={customer_id}/>
+      <NameCard customer={customer} />
     </PageContainer>
   );
 }
