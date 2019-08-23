@@ -13,11 +13,9 @@ const {
   customerRouter,
   chefRouter,
   dishRouter,
-
-  orderRouter,
-
-  paymentRouter
-
+  paymentRouter,
+  filterChefRouter,
+  orderRouter
 } = require("./routes");
 const config = require("config");
 
@@ -47,6 +45,7 @@ app.use("/chef", chefRouter);
 app.use("/dish", dishRouter);
 app.use("/order", orderRouter);
 app.use("/payment", paymentRouter);
+app.use("/available_chef", filterChefRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -9,6 +9,7 @@ import ChefPage from "./pages/ChefProfilePage";
 import CustomerPage from "./pages/CustomerProfilePage";
 import "./App.css";
 import BrowseChefsPage from "./pages/BrowseChefsPage";
+console.log("What is the stuff:",require("dotenv").config());
 
 //TODO: Implement this
 function browserHasToken() {
