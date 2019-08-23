@@ -41,19 +41,20 @@ const PageContainer = styled.div`
 function CustomerPage({ customerId }) {
   // Determine whether logged in user owns this
   // profile page
+  console.log(customerId);
   const { user } = useContext(AuthContext),
     userIsOwner = user && user.id === customerId;
 
   // Get the ID'd Customer document from API
   const [customer] = useResource(`customer/${customerId}`, user.token);
-
+  console.log(customer);
   return (
     <PageContainer>
       <Navbar>
         <SimpleMenu />
       </Navbar>
 
-      <NameCard customer={customer} />
+      {customer ? <NameCard customer={customer} /> : "Loading..."}
     </PageContainer>
   );
 }

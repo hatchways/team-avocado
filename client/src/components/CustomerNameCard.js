@@ -9,6 +9,7 @@ import CuisineList from "./CuisineList";
 import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
+import { Link, withRouter } from "react-router-dom";
 
 const { brandLight } = colors;
 
@@ -96,13 +97,14 @@ const useStyles = makeStyles({
 });
 //TODO: pass in props and get data from props
 
-export default function Namecard({ customer }) {
+function Namecard({ customer, history}) {
   const classes = useStyles();
   const [values, setValues] = useState({
-    name: "",
-    strlocation: "",
-    description: "",
-    favorite: []
+    name: customer.name,
+    strlocation: customer.strlocation,
+    description: customer.description,
+    favorite: customer.favorite,
+    avatar: customer.avatar
   });
 
   const [location, setLocation] = useState({
@@ -110,28 +112,33 @@ export default function Namecard({ customer }) {
     lng: ""
   });
 
-  useEffect(() => {
-    async function getLatlnt() {
-      const address = values.strlocation;
-      const key = process.env.CHEF_MENU_GOOGLE_MAP;
-      const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-      console.log(values);
-      console.log("key", key);
-      const results = await callAPI({
-        endpoint: googleapi,
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      setLocation(results.geometry.location);
-    }
-    try {
-      getLatlnt();
-    } catch (err) {
-      console.log(err);
-    }
-  }, [values]);
+//   useEffect(() => {
+//     async function getLatlnt() {
+//         console.log(values);
+//       const address = values.strlocation;
+//       const key = process.env.CHEF_MENU_GOOGLE_MAP;
+//       const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+//       console.log(values);
+//       console.log("key", key);
+//       const results = await callAPI({
+//         endpoint: googleapi,
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json"
+//         }
+//       });
+//       setLocation(results.geometry.location);
+//     }
+//     try {
+//       getLatlnt();
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   }, [values]);
+  function handleSubmit(){
+    history.push("/browse/chefs");
+  }
+
 
   return (
     <div className={classes.cardContainer}>
@@ -146,7 +153,7 @@ export default function Namecard({ customer }) {
               />
               <span className={classes.name}> {values.name} </span>
               <p className={classes.grey}> {values.strlocation} </p>
-              <RequestButton type="submit">Send Message</RequestButton>
+              <RequestButton onClick={handleSubmit}>Start Order</RequestButton>
             </div>
           </div>
           <div className={classes.rightpane}>
@@ -155,9 +162,6 @@ export default function Namecard({ customer }) {
               <p className={classes.grey}>{values.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
               <CuisineList cuisineList={values.favorite} />
-              <div className={classes.lower}>
-                <GoogleMap location={location} />
-              </div>
             </div>
           </div>
         </div>
@@ -168,3 +172,6 @@ export default function Namecard({ customer }) {
     </div>
   );
 }
+
+
+export default withRouter(Namecard);
