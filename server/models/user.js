@@ -26,6 +26,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
   location: pointSchema,
   avatar: String,
   background: String,
