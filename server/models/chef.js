@@ -17,13 +17,32 @@ const chefSchema = new Schema({
   },
   cuisine: String,
   travelRadius: Number,
+  //will changed as order submit.
   availability:{"Monday":[{type:Array}],
                 "Tuesday": [{type:Array}],
                 "Wednesday": [{type:Array}],
                 "Thursday":[{type:Array}],
                 "Friday":[{type:Array}],
                 "Saturday":[{type:Array}],
-                "Sunday": [{type:Array}]}
+                "Sunday": [{type:Array}]},
+  //will changed only if chef changed it. And it will go forward
+  availability_default:{"Monday":[{type:Array}],
+                "Tuesday": [{type:Array}],
+                "Wednesday": [{type:Array}],
+                "Thursday":[{type:Array}],
+                "Friday":[{type:Array}],
+                "Saturday":[{type:Array}],
+                "Sunday": [{type:Array}]},
+  //data structures to reduce time complexity.
+  available_days:{
+    "Monday":{type: Boolean, default: false},
+    "Tuesday": {type: Boolean, default: false},
+    "Wednesday": {type: Boolean, default: false},
+    "Thursday":{type: Boolean, default: false},
+    "Friday":{type: Boolean, default: false},
+    "Saturday":{type: Boolean, default: false},
+    "Sunday": {type: Boolean, default: false}
+  }
 });
 
 /**

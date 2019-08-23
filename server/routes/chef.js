@@ -105,7 +105,7 @@ router.put(
 );
 
 /**
- *  Set a Chef's profile fields
+ *  Set a Chef's availability
  */
 router.put(
   "/:userId/availability",
@@ -129,11 +129,22 @@ router.put(
         createError(400, `Chef with id ${userId} could not be found.`)
       );
     }
+    chef.availability_default = chef.availability;
+    const week_days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    function setAvailable_days(week_day){
+      if(chef.availability[week_day].length>0){
+        chef.available_days[week_day] = true;
+      }else{
+        chef.available_days[week_day] = false;
+      }
+    }
+    week_days.forEach(setAvailable_days);
+    chef.save()
     const token = req.headers.authorization.split(" ")[1];
-
     res.status(200).send({availability:chef.availability,token, usertype:"chef", name: chef.name, id: chef._id});
   }
 );
+
 
 
 router.post("/:userId/avatar", fileUploadService, async (req, res) => {
