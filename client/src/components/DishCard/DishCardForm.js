@@ -3,6 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import { Route, Switch } from "react-router-dom";
+
+import ImageUploader from "../ImageUploader";
+import CardContainer from "./CardContainer";
 import Button from "../Button";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
@@ -13,9 +16,6 @@ import { useContext } from "react";
 import AuthContext from "../../store/createContext";
 
 const { brandLight } = colors;
-const SaveButton = styled(Button)`
-  min-width: 100px;
-`;
 const useStyles = makeStyles(theme => ({
   card: {
     minWidth: "70%",
@@ -72,25 +72,26 @@ const useStyles = makeStyles(theme => ({
 
 export default function SimpleCard({
   dishImg,
-  dish_id,
   name,
-  serve,
+  numPeopleServed,
   price,
-  ingred,
-  required,
+  ingredients,
+  requirements,
   storeUpdatedDish,
-  storeDishImg
+  storeDishImg,
+  toggleEdit,
+  dish_id
 }) {
   const classes = useStyles(brandLight);
 
   const { user, setUser } = useContext(AuthContext);
   // console.log("Context user:",user);
   const [values, setValues] = React.useState({
-    numPeopleServed: serve,
+    numPeopleServed: numPeopleServed,
     name: name,
     price: price,
-    ingredients: ingred,
-    requirements: required,
+    ingredients: ingredients,
+    requirements: requirements,
     cuisine: "Japanese",
     chef: user.id,
     dishImg: dishImg
@@ -119,7 +120,7 @@ export default function SimpleCard({
     }
   }
 
-  async function handleClick(event) {
+  async function handleSubmitImage(event) {
     event.preventDefault();
     const fileObj = event.target.files[0];
     let formData = new FormData();
@@ -139,109 +140,65 @@ export default function SimpleCard({
     }
   }
   return (
-    <Card className={classes.card}>
-      <Switch>
-        <Route path="/chef/:chef_id/edit">
-          <form className={classes.form} onSubmit={onSubmitAttempt}>
-            <Grid className={classes.info}>
-              <TextField
-                label="How many people to serve."
-                className="{classes.textField}"
-                value={values.numPeopleServed}
-                onChange={handleChange("numPeopleServed")}
-                margin="dense"
-                variant="outlined"
-                type="number"
-              />
-              <TextField
-                label="name"
-                className="{classes.textField}"
-                value={values.name}
-                onChange={handleChange("name")}
-                margin="dense"
-                variant="outlined"
-              />
-              <TextField
-                label="Price"
-                className="{classes.textField}"
-                value={values.price}
-                onChange={handleChange("price")}
-                margin="dense"
-                variant="outlined"
-                type="number"
-              />
-              <TextField
-                label="Ingredients"
-                multiline
-                rowsMax="4"
-                className="{classes.textField}"
-                value={values.ingredients}
-                onChange={handleChange("ingredients")}
-                margin="dense"
-                variant="outlined"
-              />
+    <CardContainer>
+      <form onSubmit={onSubmitAttempt}>
+        <TextField
+          label="How many people to serve."
+          className="{classes.textField}"
+          value={values.numPeopleServed}
+          onChange={handleChange("numPeopleServed")}
+          margin="dense"
+          variant="outlined"
+          type="number"
+        />
+        <TextField
+          label="name"
+          className="{classes.textField}"
+          value={values.name}
+          onChange={handleChange("name")}
+          margin="dense"
+          variant="outlined"
+        />
+        <TextField
+          label="Price"
+          className="{classes.textField}"
+          value={values.price}
+          onChange={handleChange("price")}
+          margin="dense"
+          variant="outlined"
+          type="number"
+        />
+        <TextField
+          label="Ingredients"
+          multiline
+          rowsMax="4"
+          className="{classes.textField}"
+          value={values.ingredients}
+          onChange={handleChange("ingredients")}
+          margin="dense"
+          variant="outlined"
+        />
 
-              <TextField
-                label="Required Stuff"
-                className="{classes.textField}"
-                value={values.requirements}
-                multiline
-                rowsMax="4"
-                onChange={handleChange("requirements")}
-                margin="dense"
-                variant="outlined"
-              />
-            </Grid>
-
-            <Grid className={classes.image}>
-              <input
-                accept="image/*"
-                className={classes.input}
-                id={dish_id}
-                multiple
-                type="file"
-                onChange={handleClick}
-              />
-              <label htmlFor={dish_id}>
-                <Tooltip
-                  title="Click to upload new profile"
-                  placement="top-start"
-                >
-                  <img
-                    className={classes.dishpic}
-                    alt="dish"
-                    src={values.dishImg}
-                  />
-                </Tooltip>
-              </label>
-            </Grid>
-
-            <SaveButton type="submit">Save Item</SaveButton>
-          </form>
-        </Route>
-
-        <Route path="/chef/:chef_id">
-          <div className={classes.form}>
-            <Grid className={classes.info}>
-              <div>
-                <span className={classes.pplnum}> MEAL FOR {serve}</span>
-              </div>
-              <p className={classes.name}> {name} </p>
-              <span className={classes.price}> ${price} </span>
-              <span className={classes.bigbold}>INGREDIENTS</span>
-              <p className={classes.grey}>{ingred.join(", ")}</p>
-              <span className={classes.bigbold}>REQUIRED STUFF</span>
-              <p className={classes.grey}>{required.join(", ")}</p>
-            </Grid>
-
-            <Grid className={classes.image}>
-              <img className="dishpic" alt="dish" src={values.dishImg} />
-            </Grid>
-          </div>
-        </Route>
-        {/* change to if else, if user is logged in and  */}
-        {/* this is user's profile page, show edit button */}
-      </Switch>
-    </Card>
+        <TextField
+          label="requirements Stuff"
+          className="{classes.textField}"
+          value={values.requirements}
+          multiline
+          rowsMax="4"
+          onChange={handleChange("requirements")}
+          margin="dense"
+          variant="outlined"
+        />
+        <Button style={{ display: "block" }} type="submit">
+          Save Item
+        </Button>
+      </form>
+      <ImageUploader
+        promptText={"Click to upload new dish image"}
+        onSubmit={handleSubmitImage}
+      >
+        <img alt="dish" src={values.dishImg} />
+      </ImageUploader>
+    </CardContainer>
   );
 }

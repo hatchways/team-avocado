@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "./Button";
 import styled from "styled-components";
-import { useContext } from "react";
+import { FiPlusCircle } from "react-icons/fi";
+
+import Button from "./Button";
 import AuthContext from "../store/createContext";
 import { callAPI } from "../helpers/api";
 
 export default function AddDishDialog({ storeNewDish }) {
   const [open, setOpen] = React.useState(false);
   const AddDishBtn = styled(Button)`
-    display: block;
-    width: 100%;
-    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      margin: 0px 5px;
+    }
   `;
   function handleClickOpen() {
     setOpen(true);
@@ -84,8 +89,11 @@ export default function AddDishDialog({ storeNewDish }) {
     }
   }
   return (
-    <div>
-      <AddDishBtn onClick={handleClickOpen}> Add New Dish</AddDishBtn>
+    <>
+      <AddDishBtn outline onClick={handleClickOpen}>
+        <FiPlusCircle />
+        Add New Dish
+      </AddDishBtn>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -164,6 +172,6 @@ export default function AddDishDialog({ storeNewDish }) {
           <Button onClick={onSubmitAttempt}>Submit</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

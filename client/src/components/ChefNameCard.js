@@ -48,7 +48,8 @@ const Container = styled.div`
     display: block;
     margin-left: auto;
     margin-right: auto;
-    border: 2px solid white;
+    border: 5px solid white;
+    background-color: white;
     border-radius: 50%;
     width: 150px;
   }

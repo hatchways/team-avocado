@@ -71,12 +71,12 @@ const DayContainer = styled.li`
       cursor: pointer;
 
       &:hover {
-        box-shadow: inset 0px 0px 1px 3px ${colors.brandLightTransprt};
+        box-shadow: inset 0px 0px 1px 3px ${colors.brandTransparent};
       }
     }
 
     li.available {
-      background-color: ${colors.brandLightTransprt};
+      background-color: ${colors.brandTransparent};
 
       &:hover {
         box-shadow: none;
