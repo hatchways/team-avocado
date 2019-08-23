@@ -50,6 +50,7 @@ export default function PickTagDialog(props ) {
                 token: user.token,
             });
             handleClose();
+            props.setValuesCuisines(chefcuisines);
         } catch (error) {
           console.log(error);
         }

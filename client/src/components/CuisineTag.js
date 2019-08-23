@@ -7,7 +7,9 @@ const useStyles = makeStyles({
     name:{
         backgroundColor:colors.brandLight,
         color:"white",
-        margin:5
+        margin:10,
+        padding:10,
+
     }
 });
 

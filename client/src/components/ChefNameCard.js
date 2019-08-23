@@ -15,6 +15,10 @@ import { Link } from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
 import {totalCuisines} from "../constants/cuisines"
 import AvailabilityDialog from "./AvailabilityDialog";
+import CuisineList from "./CuisineList";
+
+
+
 const Container = styled.div`
   height: 100%;
   font-family: "Montserrat";
@@ -182,7 +186,9 @@ export default function Namecard({ chef, userIsOwner }) {
     background: "https://i.imgur.com/K1knFqf.jpg",
     cuisines:chef.cuisines,
   });
-
+  function setValuesCuisines(cuisines){
+      setValues({...values, cuisines:cuisines});
+  }
   const { user, setUser } = useContext(AuthContext);
   const [restCuisines, setRestCuisines] = useState([]);
   
@@ -263,6 +269,9 @@ export default function Namecard({ chef, userIsOwner }) {
           <div>
             <p className="description">{values.description}</p>
           </div>
+          <div>
+            <CuisineList cuisineList={values.cuisines} />
+          </div>
         </div>
       </div>
       <div className="button-container">
@@ -292,7 +301,7 @@ export default function Namecard({ chef, userIsOwner }) {
           >
             <img src={values.avatar} alt="" id="profile" />
           </ImageUploader>
-          <PickTagDialog cuisines={values.cuisines} restCuisines={restCuisines} />
+          <PickTagDialog cuisines={values.cuisines} restCuisines={restCuisines} setValuesCuisines={setValuesCuisines}/>
           <AvailabilityDialog />
           <TextField
             className="form-field"
