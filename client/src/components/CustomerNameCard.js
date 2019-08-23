@@ -9,6 +9,7 @@ import CuisineList from "./CuisineList";
 import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
+
 const { brandLight } = colors;
 
 
@@ -115,7 +116,10 @@ export default function Namecard({user_id}) {
     }); 
     const endpoint = `customer/${user_id}`;
     const {user} = useContext(AuthContext);
-
+    const [location,setLocation] = useState({
+        lat:"",
+        lng:""
+    })
     useEffect(() => {
         async function getCustomer(){
         const customer= await callAPI({
@@ -128,8 +132,35 @@ export default function Namecard({user_id}) {
             });
             setValues({name:customer.name, strlocation:customer.strlocation, description:customer.description, favorite:customer.favorite});
         }
-        getCustomer()
-    },[]);
+        getCustomer();
+
+      },[]);
+
+    useEffect(() => {
+
+
+      async function getLatlnt(){
+        const address = values.strlocation;
+        const key = process.env.CHEF_MENU_GOOGLE_MAP;
+        const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+        console.log(values);
+        console.log("key",key);
+        const results= await callAPI({
+            endpoint: googleapi,
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            });
+            setLocation(results.geometry.location)
+        } 
+        try{
+        getLatlnt();
+        }catch(err){
+            console.log(err);
+        }
+    },[values]);
+
 
     return (
     <div className={classes.cardContainer}>
@@ -155,8 +186,8 @@ export default function Namecard({user_id}) {
                 </div>
             </div>
             <div className={classes.lower}>
-                <GoogleMap>
-                </GoogleMap>
+                <GoogleMap location={location}/>
+
             </div>
 
         </Card>

@@ -17,13 +17,13 @@ const chefSchema = new Schema({
   },
   cuisine: String,
   travelRadius: Number,
-  availability:{"Monday":[{type:String}],
-                "Tuesday": [{type:String}],
-                "Wednesday": [{type:String}],
-                "Thursday":[{type:String}],
-                "Friday":[{type:String}],
-                "Saturday":[{type:String}],
-                "Sunday": [{type:String}]}
+  availability:{"Monday":[{type:Array}],
+                "Tuesday": [{type:Array}],
+                "Wednesday": [{type:Array}],
+                "Thursday":[{type:Array}],
+                "Friday":[{type:Array}],
+                "Saturday":[{type:Array}],
+                "Sunday": [{type:Array}]}
 });
 
 /**
