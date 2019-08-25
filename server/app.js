@@ -1,4 +1,4 @@
-require("dotenv").config();
+console.log("What is the stuff:",require("dotenv").config());
 
 const createError = require("http-errors");
 const express = require("express");
@@ -15,7 +15,8 @@ const {
   dishRouter,
   paymentRouter,
   filterChefRouter,
-  orderRouter
+  orderRouter,
+  getEnvRouter,
 } = require("./routes");
 const config = require("config");
 
@@ -46,6 +47,8 @@ app.use("/dish", dishRouter);
 app.use("/order", orderRouter);
 app.use("/payment", paymentRouter);
 app.use("/available_chef", filterChefRouter);
+app.use("/getenv", getEnvRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -38,39 +38,33 @@ const AnyReactComponent = ({ text }) =>
 
 //TODO use an api to get position of specified location.
 
-const apikey = process.env.CHEF_MENU_GOOGLE_MAP;
-const position = {
-  lat: 43.653225,
-  lng: -79.383186
-}
+function SimpleMap(props){
 
-class SimpleMap extends Component {
-
-  static defaultProps = {
-    center: {
-      lat: position.lat,
-      lng: position.lng
-    },
-    zoom: 13
-  };
-
-  render() {
+    // props.center.lat = props.location.lat;
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <GoogleMapReact
-          bootstrapURLKeys={apikey}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
+          bootstrapURLKeys={props.apikey}
+          center={props.location}
+          zoom={props.zoom}
         >
           <AnyReactComponent
-            lat={this.props.center.lat}
-            lng={this.props.center.lng}
+            lat={props.location.lat}
+            lng={props.location.lng}
             
           />
         </GoogleMapReact>
       </div>
     );
-  }
+  
 }
+
+// SimpleMap.defaultProps = {
+//   center: {
+//     lat: position.lat,
+//     lng: position.lng
+//   },
+//   zoom: 13
+// };
 
 export default SimpleMap;

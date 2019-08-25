@@ -24,7 +24,7 @@ import { Link, withRouter } from "react-router-dom";
     setAnchorEl(event.currentTarget);
   }
   function handleProfileClick(event) {
-    props.history.push(`/${user.usertype}/${user.id}`)
+    props.history.push(`${user.usertype}/${user.id}`)
   }
   function handleClose() {
     setAnchorEl(null);
@@ -48,4 +48,4 @@ import { Link, withRouter } from "react-router-dom";
   );
 }
 
-export default withRouter(Menubutton);
+export default withRouter(Menubutton)
