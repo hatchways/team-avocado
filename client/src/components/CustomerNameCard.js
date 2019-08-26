@@ -147,7 +147,6 @@ function Namecard({ customer, history}) {
     history.push("/browse/chefs");
   }
 
-
   return (
     <div className={classes.cardContainer}>
       <Card className={classes.card}>
@@ -159,15 +158,15 @@ function Namecard({ customer, history}) {
                 alt="profile"
                 src="/userpic-6.png"
               />
-              <span className={classes.name}> {values.name} </span>
-              <p className={classes.grey}> {values.strlocation} </p>
+              <span className={classes.name}> {customer.name} </span>
+              <p className={classes.grey}> {customer.strlocation} </p>
               <RequestButton onClick={handleSubmit}>Start Order</RequestButton>
             </div>
           </div>
           <div className={classes.rightpane}>
             <div className={classes.descwrap}>
               <span className={classes.boldbig}>ABOUT ME:</span>
-              <p className={classes.grey}>{values.description}</p>
+              <p className={classes.grey}>{customer.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
               <CuisineList cuisineList={values.favorite} />
             </div>

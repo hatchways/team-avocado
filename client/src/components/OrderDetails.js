@@ -2,30 +2,42 @@ import React from "react";
 import styled from "styled-components";
 
 import priceHelpers from "../helpers/priceHelpers";
+
+import useResource from "../hooks/useResource";
 import Button from "./Button";
 import { colors, layout } from "../themes/theme";
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+
   max-width: 300px;
   margin: 40px auto;
   background: white;
   box-shadow: 1px 7px 20px #33333314;
 
-  h1 {
+  h2 {
     text-align: center;
     padding: ${layout.spacing(2)} 0px;
     margin: 0px;
+    font-weight: normal;
   }
 
   ul {
     list-style: none;
     padding: 0px 25px;
+    max-height: 40vh;
+    overflow-y: auto;
   }
 
-  li {
+  .order-item {
     font-size: 0.5rem;
     display: flex;
+    align-items: center;
     margin-bottom: 5px;
+    font-size: 1rem;
 
     img {
       width: 50px;
@@ -33,14 +45,20 @@ const Container = styled.div`
     }
 
     div {
-      width: 70%;
-      padding: 5px 0px;
+      padding: 10px;
       flex-grow: 1;
     }
 
-    h3,
-    h2 {
+    h1 {
+      margin: 5px 0px;
+      font-size: 1.3rem;
+      padding: 0px;
+      text-align: left;
+    }
+    p {
+      display: flex;
       margin: 0px;
+      justify-content: space-between;
     }
   }
 
@@ -48,6 +66,10 @@ const Container = styled.div`
     width: 50px;
     height: 50px;
     margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    box-sizing: content-box;
+    background-color: black;
   }
 
   button {
@@ -59,7 +81,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     padding: ${layout.spacing(2)} ${layout.spacing(3)};
-
+    font-size: 0.8rem;
     span:nth-of-type(1) {
       font-weight: bold;
     }
@@ -85,7 +107,60 @@ const Container = styled.div`
   }
 `;
 
+const OrderItem = ({ dish: dishId, price, numDishes }) => {
+  console.log(`dishPrice: ${price}`);
+  const { resource, loading, error } = useResource(`dish/${dishId}`);
+
+  return (
+    <li className="order-item">
+      {loading ? (
+        "Loading..."
+      ) : (
+        <>
+          <img src={resource.dishImg} alt="dish" />
+          <div>
+            <h1>{resource.name}</h1>
+            <p>
+              <span>${price}</span>
+
+              <span>x{numDishes}</span>
+            </p>
+          </div>
+        </>
+      )}
+    </li>
+  );
+};
+
+const OrderDetails = ({ items, price, arrivalTime, onSubmit }) => {
+  const orderItems = items.map(item => <OrderItem {...item} />);
+
+  console.dir(items);
+  return (
+    <Container>
+      <h2>Your Order</h2>
+
+      <span>{console.dir(items)}</span>
+
+      <ul>{orderItems}</ul>
+      <div id="arrival-container">
+        <span>Arrival Time:</span>
+        <span>{getArrivalTimeString(arrivalTime)}</span>
+      </div>
+      <div id="total-container">
+        <span id="total-label">Total</span>
+        <span id="total">${price}</span>
+      </div>
+      <Button onClick={onSubmit}>Checkout</Button>
+    </Container>
+  );
+};
+
+export default OrderDetails;
+
 function getArrivalTimeString(date) {
+  date = new Date(date);
+
   const split = date.toDateString().split(" ");
 
   const [time, amOrPm] = date.toLocaleTimeString().split(" ");
@@ -95,46 +170,3 @@ function getArrivalTimeString(date) {
     -3
   )}${amOrPm.toLowerCase()}`;
 }
-
-const OrderItem = ({ imageURL, name, price }) => (
-  <li>
-    <img src={imageURL} alt="image of dish" />
-
-    <div>
-      <h3>{name}</h3>
-      <h2>{priceHelpers.numToString(price)}</h2>
-    </div>
-  </li>
-);
-
-const OrderDetails = ({ items, arrivalTime, onSubmit }) => {
-  const orderItems = items.map(item => <OrderItem {...item} />);
-
-  const total = priceHelpers.numToString(
-    items.reduce((accum, item) => {
-      accum += item.price;
-      return accum;
-    }, 0)
-  );
-
-  return (
-    <Container>
-      <div>
-        <h1>Your Order</h1>
-
-        <ul>{orderItems}</ul>
-        <div id="arrival-container">
-          <span>Arrival Time:</span>
-          <span>{getArrivalTimeString(arrivalTime)}</span>
-        </div>
-        <div id="total-container">
-          <span id="total-label">Total</span>
-          <span id="total">{total}</span>
-        </div>
-      </div>
-      <Button onClick={onSubmit}>Checkout</Button>
-    </Container>
-  );
-};
-
-export default OrderDetails;
