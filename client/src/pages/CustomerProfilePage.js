@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import NameCard from "../components/CustomerNameCard";
@@ -45,15 +46,18 @@ function CustomerPage({ customerId }) {
     userIsOwner = user && user.id === customerId;
 
   // Get the ID'd Customer document from API
-  const [customer] = useResource(`customer/${customerId}`, user.token);
+  const { resource: customer } = useResource(
+    `customer/${customerId}`,
+    user.token
+  );
 
   return (
     <PageContainer>
       <Navbar>
+        <Link to="/browse/chefs">Browse Chefs</Link>
         <SimpleMenu />
       </Navbar>
-
-      <NameCard customer={customer} />
+      {customer ? <NameCard customer={customer} /> : "Loading..."}
     </PageContainer>
   );
 }
