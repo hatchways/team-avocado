@@ -43,7 +43,7 @@ function CustomerPage({ customerId }) {
   // profile page
   console.log(customerId);
   const { user } = useContext(AuthContext),
-    userIsOwner = user && user.id === customerId;
+  userIsOwner = user && user.id === customerId;
 
   // Get the ID'd Customer document from API
   const [customer] = useResource(`customer/${customerId}`, user.token);

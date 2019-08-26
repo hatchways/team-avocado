@@ -10,6 +10,8 @@ import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
 import { Link, withRouter } from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+import TextField from "@material-ui/core/TextField";
 
 const { brandLight } = colors;
 
@@ -111,6 +113,8 @@ function Namecard({ customer, history}) {
     lat: "",
     lng: ""
   });
+  const { user, setUser } = useContext(AuthContext);
+
   const [key,setKey] = useState("");
   useEffect(() =>{
       async function getApikey(){
@@ -131,8 +135,6 @@ function Namecard({ customer, history}) {
       fetch(googleapi)
       .then(response=>response.json())
       .then(data=>{
-        console.log(data);
-        //   console.log(data.results[0].geometry);
         if(data.status === "OK"){
           setLocation(data.results[0].geometry.location);
         }
@@ -146,10 +148,81 @@ function Namecard({ customer, history}) {
   function handleSubmit(){
     history.push("/browse/chefs");
   }
+  const handleChange = name => event => {
+    setValues({ ...values, [name]: event.target.value });
+  };
+  async function handleImageSubmit(event) {
+    const fileObj = event.target.files[0];
+    let formData = new FormData();
+    formData.append("image", fileObj);
+    const id = event.target.id;
+    var imgAlt = "avatar";
+    try {
+      const endpoint = `customer/${customer._id}/${imgAlt}`;
+      const imgURL = await callAPI({
+        endpoint: endpoint,
+        method: "POST",
+        body: formData,
+        isForm: true
+      });
+        setValues({ ...values, avatar: imgURL });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  async function onSubmitAttempt(e) {
+    e.preventDefault();
+    try {
+      const updatedCustomer = await callAPI({
+        endpoint: `customer/${customer._id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: values,
+        token: user.token
+      });
 
-  return (
-    <div className={classes.cardContainer}>
+      setUser(updatedCustomer);
+      // toggleEditMode();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
+    return (
+      <Tooltip title={promptText} placement="center">
+        <div
+          style={{
+            position: "relative",
+            display: "inline-block",
+            cursor: "pointer",
+            width: "100%"
+          }}
+        >
+          <input
+            accept="image/*"
+            id="background-img-file"
+            multiple
+            type="file"
+            style={{
+              opacity: 0,
+              position: "absolute",
+              top: "0px",
+              left: "0px",
+              height: "100%",
+              width: "100%",
+              cursor: "pointer"
+            }}
+            onChange={onSubmit}
+          />
+          {children}
+        </div>
+      </Tooltip>
+    );
+  };
+  const StaticCard = (
       <Card className={classes.card}>
         <div className={classes.upper}>
           <div className={classes.leftpane}>
@@ -157,7 +230,7 @@ function Namecard({ customer, history}) {
               <img
                 className={classes.profile}
                 alt="profile"
-                src="/userpic-6.png"
+                src={values.avatar}
               />
               <span className={classes.name}> {values.name} </span>
               <p className={classes.grey}> {values.strlocation} </p>
@@ -177,6 +250,78 @@ function Namecard({ customer, history}) {
           <GoogleMap  location={location} apikey = {key} zoom={13}/>
         </div>
       </Card>
+
+  );
+
+  const EditModeCard = (
+    <Card className={classes.card} >
+    <div className={classes.upper}>
+      <div className={classes.leftpane}>
+        <div className={classes.wrap}>
+          <ImageUploader
+          onSubmit={handleImageSubmit}
+          promptText="Click to upload a new background"
+          >
+            <img
+              className={classes.profile}
+              alt="profile"
+              src={values.avatar}
+            />          
+          </ImageUploader>
+
+          <TextField
+            className="form-field"
+            label="Name"
+            value={values.name}
+            onChange={handleChange("name")}
+            margin="dense"
+            variant="outlined"
+          />
+          <TextField
+            className="form-field"
+            label="Location"
+            value={values.strlocation}
+            onChange={handleChange("strlocation")}
+            margin="dense"
+            variant="outlined"
+          />
+          <RequestButton onClick={onSubmitAttempt}>Save Profile</RequestButton>
+        </div>
+      </div>
+      <div className={classes.rightpane}>
+        <div className={classes.descwrap}>
+          <span className={classes.boldbig}>ABOUT ME:</span>
+          <TextField
+            className="form-field"
+            label="About Me"
+            value={values.description}
+            onChange={handleChange("description")}
+            margin="dense"
+            multiline
+            variant="outlined"
+          />
+          <span className={classes.boldbig}>FAVORITE CUSINE: </span>
+          {/* <CuisineList cuisineList={values.favorite} /> */}
+          <TextField
+            className="form-field"
+            label="Favorite Cuisines"
+            value={values.favorite}
+            onChange={handleChange("favorite")}
+            margin="dense"
+            multiline
+            variant="outlined"
+          />
+        </div>
+      </div>
+    </div>
+    <div className={classes.lower}>
+    </div>
+
+  </Card>
+  )
+  return (
+    <div className={classes.cardContainer}>
+        {EditModeCard}
     </div>
   );
 }

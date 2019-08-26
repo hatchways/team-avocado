@@ -87,60 +87,6 @@ const FormContainer = styled.form`
 `;
 
 
-    
-
-// const useStyles = makeStyles({
-//   form: {
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center",
-//     height: "100%",
-//     justifyContent: "space-between"
-//   },
-//   input: {
-//     display: "none"
-//   },
-//   cover: {
-//     cursor: "pointer",
-//     maxWidth: "100%"
-//   },
-//   profile: {
-//     position: "absolute",
-//     top: "15%",
-//     left: "30%",
-//     cursor: "pointer"
-//   },
-
-//   textField: {
-//     fontFamily: "Montserrat"
-//   },
-//   wrap: {
-//     height: "100%"
-//   },
-//   profileimg: {
-//     position: "absolute",
-//     top: "15%",
-//     left: "30%"
-//   },
-//   info: {
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center"
-//   },
-//   name: {
-//     textAlign: "center",
-//     fontWeight: "bold",
-//     fontSize: 20
-//   },
-//   location: {
-//     textAlign: "center",
-//     color: "grey"
-//   },
-//   desc: {
-//     textAlign: "center"
-//   }
-// });
-
 const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
   return (
     <Tooltip title={promptText} placement="center">
@@ -193,9 +139,7 @@ export default function Namecard({ chef, userIsOwner }) {
   const [restCuisines, setRestCuisines] = useState([]);
   
   function setCuisines(cuisines, chefsCuisines){
-      console.log(cuisines, chefsCuisines);
       let difference = cuisines.filter(x => !chefsCuisines.includes(x));
-      console.log(difference);
       return difference;
   }
   useEffect(()=>{
@@ -226,10 +170,7 @@ export default function Namecard({ chef, userIsOwner }) {
   }
   async function handleImageSubmit(event) {
     const fileObj = event.target.files[0];
-    console.log("FileObj", fileObj);
     let formData = new FormData();
-    console.log("target.id", event.target.id);
-
     formData.append("image", fileObj);
     const id = event.target.id;
     if (id === "profile-img-file") {
