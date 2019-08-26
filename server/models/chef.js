@@ -18,30 +18,34 @@ const chefSchema = new Schema({
   cuisine: String,
   travelRadius: Number,
   //will changed as order submit.
-  availability:{"Monday":[{type:Array}],
-                "Tuesday": [{type:Array}],
-                "Wednesday": [{type:Array}],
-                "Thursday":[{type:Array}],
-                "Friday":[{type:Array}],
-                "Saturday":[{type:Array}],
-                "Sunday": [{type:Array}]},
+  availability: {
+    Monday: [{ type: Array }],
+    Tuesday: [{ type: Array }],
+    Wednesday: [{ type: Array }],
+    Thursday: [{ type: Array }],
+    Friday: [{ type: Array }],
+    Saturday: [{ type: Array }],
+    Sunday: [{ type: Array }]
+  },
   //will changed only if chef changed it. And it will go forward
-  availability_default:{"Monday":[{type:Array}],
-                "Tuesday": [{type:Array}],
-                "Wednesday": [{type:Array}],
-                "Thursday":[{type:Array}],
-                "Friday":[{type:Array}],
-                "Saturday":[{type:Array}],
-                "Sunday": [{type:Array}]},
+  availability_default: {
+    Monday: [{ type: Array }],
+    Tuesday: [{ type: Array }],
+    Wednesday: [{ type: Array }],
+    Thursday: [{ type: Array }],
+    Friday: [{ type: Array }],
+    Saturday: [{ type: Array }],
+    Sunday: [{ type: Array }]
+  },
   //data structures to reduce time complexity.
-  available_days:{
-    "Monday":{type: Boolean, default: false},
-    "Tuesday": {type: Boolean, default: false},
-    "Wednesday": {type: Boolean, default: false},
-    "Thursday":{type: Boolean, default: false},
-    "Friday":{type: Boolean, default: false},
-    "Saturday":{type: Boolean, default: false},
-    "Sunday": {type: Boolean, default: false}
+  available_days: {
+    Monday: { type: Boolean, default: false },
+    Tuesday: { type: Boolean, default: false },
+    Wednesday: { type: Boolean, default: false },
+    Thursday: { type: Boolean, default: false },
+    Friday: { type: Boolean, default: false },
+    Saturday: { type: Boolean, default: false },
+    Sunday: { type: Boolean, default: false }
   }
 });
 
@@ -53,7 +57,6 @@ const chefSchema = new Schema({
 chefSchema.statics.findChefsForLocation = async function(customerCoordinates) {
   // MongoDB expects coordinates in reverse of typical ordering
   // i.e. <longitude, latitude> instead of <latitude, longitude>
-  // console.log(`customerCoordinates: ${customerCoordinates}`);
 
   console.log(`customerCoordinates: ${customerCoordinates}`);
 
@@ -84,6 +87,5 @@ chefSchema.statics.findChefsForLocation = async function(customerCoordinates) {
 const ChefModel = BaseUserModel.discriminator("Chef", chefSchema, {
   discriminatorKey: "kind"
 });
-
 
 module.exports = ChefModel;

@@ -110,28 +110,28 @@ export default function Namecard({ customer }) {
     lng: ""
   });
 
-  useEffect(() => {
-    async function getLatlnt() {
-      const address = values.strlocation;
-      const key = process.env.CHEF_MENU_GOOGLE_MAP;
-      const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-      console.log(values);
-      console.log("key", key);
-      const results = await callAPI({
-        endpoint: googleapi,
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      setLocation(results.geometry.location);
-    }
-    try {
-      getLatlnt();
-    } catch (err) {
-      console.log(err);
-    }
-  }, [values]);
+  // useEffect(() => {
+  //   async function getLatlnt() {
+  //     const address = values.strlocation;
+  //     const key = process.env.CHEF_MENU_GOOGLE_MAP;
+  //     const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+  //     console.log(values);
+  //     console.log("key", key);
+  //     const results = await callAPI({
+  //       endpoint: googleapi,
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       }
+  //     });
+  //     setLocation(results.geometry.location);
+  //   }
+  //   try {
+  //     getLatlnt();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, [values]);
 
   return (
     <div className={classes.cardContainer}>
@@ -144,19 +144,19 @@ export default function Namecard({ customer }) {
                 alt="profile"
                 src="/userpic-6.png"
               />
-              <span className={classes.name}> {values.name} </span>
-              <p className={classes.grey}> {values.strlocation} </p>
+              <span className={classes.name}> {customer.name} </span>
+              <p className={classes.grey}> {customer.strlocation} </p>
               <RequestButton type="submit">Send Message</RequestButton>
             </div>
           </div>
           <div className={classes.rightpane}>
             <div className={classes.descwrap}>
               <span className={classes.boldbig}>ABOUT ME:</span>
-              <p className={classes.grey}>{values.description}</p>
+              <p className={classes.grey}>{customer.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-              <CuisineList cuisineList={values.favorite} />
+              <CuisineList cuisineList={customer.favorite} />
               <div className={classes.lower}>
-                <GoogleMap location={location} />
+                {/* <GoogleMap location={location} /> */}
               </div>
             </div>
           </div>

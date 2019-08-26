@@ -81,7 +81,7 @@ const PageContainer = styled.div`
 `;
 
 function BrowseChefsPage({ classes, ...rest }) {
-  let [retrievedChefs] = useResource("chef");
+  let { resource: retrievedChefs } = useResource("chef");
 
   let [cuisines, setCuisines] = useState(
     cuisinesArray.reduce(
@@ -92,7 +92,7 @@ function BrowseChefsPage({ classes, ...rest }) {
       { all: true }
     )
   );
-  
+
   function toggleCuisine(cuisineName) {
     if (cuisineName !== "all" && cuisines.all) {
       // When 'all' filter is selected, treat clicks on

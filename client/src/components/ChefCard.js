@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link, withRouter } from "react-router-dom";
 import Chip from "./Chip";
 import { fadeIn } from "../constants/animations";
 
@@ -26,6 +27,8 @@ const Container = styled.li`
     transform: translate(0px, -5px);
   }
 
+  cursor: pointer;
+
   h1,
   h3 {
     margin: 0px;
@@ -50,9 +53,21 @@ const Container = styled.li`
   }
 `;
 
-const ChefCard = ({ name, avatar, strlocation, description, cuisine }) => {
+const ChefCard = ({
+  name,
+  avatar,
+  strlocation,
+  description,
+  cuisine,
+  history,
+  _id
+}) => {
+  function redirectToChefProfile() {
+    history.push(`/chef/${_id}`);
+  }
+
   return (
-    <Container>
+    <Container onClick={redirectToChefProfile}>
       <img src={avatar} alt="Chef" />
       <div>
         <h1>{name}</h1>
@@ -64,4 +79,4 @@ const ChefCard = ({ name, avatar, strlocation, description, cuisine }) => {
   );
 };
 
-export default ChefCard;
+export default withRouter(ChefCard);

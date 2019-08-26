@@ -89,10 +89,9 @@ export default function DishCard({
 }) {
   const classes = useStyles(brandLight);
 
-  console.log(ingredients);
   return (
     <CardContainer>
-      <EditButton onClick={toggleEdit} />
+      {toggleEdit && <EditButton onClick={toggleEdit} />}
       <div>
         <div>
           <span className={classes.pplnum}> MEAL FOR {numPeopleServed}</span>

@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import PickTagDialog from "./PickTagDialog";
 
+import ImageUploader from "./ImageUploader";
 import useToggle from "../hooks/useToggle";
 import { callAPI } from "../helpers/api";
 import { useContext } from "react";
@@ -81,94 +82,8 @@ const FormContainer = styled.form`
     display: block;
   }
 `;
-
-// const useStyles = makeStyles({
-//   form: {
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center",
-//     height: "100%",
-//     justifyContent: "space-between"
-//   },
-//   input: {
-//     display: "none"
-//   },
-//   cover: {
-//     cursor: "pointer",
-//     maxWidth: "100%"
-//   },
-//   profile: {
-//     position: "absolute",
-//     top: "15%",
-//     left: "30%",
-//     cursor: "pointer"
-//   },
-
-//   textField: {
-//     fontFamily: "Montserrat"
-//   },
-//   wrap: {
-//     height: "100%"
-//   },
-//   profileimg: {
-//     position: "absolute",
-//     top: "15%",
-//     left: "30%"
-//   },
-//   info: {
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center"
-//   },
-//   name: {
-//     textAlign: "center",
-//     fontWeight: "bold",
-//     fontSize: 20
-//   },
-//   location: {
-//     textAlign: "center",
-//     color: "grey"
-//   },
-//   desc: {
-//     textAlign: "center"
-//   }
-// });
 const cuisines = ["Chinese", "Indian", "American", "Japanese"];
 
-const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
-  return (
-    <Tooltip title={promptText} placement="center">
-      <div
-        style={{
-          position: "relative",
-          display: "inline-block",
-          cursor: "pointer",
-          width: "100%"
-        }}
-      >
-        <input
-          accept="image/*"
-          id="background-img-file"
-          multiple
-          type="file"
-          style={{
-            opacity: 0,
-            position: "absolute",
-            top: "0px",
-            left: "0px",
-            height: "100%",
-            width: "100%",
-            cursor: "pointer"
-          }}
-          onChange={onSubmit}
-        />
-        {children}
-      </div>
-    </Tooltip>
-  );
-};
-
-//TODO: pass in props and get data from props
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
 
@@ -257,7 +172,7 @@ export default function Namecard({ chef, userIsOwner }) {
         {userIsOwner ? (
           <Button onClick={toggleEditMode}>Edit Info</Button>
         ) : (
-          <SendRequestDialog />
+          user && <SendRequestDialog chef={chef} />
         )}
       </div>
     </>

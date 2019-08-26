@@ -46,12 +46,6 @@ const useStyles = makeStyles({
     fontFamily: "Montserrat"
   },
 
-  scroll: {
-    // width: "80%",
-    // height: "83%",
-    // overflowY: "scroll"
-  },
-
   titlediv: {
     padding: 10
   },
