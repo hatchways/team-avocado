@@ -35,7 +35,7 @@ const PageContainer = styled.div`
 
     & > h1,
     & > div {
-      padding: ${layout.spacing(3)} ${layout.spacing(7)};
+      padding: ${layout.spacing(3)} ${layout.spacing(10)};
     }
   }
   .paneRight {
@@ -59,14 +59,14 @@ const CheckoutPage = ({ stripe }) => {
   const [loading, toggleLoading] = useToggle(false),
     [paymentComplete, togglePaymentComplete] = useToggle(false),
     [error, setError] = useState(null),
-    { cart, addToCart, removeFromCart, getCurrentTotal } = useContext(Context);
+    { order, user } = useContext(Context);
 
   async function onSubmit(e) {
     e.preventDefault();
 
     toggleLoading();
 
-    let { token } = await stripe.createToken({ name: "Test User" });
+    let { token } = await stripe.createToken({ name: user.name });
 
     // token will be 'undefined' if
     if (token) {
@@ -76,7 +76,7 @@ const CheckoutPage = ({ stripe }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: { tokenId: token.id, totalPrice: getCurrentTotal() * 100 }
+        body: { tokenId: token.id, totalPrice: order.price }
       });
 
       if (response.status === "succeeded") {
@@ -102,8 +102,9 @@ const CheckoutPage = ({ stripe }) => {
         </div>
         <div className="paneRight">
           <OrderDetails
-            items={cart}
-            arrivalTime={new Date()}
+            items={order.dishes}
+            arrivalTime={order.bookedTime}
+            price={order.price}
             onSubmit={onSubmit}
           />
         </div>
