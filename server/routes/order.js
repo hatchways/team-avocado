@@ -5,7 +5,6 @@ const _ = require("lodash");
 const Joi = require("joi");
 const createError = require("http-errors");
 const { decodeToken, userIsAuthorized } = require("../middleware/auth");
-const fileUploadService = require("../services/fileUploader");
 
 /**
  * GET an individual order by its ID

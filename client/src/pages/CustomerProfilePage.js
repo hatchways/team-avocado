@@ -42,6 +42,7 @@ const PageContainer = styled.div`
 function CustomerPage({ customerId }) {
   // Determine whether logged in user owns this
   // profile page
+  console.log(customerId);
   const { user } = useContext(AuthContext),
     userIsOwner = user && user.id === customerId;
 
@@ -57,6 +58,7 @@ function CustomerPage({ customerId }) {
         <Link to="/browse/chefs">Browse Chefs</Link>
         <SimpleMenu />
       </Navbar>
+
       {customer ? <NameCard customer={customer} /> : "Loading..."}
     </PageContainer>
   );

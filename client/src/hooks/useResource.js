@@ -8,6 +8,7 @@ export default function useResource(endpoint, token) {
 
   useEffect(() => {
     async function retrieveResource() {
+      console.log("---------");
       let config = token ? { endpoint, token } : { endpoint };
 
       try {

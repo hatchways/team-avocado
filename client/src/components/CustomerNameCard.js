@@ -9,6 +9,7 @@ import CuisineList from "./CuisineList";
 import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
+import { Link, withRouter } from "react-router-dom";
 
 const { brandLight } = colors;
 
@@ -96,42 +97,55 @@ const useStyles = makeStyles({
 });
 //TODO: pass in props and get data from props
 
-export default function Namecard({ customer }) {
+function Namecard({ customer, history}) {
   const classes = useStyles();
   const [values, setValues] = useState({
-    name: "",
-    strlocation: "",
-    description: "",
-    favorite: []
+    name: customer.name,
+    strlocation: customer.strlocation,
+    description: customer.description,
+    favorite: customer.favorite,
+    avatar: customer.avatar
   });
 
   const [location, setLocation] = useState({
     lat: "",
     lng: ""
   });
+  const [key,setKey] = useState("");
+  useEffect(() =>{
+      async function getApikey(){
+        const apikey = await callAPI({
+            endpoint: "getenv/CHEF_MENU_GOOGLE_MAP",
+            method: "GET",
+        });
+        setKey(apikey);
+      }
+      getApikey();
+  },[])
 
-  // useEffect(() => {
-  //   async function getLatlnt() {
-  //     const address = values.strlocation;
-  //     const key = process.env.CHEF_MENU_GOOGLE_MAP;
-  //     const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-  //     console.log(values);
-  //     console.log("key", key);
-  //     const results = await callAPI({
-  //       endpoint: googleapi,
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       }
-  //     });
-  //     setLocation(results.geometry.location);
-  //   }
-  //   try {
-  //     getLatlnt();
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, [values]);
+  useEffect(() => {
+    async function getLatlnt() {
+      const address = values.strlocation;
+      const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+      if (key != undefined){
+      fetch(googleapi)
+      .then(response=>response.json())
+      .then(data=>{
+        console.log(data);
+        //   console.log(data.results[0].geometry);
+        if(data.status === "OK"){
+          setLocation(data.results[0].geometry.location);
+        }
+      })
+    }
+    }
+      getLatlnt();
+    
+  }, [key]);
+
+  function handleSubmit(){
+    history.push("/browse/chefs");
+  }
 
   return (
     <div className={classes.cardContainer}>
@@ -146,7 +160,7 @@ export default function Namecard({ customer }) {
               />
               <span className={classes.name}> {customer.name} </span>
               <p className={classes.grey}> {customer.strlocation} </p>
-              <RequestButton type="submit">Send Message</RequestButton>
+              <RequestButton onClick={handleSubmit}>Start Order</RequestButton>
             </div>
           </div>
           <div className={classes.rightpane}>
@@ -154,17 +168,17 @@ export default function Namecard({ customer }) {
               <span className={classes.boldbig}>ABOUT ME:</span>
               <p className={classes.grey}>{customer.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-              <CuisineList cuisineList={customer.favorite} />
-              <div className={classes.lower}>
-                {/* <GoogleMap location={location} /> */}
-              </div>
+              <CuisineList cuisineList={values.favorite} />
             </div>
           </div>
         </div>
         <div className={classes.lower}>
-          <GoogleMap />
+          <GoogleMap  location={location} apikey = {key} zoom={13}/>
         </div>
       </Card>
     </div>
   );
 }
+
+
+export default withRouter(Namecard);

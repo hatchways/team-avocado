@@ -11,6 +11,7 @@ import Chip from "../components/Chip";
 import Button from "../components/Button";
 import TextField from "../components/TextField";
 import ChefCard from "../components/ChefCard";
+import SimpleMenu from "../components/MenuButton";
 
 const cuisinesArray = [
   "American",
@@ -64,7 +65,6 @@ const PageContainer = styled.div`
 
   nav span {
     margin-right: ${layout.spacing(4)};
-    color: white;
   }
 
   #cuisine-label {
@@ -136,7 +136,9 @@ function BrowseChefsPage({ classes, ...rest }) {
   console.log(selectedCuisines);
   return (
     <PageContainer className="pageContainer">
-      <Navbar />
+      <Navbar transparent>
+        <SimpleMenu/>
+      </Navbar>
 
       <div className="paneLeft">
         <TextField label="Location" IconComponent={TiLocation} />

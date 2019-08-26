@@ -46,6 +46,7 @@ router.get("/:userId", async (req, res, next) => {
   /**
    *    Return JSON containing: Chef's name, description, and populated array of dishes.
    */
+  console.log(chef.cuisines);
   res.status(200).send(chef);
 });
 

@@ -10,11 +10,15 @@ import PickTagDialog from "./PickTagDialog";
 import ImageUploader from "./ImageUploader";
 import useToggle from "../hooks/useToggle";
 import { callAPI } from "../helpers/api";
-import { useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import AuthContext from "../store/createContext";
 import { Link } from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
+import {totalCuisines} from "../constants/cuisines"
 import AvailabilityDialog from "./AvailabilityDialog";
+import CuisineList from "./CuisineList";
+
+
 
 const Container = styled.div`
   height: 100%;
@@ -82,7 +86,9 @@ const FormContainer = styled.form`
     display: block;
   }
 `;
+
 const cuisines = ["Chinese", "Indian", "American", "Japanese"];
+
 
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
@@ -92,11 +98,25 @@ export default function Namecard({ chef, userIsOwner }) {
     strlocation: chef.strlocation,
     description: chef.description,
     avatar: chef.avatar,
-    background: "https://i.imgur.com/K1knFqf.jpg"
+    background: "https://i.imgur.com/K1knFqf.jpg",
+    cuisines:chef.cuisines,
   });
-
+  function setValuesCuisines(cuisines){
+      setValues({...values, cuisines:cuisines});
+  }
   const { user, setUser } = useContext(AuthContext);
-
+  const [restCuisines, setRestCuisines] = useState([]);
+  
+  function setCuisines(cuisines, chefsCuisines){
+      console.log(cuisines, chefsCuisines);
+      let difference = cuisines.filter(x => !chefsCuisines.includes(x));
+      console.log(difference);
+      return difference;
+  }
+  useEffect(()=>{
+      const rest = setCuisines(totalCuisines, values.cuisines);
+      setRestCuisines(rest);
+  },[values])
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
@@ -133,7 +153,6 @@ export default function Namecard({ chef, userIsOwner }) {
       var imgAlt = "chef_background";
     }
     try {
-      console.log("What's wrong", imgAlt);
       const endpoint = `chef/${chef._id}/${imgAlt}`;
       const imgURL = await callAPI({
         endpoint: endpoint,
@@ -141,8 +160,7 @@ export default function Namecard({ chef, userIsOwner }) {
         body: formData,
         isForm: true
       });
-      console.log("url returned", imgURL);
-      console.log("NMSL", imgAlt === "chef_background");
+
       if (imgAlt === "chef_background") {
         setValues({ ...values, background: imgURL });
       } else if (imgAlt === "avatar") {
@@ -166,6 +184,9 @@ export default function Namecard({ chef, userIsOwner }) {
           <div>
             <p className="description">{values.description}</p>
           </div>
+          <div>
+            <CuisineList cuisineList={values.cuisines} />
+          </div>
         </div>
       </div>
       <div className="button-container">
@@ -177,6 +198,7 @@ export default function Namecard({ chef, userIsOwner }) {
       </div>
     </>
   );
+
 
   const EditModeCard = (
     <FormContainer onSubmit={onSubmitAttempt}>
@@ -194,7 +216,7 @@ export default function Namecard({ chef, userIsOwner }) {
           >
             <img src={values.avatar} alt="" id="profile" />
           </ImageUploader>
-          <PickTagDialog cuisines={cuisines} />
+          <PickTagDialog cuisines={values.cuisines} restCuisines={restCuisines} setValuesCuisines={setValuesCuisines}/>
           <AvailabilityDialog />
           <TextField
             className="form-field"
@@ -250,7 +272,9 @@ export default function Namecard({ chef, userIsOwner }) {
 
   return (
     <Container>
+
       {userIsOwner && isEditing ? EditModeCard : StaticCard}
+
     </Container>
   );
 }
