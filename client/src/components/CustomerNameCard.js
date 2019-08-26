@@ -111,30 +111,38 @@ function Namecard({ customer, history}) {
     lat: "",
     lng: ""
   });
+  const [key,setKey] = useState("");
+  useEffect(() =>{
+      async function getApikey(){
+        const apikey = await callAPI({
+            endpoint: "getenv/CHEF_MENU_GOOGLE_MAP",
+            method: "GET",
+        });
+        setKey(apikey);
+      }
+      getApikey();
+  },[])
 
-//   useEffect(() => {
-//     async function getLatlnt() {
-//         console.log(values);
-//       const address = values.strlocation;
-//       const key = process.env.CHEF_MENU_GOOGLE_MAP;
-//       const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-//       console.log(values);
-//       console.log("key", key);
-//       const results = await callAPI({
-//         endpoint: googleapi,
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json"
-//         }
-//       });
-//       setLocation(results.geometry.location);
-//     }
-//     try {
-//       getLatlnt();
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }, [values]);
+  useEffect(() => {
+    async function getLatlnt() {
+      const address = values.strlocation;
+      const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
+      if (key != undefined){
+      fetch(googleapi)
+      .then(response=>response.json())
+      .then(data=>{
+        console.log(data);
+        //   console.log(data.results[0].geometry);
+        if(data.status === "OK"){
+          setLocation(data.results[0].geometry.location);
+        }
+      })
+    }
+    }
+      getLatlnt();
+    
+  }, [key]);
+
   function handleSubmit(){
     history.push("/browse/chefs");
   }
@@ -166,7 +174,7 @@ function Namecard({ customer, history}) {
           </div>
         </div>
         <div className={classes.lower}>
-          <GoogleMap />
+          <GoogleMap  location={location} apikey = {key} zoom={13}/>
         </div>
       </Card>
     </div>

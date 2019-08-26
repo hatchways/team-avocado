@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useContext } from "react";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
+import AuthContext from "../store/createContext";
+import { Link, withRouter } from "react-router-dom";
 
-export default function Menubutton() {
+
+ function Menubutton(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { user } = useContext(AuthContext);
 
   const useStyles = makeStyles(theme => ({
     button: {
@@ -19,7 +23,9 @@ export default function Menubutton() {
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
-
+  function handleProfileClick(event) {
+    props.history.push(`${user.usertype}/${user.id}`)
+  }
   function handleClose() {
     setAnchorEl(null);
   }
@@ -27,7 +33,7 @@ export default function Menubutton() {
   return (
     <div>
       {/* TODO Get the currentuser and display name in menu */}
-    <Button className={classes.button} onClick={handleClick} color="primary">Default</Button>
+    <Button className={classes.button} onClick={handleClick} color="primary">{user.name}</Button>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -35,10 +41,11 @@ export default function Menubutton() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
     </div>
   );
 }
+
+export default withRouter(Menubutton)
