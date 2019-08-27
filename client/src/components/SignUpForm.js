@@ -124,8 +124,6 @@ function SignUpForm({ onSubmit: submitForm, userType, history}) {
         });
 
         setUser(user);
-        console.log(userType);
-        console.log(user);
         history.push(`/${userType}/${user.id}/edit`);
       } catch (error) {
         displayErrorMessage(error);

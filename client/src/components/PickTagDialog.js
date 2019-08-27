@@ -15,7 +15,6 @@ import AuthContext from "../store/createContext";
 
 
 export default function PickTagDialog(props ) {
-  console.log("PTD props",props);
     const [open, setOpen] = React.useState(false);
     const PickTagBtn = styled(Button)`
         display:block;
@@ -35,7 +34,6 @@ export default function PickTagDialog(props ) {
       async function handleClick(event){
         event.preventDefault();
         try {
-          console.log(chefcuisines)
           const cuisinesBody = {
             "cuisines":chefcuisines
           }

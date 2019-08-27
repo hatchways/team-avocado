@@ -44,15 +44,12 @@ export default function TransferList({cuisines, restCuisines,setchefCuisines}) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([...Array(restcuiIndex).keys()]);
-  console.log("Left and list:",left, list);
   if(list.length === restcuiIndex){
     var numArray = [];
   } else{
     var numArray = Array.from([...Array(list.length-restcuiIndex).keys()],x=>x+restcuiIndex);
   }
-  console.log("numArray:",numArray);
   const [right, setRight] = React.useState(numArray);
-  console.log("Right",right);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);

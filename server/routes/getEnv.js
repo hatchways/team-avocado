@@ -8,11 +8,7 @@ router = require("express").Router(),
 router.get(
     "/CHEF_MENU_GOOGLE_MAP",
     async (req, res, next) => {
-        // const {
-        //     params: { variable }
-        //   } = req;
-        // console.log("Variable:",variable);
-        // if(variable === "CHEF_MENU_GOOGLE_MAP"){
+
         res.status(200).send(JSON.stringify(process.env.CHEF_MENU_GOOGLE_MAP));
       
     }

@@ -61,7 +61,6 @@ module.exports.getCoordinates = async function(address) {
   // Make the request and parse returned JSON
   const res = await fetch(URL).then(res => res.json());
 
-  console.log(res);
 
   let result;
   try {

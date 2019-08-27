@@ -173,8 +173,6 @@ const AvailabilityDialog = () => {
   };
 
   function selectHour(dayName, hour) {
-    console.log(`daysOfTheWeek: ${daysOfTheWeek}`);
-    console.log(`dayName: ${dayName}`);
 
     const newAvailibility = [...daysOfTheWeek[dayName]];
 

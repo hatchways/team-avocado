@@ -53,7 +53,6 @@ export default function SendRequestDialog() {
     setSelectedDate(date);
   }
   const { user } = useContext(AuthContext);
-  console.log("Context user:", user);
 
   const [values, setValues] = React.useState({});
 

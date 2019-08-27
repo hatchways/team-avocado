@@ -6,11 +6,8 @@ export default function useResource(endpoint, token) {
   console.log(endpoint);
   useEffect(() => {
     async function retrieveResource() {
-      console.log("---------");
       let config = token ? { endpoint, token } : { endpoint };
       
-      console.log("config = ", config);
-    
       setResource(await callAPI(config));
     }
 

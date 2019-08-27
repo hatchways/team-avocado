@@ -133,7 +133,6 @@ function BrowseChefsPage({ classes, ...rest }) {
           {entry[0]}
         </Chip>
       ));
-  console.log(selectedCuisines);
   return (
     <PageContainer className="pageContainer">
       <Navbar transparent>

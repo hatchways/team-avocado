@@ -1,4 +1,4 @@
-console.log("What is the stuff:",require("dotenv").config());
+require("dotenv").config();
 
 const createError = require("http-errors");
 const express = require("express");

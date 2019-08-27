@@ -46,7 +46,6 @@ router.get("/:userId", async (req, res, next) => {
   /**
    *    Return JSON containing: Chef's name, description, and populated array of dishes.
    */
-  console.log(chef.cuisines);
   res.status(200).send(chef);
 });
 
@@ -161,7 +160,6 @@ router.post("/:userId/avatar", fileUploadService, async (req, res) => {
 
 router.post("/:userId/chef_background", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
-  console.log("bg url",fileURL);
   // Add URL for uploaded photo to user document
   await Chef.findByIdAndUpdate(req.params.userId, { background: fileURL });
 

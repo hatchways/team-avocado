@@ -29,7 +29,6 @@ router.get("/", async (req, res, next) => {
 router.post("/", decodeToken, async (req, res, next) => {
   const { body, decoded } = req;
   const { error } = validateDish(body);
-  console.log(body);
   if (error) return next(createError(400, error.details[0].message));
 
   /**
@@ -66,7 +65,6 @@ router.put(
       useFindAndModify: false,
       new:true
     });
-    console.log("Dish in route:",dish);
     if (!dish) {
       return next(
         createError(400, `Dish with id ${userId} could not be found.`)
@@ -78,7 +76,6 @@ router.put(
 
 router.post("/:dishId/dishImg", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
-  console.log("bg url",fileURL);
   // Add URL for uploaded photo to user document
   await Dish.findByIdAndUpdate(req.params.dishId, { dishImg: fileURL });
 
@@ -88,7 +85,6 @@ router.post("/:dishId/dishImg", fileUploadService, async (req, res) => {
 
 router.post("/dishImg", fileUploadService, async (req, res) => {
   const fileURL = req.file.location;
-  console.log("bg url",fileURL);
   // Add URL for uploaded photo to user document
   await Dish.findByIdAndUpdate(req.params.dishId, { dishImg: fileURL });
 
