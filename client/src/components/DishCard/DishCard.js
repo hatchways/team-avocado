@@ -89,7 +89,6 @@ export default function DishCard({
 }) {
   const classes = useStyles(brandLight);
 
-  console.log(ingredients);
   return (
     <CardContainer>
       <EditButton onClick={toggleEdit} />

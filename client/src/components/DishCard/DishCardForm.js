@@ -85,7 +85,6 @@ export default function SimpleCard({
   const classes = useStyles(brandLight);
 
   const { user, setUser } = useContext(AuthContext);
-  // console.log("Context user:",user);
   const [values, setValues] = React.useState({
     numPeopleServed: numPeopleServed,
     name: name,

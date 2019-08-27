@@ -101,7 +101,6 @@ const useStyles = makeStyles({
 //TODO: pass in props and get data from props
 
 function Namecard({ customer, history, userIsOwner}) {
-  console.log("Use is owner:",userIsOwner);
   const classes = useStyles();
   const [values, setValues] = useState({
     name: customer.name,
@@ -153,7 +152,6 @@ function Namecard({ customer, history, userIsOwner}) {
   }
   const handleChange = name => event => {
     if(name==="favorite"){
-      console.log("Favorite values:",event.target.value);
       setValues({ ...values, [name]: event.target.value.split(",") });
     }else{
       setValues({ ...values, [name]: event.target.value });
