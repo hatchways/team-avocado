@@ -54,7 +54,7 @@ function CustomerPage({ customerId }) {
         <SimpleMenu />
       </Navbar>
 
-      {customer ? <NameCard customer={customer} /> : "Loading..."}
+      {customer ? <NameCard customer={customer} userIsOwner={userIsOwner}/> : "Loading..."}
     </PageContainer>
   );
 }

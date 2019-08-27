@@ -123,7 +123,7 @@ const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
 //TODO: pass in props and get data from props
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
-
+  console.log("User is owner:",userIsOwner);
   const [values, setValues] = React.useState({
     name: chef.name,
     strlocation: chef.strlocation,

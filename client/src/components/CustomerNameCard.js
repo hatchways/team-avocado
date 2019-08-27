@@ -12,6 +12,7 @@ import AuthContext from "../store/createContext";
 import { Link, withRouter } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import TextField from "@material-ui/core/TextField";
+import useToggle from "../hooks/useToggle";
 
 const { brandLight } = colors;
 
@@ -99,7 +100,8 @@ const useStyles = makeStyles({
 });
 //TODO: pass in props and get data from props
 
-function Namecard({ customer, history}) {
+function Namecard({ customer, history, userIsOwner}) {
+  console.log("Use is owner:",userIsOwner);
   const classes = useStyles();
   const [values, setValues] = useState({
     name: customer.name,
@@ -108,6 +110,7 @@ function Namecard({ customer, history}) {
     favorite: customer.favorite,
     avatar: customer.avatar
   });
+  const [isEditing, toggleEditMode] = useToggle(false);
 
   const [location, setLocation] = useState({
     lat: "",
@@ -149,8 +152,14 @@ function Namecard({ customer, history}) {
     history.push("/browse/chefs");
   }
   const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
+    if(name==="favorite"){
+      console.log("Favorite values:",event.target.value);
+      setValues({ ...values, [name]: event.target.value.split(",") });
+    }else{
+      setValues({ ...values, [name]: event.target.value });
+    }
   };
+  
   async function handleImageSubmit(event) {
     const fileObj = event.target.files[0];
     let formData = new FormData();
@@ -184,15 +193,15 @@ function Namecard({ customer, history}) {
         token: user.token
       });
 
-      setUser(updatedCustomer);
-      // toggleEditMode();
+      // setUser(updatedCustomer);
+      toggleEditMode();
     } catch (error) {
       console.log(error);
     }
   }
   const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
     return (
-      <Tooltip title={promptText} placement="center">
+      <Tooltip title={promptText}>
         <div
           style={{
             position: "relative",
@@ -234,7 +243,11 @@ function Namecard({ customer, history}) {
               />
               <span className={classes.name}> {values.name} </span>
               <p className={classes.grey}> {values.strlocation} </p>
-              <RequestButton onClick={handleSubmit}>Start Order</RequestButton>
+              {userIsOwner ? (
+                <RequestButton onClick={toggleEditMode}>Edit Info</RequestButton>
+                ) : (
+                  <RequestButton onClick={handleSubmit}>Browse Chef</RequestButton>
+                  )}
             </div>
           </div>
           <div className={classes.rightpane}>
@@ -257,7 +270,7 @@ function Namecard({ customer, history}) {
     <Card className={classes.card} >
     <div className={classes.upper}>
       <div className={classes.leftpane}>
-        <div className={classes.wrap}>
+        <div className={classes.wrap} >
           <ImageUploader
           onSubmit={handleImageSubmit}
           promptText="Click to upload a new background"
@@ -301,7 +314,6 @@ function Namecard({ customer, history}) {
             variant="outlined"
           />
           <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-          {/* <CuisineList cuisineList={values.favorite} /> */}
           <TextField
             className="form-field"
             label="Favorite Cuisines"
@@ -321,7 +333,7 @@ function Namecard({ customer, history}) {
   )
   return (
     <div className={classes.cardContainer}>
-        {EditModeCard}
+      {userIsOwner && isEditing ? EditModeCard : StaticCard}
     </div>
   );
 }
