@@ -47,6 +47,8 @@ app.use("/payment", paymentRouter);
 app.use("/available_chef", filterChefRouter);
 app.use("/getenv", getEnvRouter);
 
+app.use(express.static("client/build"));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
