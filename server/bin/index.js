@@ -1,6 +1,3 @@
-/* Sets up the environment variables from your .env file*/
-require("dotenv").config();
-
 /**
  * Module dependencies.
  */
