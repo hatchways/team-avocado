@@ -1,9 +1,23 @@
-module.exports.signupRouter = require("./signup");
-module.exports.loginRouter = require("./login");
-module.exports.customerRouter = require("./customer");
-module.exports.chefRouter = require("./chef");
-module.exports.dishRouter = require("./dish");
-module.exports.orderRouter = require("./order");
-module.exports.paymentRouter = require("./payment");
-module.exports.filterChefRouter = require("./filterChef");
-module.exports.getEnvRouter = require("./getEnv");
+const apiRouter = require("express").Router();
+
+const signupRouter = require("./signup"),
+  loginRouter = require("./login"),
+  customerRouter = require("./customer"),
+  chefRouter = require("./chef"),
+  dishRouter = require("./dish"),
+  orderRouter = require("./order"),
+  paymentRouter = require("./payment"),
+  filterChefRouter = require("./filterChef"),
+  getEnvRouter = require("./getEnv");
+
+apiRouter.use("/signup", signupRouter);
+apiRouter.use("/login", loginRouter);
+apiRouter.use("/customer", customerRouter);
+apiRouter.use("/chef", chefRouter);
+apiRouter.use("/dish", dishRouter);
+apiRouter.use("/order", orderRouter);
+apiRouter.use("/payment", paymentRouter);
+apiRouter.use("/available_chef", filterChefRouter);
+apiRouter.use("/getenv", getEnvRouter);
+
+module.exports = apiRouter;

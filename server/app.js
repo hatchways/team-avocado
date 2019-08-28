@@ -5,17 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 
-const {
-  signupRouter,
-  loginRouter,
-  customerRouter,
-  chefRouter,
-  dishRouter,
-  paymentRouter,
-  filterChefRouter,
-  orderRouter,
-  getEnvRouter
-} = require("./routes");
+const apiRouter = require("./routes");
 const config = require("config");
 
 const app = express();
@@ -33,21 +23,15 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 
 // app.use((req, res) => console.dir(req.body));
 
-app.use("/signup", signupRouter);
-app.use("/login", loginRouter);
-app.use("/customer", customerRouter);
-app.use("/chef", chefRouter);
-app.use("/dish", dishRouter);
-app.use("/order", orderRouter);
-app.use("/payment", paymentRouter);
-app.use("/available_chef", filterChefRouter);
-app.use("/getenv", getEnvRouter);
+app.use(express.static(path.join(__dirname, "client/build")));
+app.use("/api", apiRouter);
 
-app.use(express.static("client/build"));
+app.use("*", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
