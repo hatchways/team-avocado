@@ -88,14 +88,13 @@ function SendRequestDialog({ chef, history }) {
     bookedTime: new Date("2014-08-18T21:11:54")
   });
 
-  function handleDateChange(date) {
-    setSelectedDate(date);
-  }
-  const { user } = useContext(AuthContext);
+  const { user, setOrder } = useContext(AuthContext);
+
   console.log(user);
 
   const handleAddDish = dishId => {
     const currentVal = orderState.dishes[dishId];
+
     const newDishes = {
       ...orderState.dishes,
       [dishId]: currentVal + 1

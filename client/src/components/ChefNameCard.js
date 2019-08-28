@@ -89,38 +89,38 @@ const FormContainer = styled.form`
 
 const cuisines = ["Chinese", "Indian", "American", "Japanese"];
 
-const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
-  return (
-    <Tooltip title={promptText} placement="center">
-      <div
-        style={{
-          position: "relative",
-          display: "inline-block",
-          cursor: "pointer",
-          width: "100%"
-        }}
-      >
-        <input
-          accept="image/*"
-          id="background-img-file"
-          multiple
-          type="file"
-          style={{
-            opacity: 0,
-            position: "absolute",
-            top: "0px",
-            left: "0px",
-            height: "100%",
-            width: "100%",
-            cursor: "pointer"
-          }}
-          onChange={onSubmit}
-        />
-        {children}
-      </div>
-    </Tooltip>
-  );
-};
+// const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
+//   return (
+//     <Tooltip title={promptText} placement="center">
+//       <div
+//         style={{
+//           position: "relative",
+//           display: "inline-block",
+//           cursor: "pointer",
+//           width: "100%"
+//         }}
+//       >
+//         <input
+//           accept="image/*"
+//           id="background-img-file"
+//           multiple
+//           type="file"
+//           style={{
+//             opacity: 0,
+//             position: "absolute",
+//             top: "0px",
+//             left: "0px",
+//             height: "100%",
+//             width: "100%",
+//             cursor: "pointer"
+//           }}
+//           onChange={onSubmit}
+//         />
+//         {children}
+//       </div>
+//     </Tooltip>
+//   );
+// };
 
 //TODO: pass in props and get data from props
 
