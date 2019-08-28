@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/index",
+    "heroku-postbuild": "cd client && npm install && run build",
     "dev": "nodemon ./bin/index",
     "test": "NODE_ENV=test mocha --exit --timeout 30000"
   },
