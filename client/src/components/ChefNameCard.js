@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import PickTagDialog from "./PickTagDialog";
 
+import ImageUploader from "./ImageUploader";
 import useToggle from "../hooks/useToggle";
 import { callAPI } from "../helpers/api";
 import { useEffect, useContext, useState } from "react";
@@ -86,6 +87,7 @@ const FormContainer = styled.form`
   }
 `;
 
+const cuisines = ["Chinese", "Indian", "American", "Japanese"];
 
 const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
   return (
@@ -121,6 +123,7 @@ const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
 };
 
 //TODO: pass in props and get data from props
+
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
   const [values, setValues] = React.useState({
@@ -218,7 +221,7 @@ export default function Namecard({ chef, userIsOwner }) {
         {userIsOwner ? (
           <Button onClick={toggleEditMode}>Edit Info</Button>
         ) : (
-          <SendRequestDialog />
+          user && <SendRequestDialog chef={chef} />
         )}
       </div>
     </>

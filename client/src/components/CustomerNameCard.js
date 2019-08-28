@@ -230,6 +230,7 @@ function Namecard({ customer, history, userIsOwner}) {
     );
   };
   const StaticCard = (
+
       <Card className={classes.card}>
         <div className={classes.upper}>
           <div className={classes.leftpane}>
@@ -251,7 +252,7 @@ function Namecard({ customer, history, userIsOwner}) {
           <div className={classes.rightpane}>
             <div className={classes.descwrap}>
               <span className={classes.boldbig}>ABOUT ME:</span>
-              <p className={classes.grey}>{values.description}</p>
+              <p className={classes.grey}>{customer.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
               <CuisineList cuisineList={values.favorite} />
             </div>

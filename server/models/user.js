@@ -39,8 +39,6 @@ const userSchema = new Schema({
   updatedAt: Date
 });
 
-// This "pre hook" lets us arrange for a function to be called
-// before a new document is saved to the db
 userSchema.pre("save", async function(next) {
   try {
     if (!this.isModified("password")) {
@@ -48,6 +46,20 @@ userSchema.pre("save", async function(next) {
     }
     let hashedPassword = await bcrypt.hash(this.password, 10);
     this.password = hashedPassword;
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+userSchema.pre("save", async function(next) {
+  try {
+    if (!this.isModified("email")) {
+      return next();
+    }
+
+    this.email = normalizeEmail(this.email);
+
     return next();
   } catch (err) {
     return next(err);
@@ -68,3 +80,19 @@ userSchema.methods.comparePassword = async function(candidatePassword, next) {
 const UserModel = mongoose.model("User", userSchema);
 
 module.exports = UserModel;
+
+// ========================
+// Helper functions
+// ========================
+
+function normalizeEmail(emailString) {
+  // '.' characters and uppercase letters must be ignored,
+  // so that, e.g., "John.Smith@gmail" is rejected if "johnsmith@gmail"
+  // already exists in DB.
+
+  emailString = emailString.toLowerCase();
+
+  const split = emailString.split("@");
+
+  return split[0].replace(".", "") + "@" + split[1];
+}

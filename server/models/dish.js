@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Chef = require("./chef");
 
 const cuisinesArray = [
   "American",
@@ -67,16 +66,21 @@ const DishSchema = mongoose.Schema({
  *  Whenever a dish is saved, its _id property must be stored on the corresponding Chef document.
  */
 
-DishSchema.pre("save", async function() {
+DishSchema.pre("save", async function(next) {
   if (this.isNew) {
     try {
       console.dir(this);
+
+      const Chef = mongoose.model("Chef");
+
       let chef = await Chef.findById(this.chef);
       chef.dishes.push(this._id);
 
       chef.save();
+
+      next();
     } catch (err) {
-      console.log(err);
+      next(err);
     }
   }
 });
