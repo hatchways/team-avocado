@@ -20,7 +20,6 @@ const config = require("config");
  */
 
 router.post("/", async (req, res, next) => {
-  console.log(req.body);
 
   let user = await User.findOne({ email: req.body.email });
 

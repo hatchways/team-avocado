@@ -43,7 +43,6 @@ export default function TransferList({
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([...Array(restcuiIndex).keys()]);
-  console.log("Left and list:", left, list);
   if (list.length === restcuiIndex) {
     var numArray = [];
   } else {
@@ -52,9 +51,7 @@ export default function TransferList({
       x => x + restcuiIndex
     );
   }
-  console.log("numArray:", numArray);
   const [right, setRight] = React.useState(numArray);
-  console.log("Right", right);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);

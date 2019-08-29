@@ -44,7 +44,7 @@ function CustomerPage({ customerId }) {
   // profile page
   console.log(customerId);
   const { user } = useContext(AuthContext),
-    userIsOwner = user && user.id === customerId;
+  userIsOwner = user && user.id === customerId;
 
   // Get the ID'd Customer document from API
   const { resource: customer } = useResource(
@@ -59,7 +59,7 @@ function CustomerPage({ customerId }) {
         <SimpleMenu />
       </Navbar>
 
-      {customer ? <NameCard customer={customer} /> : "Loading..."}
+      {customer ? <NameCard customer={customer} userIsOwner={userIsOwner}/> : "Loading..."}
     </PageContainer>
   );
 }

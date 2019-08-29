@@ -10,6 +10,10 @@ import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../store/createContext";
 import { Link, withRouter } from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+import TextField from "@material-ui/core/TextField";
+import useToggle from "../hooks/useToggle";
+import ImageUploader from "./ImageUploader";
 
 const { brandLight } = colors;
 
@@ -97,7 +101,7 @@ const useStyles = makeStyles({
 });
 //TODO: pass in props and get data from props
 
-function Namecard({ customer, history}) {
+function Namecard({ customer, history, userIsOwner }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     name: customer.name,
@@ -106,48 +110,95 @@ function Namecard({ customer, history}) {
     favorite: customer.favorite,
     avatar: customer.avatar
   });
+  const [isEditing, toggleEditMode] = useToggle(false);
 
   const [location, setLocation] = useState({
     lat: "",
     lng: ""
   });
-  const [key,setKey] = useState("");
-  useEffect(() =>{
-      async function getApikey(){
-        const apikey = await callAPI({
-            endpoint: "getenv/CHEF_MENU_GOOGLE_MAP",
-            method: "GET",
-        });
-        setKey(apikey);
-      }
-      getApikey();
-  },[])
+  const { user, setUser } = useContext(AuthContext);
+
+  const [key, setKey] = useState("");
+  useEffect(() => {
+    async function getApikey() {
+      const apikey = await callAPI({
+        endpoint: "getenv/CHEF_MENU_GOOGLE_MAP",
+        method: "GET"
+      });
+      setKey(apikey);
+    }
+    getApikey();
+  }, []);
 
   useEffect(() => {
     async function getLatlnt() {
       const address = values.strlocation;
       const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-      if (key != undefined){
-      fetch(googleapi)
-      .then(response=>response.json())
-      .then(data=>{
-        console.log(data);
-        //   console.log(data.results[0].geometry);
-        if(data.status === "OK"){
-          setLocation(data.results[0].geometry.location);
-        }
-      })
+      if (key != undefined) {
+        fetch(googleapi)
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === "OK") {
+              setLocation(data.results[0].geometry.location);
+            }
+          });
+      }
     }
-    }
-      getLatlnt();
-    
+    getLatlnt();
   }, [key]);
 
-  function handleSubmit(){
+  function handleSubmit() {
     history.push("/browse/chefs");
   }
+  const handleChange = name => event => {
+    if (name === "favorite") {
+      setValues({ ...values, [name]: event.target.value.split(",") });
+    } else {
+      setValues({ ...values, [name]: event.target.value });
+    }
+  };
 
-  return (
+  async function handleImageSubmit(event) {
+    const fileObj = event.target.files[0];
+    let formData = new FormData();
+    formData.append("image", fileObj);
+    const id = event.target.id;
+    var imgAlt = "avatar";
+    try {
+      const endpoint = `customer/${customer._id}/${imgAlt}`;
+      const imgURL = await callAPI({
+        endpoint: endpoint,
+        method: "POST",
+        body: formData,
+        isForm: true
+      });
+      setValues({ ...values, avatar: imgURL });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onSubmitAttempt(e) {
+    e.preventDefault();
+    try {
+      const updatedCustomer = await callAPI({
+        endpoint: `customer/${customer._id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: values,
+        token: user.token
+      });
+
+      // setUser(updatedCustomer);
+      toggleEditMode();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const StaticCard = (
     <div className={classes.cardContainer}>
       <Card className={classes.card}>
         <div className={classes.upper}>
@@ -156,11 +207,19 @@ function Namecard({ customer, history}) {
               <img
                 className={classes.profile}
                 alt="profile"
-                src="/userpic-6.png"
+                src={values.avatar}
               />
-              <span className={classes.name}> {customer.name} </span>
-              <p className={classes.grey}> {customer.strlocation} </p>
-              <RequestButton onClick={handleSubmit}>Start Order</RequestButton>
+              <span className={classes.name}> {values.name} </span>
+              <p className={classes.grey}> {values.strlocation} </p>
+              {userIsOwner ? (
+                <RequestButton onClick={toggleEditMode}>
+                  Edit Info
+                </RequestButton>
+              ) : (
+                <RequestButton onClick={handleSubmit}>
+                  Browse Chef
+                </RequestButton>
+              )}
             </div>
           </div>
           <div className={classes.rightpane}>
@@ -173,12 +232,82 @@ function Namecard({ customer, history}) {
           </div>
         </div>
         <div className={classes.lower}>
-          <GoogleMap  location={location} apikey = {key} zoom={13}/>
+          <GoogleMap location={location} apikey={key} zoom={13} />
         </div>
       </Card>
     </div>
   );
-}
 
+  const EditModeCard = (
+    <Card className={classes.card}>
+      <div className={classes.upper}>
+        <div className={classes.leftpane}>
+          <div className={classes.wrap}>
+            <ImageUploader
+              onSubmit={handleImageSubmit}
+              promptText="Click to upload a new background"
+            >
+              <img
+                className={classes.profile}
+                alt="profile"
+                src={values.avatar}
+              />
+            </ImageUploader>
+
+            <TextField
+              className="form-field"
+              label="Name"
+              value={values.name}
+              onChange={handleChange("name")}
+              margin="dense"
+              variant="outlined"
+            />
+            <TextField
+              className="form-field"
+              label="Location"
+              value={values.strlocation}
+              onChange={handleChange("strlocation")}
+              margin="dense"
+              variant="outlined"
+            />
+            <RequestButton onClick={onSubmitAttempt}>
+              Save Profile
+            </RequestButton>
+          </div>
+        </div>
+        <div className={classes.rightpane}>
+          <div className={classes.descwrap}>
+            <span className={classes.boldbig}>ABOUT ME:</span>
+            <TextField
+              className="form-field"
+              label="About Me"
+              value={values.description}
+              onChange={handleChange("description")}
+              margin="dense"
+              multiline
+              variant="outlined"
+            />
+            <span className={classes.boldbig}>FAVORITE CUSINE: </span>
+            <TextField
+              className="form-field"
+              label="Favorite Cuisines"
+              value={values.favorite}
+              onChange={handleChange("favorite")}
+              margin="dense"
+              multiline
+              variant="outlined"
+            />
+          </div>
+        </div>
+      </div>
+      <div className={classes.lower}></div>
+    </Card>
+  );
+  return (
+    <div className={classes.cardContainer}>
+      {userIsOwner && isEditing ? EditModeCard : StaticCard}
+    </div>
+  );
+}
 
 export default withRouter(Namecard);

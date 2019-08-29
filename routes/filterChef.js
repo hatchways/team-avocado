@@ -19,7 +19,6 @@ router.get(
       for(let j=0;j<chefs.length;j++){
           const availability = chefs[j].availability;
           const day_availability = availability[body.week_day];
-          console.log(day_availability);
           for (let i=0;i<day_availability.length;i++){
               if (body.time<=day_availability[i][1] && body.time>=day_availability[i][0]){
                 rtchefs.push(chefs[j]);
@@ -28,7 +27,6 @@ router.get(
           }
 
       }
-      console.log(rtchefs);
       res.status(200).send(rtchefs);
     }
   );

@@ -68,7 +68,6 @@ export default function ChefDashboard({ chef }) {
   const [activeTab, setTab] = useState(MENU_TAB);
 
   function toggleDishEditing(dishIndex) {
-    console.log("toggling dish at index " + dishIndex);
 
     const newDishes = [...dishes];
 

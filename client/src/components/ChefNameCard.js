@@ -14,11 +14,9 @@ import { useEffect, useContext, useState } from "react";
 import AuthContext from "../store/createContext";
 import { Link } from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
-import {totalCuisines} from "../constants/cuisines"
+import { totalCuisines } from "../constants/cuisines";
 import AvailabilityDialog from "./AvailabilityDialog";
 import CuisineList from "./CuisineList";
-
-
 
 const Container = styled.div`
   height: 100%;
@@ -89,34 +87,30 @@ const FormContainer = styled.form`
 
 const cuisines = ["Chinese", "Indian", "American", "Japanese"];
 
-
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
-
   const [values, setValues] = React.useState({
     name: chef.name,
     strlocation: chef.strlocation,
     description: chef.description,
     avatar: chef.avatar,
     background: "https://i.imgur.com/K1knFqf.jpg",
-    cuisines:chef.cuisines,
+    cuisines: chef.cuisines
   });
-  function setValuesCuisines(cuisines){
-      setValues({...values, cuisines:cuisines});
+  function setValuesCuisines(cuisines) {
+    setValues({ ...values, cuisines: cuisines });
   }
   const { user, setUser } = useContext(AuthContext);
   const [restCuisines, setRestCuisines] = useState([]);
-  
-  function setCuisines(cuisines, chefsCuisines){
-      console.log(cuisines, chefsCuisines);
-      let difference = cuisines.filter(x => !chefsCuisines.includes(x));
-      console.log(difference);
-      return difference;
+
+  function setCuisines(cuisines, chefsCuisines) {
+    let difference = cuisines.filter(x => !chefsCuisines.includes(x));
+    return difference;
   }
-  useEffect(()=>{
-      const rest = setCuisines(totalCuisines, values.cuisines);
-      setRestCuisines(rest);
-  },[values])
+  useEffect(() => {
+    const rest = setCuisines(totalCuisines, values.cuisines);
+    setRestCuisines(rest);
+  }, [values]);
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
@@ -141,10 +135,7 @@ export default function Namecard({ chef, userIsOwner }) {
   }
   async function handleImageSubmit(event) {
     const fileObj = event.target.files[0];
-    console.log("FileObj", fileObj);
     let formData = new FormData();
-    console.log("target.id", event.target.id);
-
     formData.append("image", fileObj);
     const id = event.target.id;
     if (id === "profile-img-file") {
@@ -199,7 +190,6 @@ export default function Namecard({ chef, userIsOwner }) {
     </>
   );
 
-
   const EditModeCard = (
     <FormContainer onSubmit={onSubmitAttempt}>
       <ImageUploader
@@ -216,7 +206,11 @@ export default function Namecard({ chef, userIsOwner }) {
           >
             <img src={values.avatar} alt="" id="profile" />
           </ImageUploader>
-          <PickTagDialog cuisines={values.cuisines} restCuisines={restCuisines} setValuesCuisines={setValuesCuisines}/>
+          <PickTagDialog
+            cuisines={values.cuisines}
+            restCuisines={restCuisines}
+            setValuesCuisines={setValuesCuisines}
+          />
           <AvailabilityDialog />
           <TextField
             className="form-field"
@@ -272,9 +266,7 @@ export default function Namecard({ chef, userIsOwner }) {
 
   return (
     <Container>
-
       {userIsOwner && isEditing ? EditModeCard : StaticCard}
-
     </Container>
   );
 }

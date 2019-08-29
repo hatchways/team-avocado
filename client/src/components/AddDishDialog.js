@@ -32,7 +32,6 @@ export default function AddDishDialog({ storeNewDish }) {
   }
 
   const { user } = useContext(AuthContext);
-  console.log("Context user:", user);
 
   const [values, setValues] = React.useState({
     numPeopleServed: 0,
@@ -61,7 +60,6 @@ export default function AddDishDialog({ storeNewDish }) {
         token: user.token
       });
       storeNewDish(newdish);
-      // console.log("Here are the new dishes",dishes);
       setOpen(false);
     } catch (error) {
       console.log("THERE IS A ERRRO", error);
@@ -82,7 +80,6 @@ export default function AddDishDialog({ storeNewDish }) {
         isForm: true,
         tokan: user.token
       });
-      console.log(imgURL);
       setValues({ ...values, dishImg: imgURL });
     } catch (error) {
       console.log(error);
