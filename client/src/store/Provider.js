@@ -18,7 +18,7 @@ const mockOrderItems = [
 export default function Provider({ children }) {
   const [user, setUser] = useCachedState(null, "user");
   const [cart, setCart] = useState(mockOrderItems);
-  const [order, setOrder] = useState({});
+  const [order, setOrder] = useCachedState(null, "order");
 
   function addToCart(dish) {
     setCart([...cart, dish]);
@@ -42,7 +42,9 @@ export default function Provider({ children }) {
     cart,
     addToCart,
     removeFromCart,
-    getCurrentTotal
+    getCurrentTotal,
+    order,
+    setOrder
   };
 
   return <Context.Provider value={initialState}>{children}</Context.Provider>;

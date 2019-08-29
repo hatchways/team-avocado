@@ -7,17 +7,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import PickTagDialog from "./PickTagDialog";
 
+import ImageUploader from "./ImageUploader";
 import useToggle from "../hooks/useToggle";
 import { callAPI } from "../helpers/api";
 import { useEffect, useContext, useState } from "react";
 import AuthContext from "../store/createContext";
 import { Link } from "react-router-dom";
 import SendRequestDialog from "./SendRequestDialog";
-import {totalCuisines} from "../constants/cuisines"
+import { totalCuisines } from "../constants/cuisines";
 import AvailabilityDialog from "./AvailabilityDialog";
 import CuisineList from "./CuisineList";
-
-
 
 const Container = styled.div`
   height: 100%;
@@ -86,41 +85,8 @@ const FormContainer = styled.form`
   }
 `;
 
+const cuisines = ["Chinese", "Indian", "American", "Japanese"];
 
-const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
-  return (
-    <Tooltip title={promptText} placement="center">
-      <div
-        style={{
-          position: "relative",
-          display: "inline-block",
-          cursor: "pointer",
-          width: "100%"
-        }}
-      >
-        <input
-          accept="image/*"
-          id="background-img-file"
-          multiple
-          type="file"
-          style={{
-            opacity: 0,
-            position: "absolute",
-            top: "0px",
-            left: "0px",
-            height: "100%",
-            width: "100%",
-            cursor: "pointer"
-          }}
-          onChange={onSubmit}
-        />
-        {children}
-      </div>
-    </Tooltip>
-  );
-};
-
-//TODO: pass in props and get data from props
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
   const [values, setValues] = React.useState({
@@ -129,22 +95,22 @@ export default function Namecard({ chef, userIsOwner }) {
     description: chef.description,
     avatar: chef.avatar,
     background: "https://i.imgur.com/K1knFqf.jpg",
-    cuisines:chef.cuisines,
+    cuisines: chef.cuisines
   });
-  function setValuesCuisines(cuisines){
-      setValues({...values, cuisines:cuisines});
+  function setValuesCuisines(cuisines) {
+    setValues({ ...values, cuisines: cuisines });
   }
   const { user, setUser } = useContext(AuthContext);
   const [restCuisines, setRestCuisines] = useState([]);
-  
-  function setCuisines(cuisines, chefsCuisines){
-      let difference = cuisines.filter(x => !chefsCuisines.includes(x));
-      return difference;
+
+  function setCuisines(cuisines, chefsCuisines) {
+    let difference = cuisines.filter(x => !chefsCuisines.includes(x));
+    return difference;
   }
-  useEffect(()=>{
-      const rest = setCuisines(totalCuisines, values.cuisines);
-      setRestCuisines(rest);
-  },[values])
+  useEffect(() => {
+    const rest = setCuisines(totalCuisines, values.cuisines);
+    setRestCuisines(rest);
+  }, [values]);
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
@@ -218,12 +184,11 @@ export default function Namecard({ chef, userIsOwner }) {
         {userIsOwner ? (
           <Button onClick={toggleEditMode}>Edit Info</Button>
         ) : (
-          <SendRequestDialog />
+          user && <SendRequestDialog chef={chef} />
         )}
       </div>
     </>
   );
-
 
   const EditModeCard = (
     <FormContainer onSubmit={onSubmitAttempt}>
@@ -241,7 +206,11 @@ export default function Namecard({ chef, userIsOwner }) {
           >
             <img src={values.avatar} alt="" id="profile" />
           </ImageUploader>
-          <PickTagDialog cuisines={values.cuisines} restCuisines={restCuisines} setValuesCuisines={setValuesCuisines}/>
+          <PickTagDialog
+            cuisines={values.cuisines}
+            restCuisines={restCuisines}
+            setValuesCuisines={setValuesCuisines}
+          />
           <AvailabilityDialog />
           <TextField
             className="form-field"
@@ -297,9 +266,7 @@ export default function Namecard({ chef, userIsOwner }) {
 
   return (
     <Container>
-
       {userIsOwner && isEditing ? EditModeCard : StaticCard}
-
     </Container>
   );
 }

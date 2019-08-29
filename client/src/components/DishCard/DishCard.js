@@ -91,7 +91,7 @@ export default function DishCard({
 
   return (
     <CardContainer>
-      <EditButton onClick={toggleEdit} />
+      {toggleEdit && <EditButton onClick={toggleEdit} />}
       <div>
         <div>
           <span className={classes.pplnum}> MEAL FOR {numPeopleServed}</span>

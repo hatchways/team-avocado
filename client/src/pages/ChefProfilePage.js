@@ -51,7 +51,7 @@ function ChefPage({ chefId }) {
     userIsOwner = user && user.id === chefId;
 
   // Get the ID'd Chef document from API
-  const [chef] = useResource(`chef/${chefId}`);
+  const { resource: chef } = useResource(`chef/${chefId}`);
 
   return (
     <PageContainer className="pageContainer">

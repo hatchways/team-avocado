@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { User, Chef, Customer, Dish } = require("../models");
 const faker = require("faker");
 const fs = require("fs");

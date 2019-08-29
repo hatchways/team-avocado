@@ -13,6 +13,7 @@ import { Link, withRouter } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import TextField from "@material-ui/core/TextField";
 import useToggle from "../hooks/useToggle";
+import ImageUploader from "./ImageUploader";
 
 const { brandLight } = colors;
 
@@ -100,7 +101,7 @@ const useStyles = makeStyles({
 });
 //TODO: pass in props and get data from props
 
-function Namecard({ customer, history, userIsOwner}) {
+function Namecard({ customer, history, userIsOwner }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     name: customer.name,
@@ -117,47 +118,46 @@ function Namecard({ customer, history, userIsOwner}) {
   });
   const { user, setUser } = useContext(AuthContext);
 
-  const [key,setKey] = useState("");
-  useEffect(() =>{
-      async function getApikey(){
-        const apikey = await callAPI({
-            endpoint: "getenv/CHEF_MENU_GOOGLE_MAP",
-            method: "GET",
-        });
-        setKey(apikey);
-      }
-      getApikey();
-  },[])
+  const [key, setKey] = useState("");
+  useEffect(() => {
+    async function getApikey() {
+      const apikey = await callAPI({
+        endpoint: "getenv/CHEF_MENU_GOOGLE_MAP",
+        method: "GET"
+      });
+      setKey(apikey);
+    }
+    getApikey();
+  }, []);
 
   useEffect(() => {
     async function getLatlnt() {
       const address = values.strlocation;
       const googleapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`;
-      if (key != undefined){
-      fetch(googleapi)
-      .then(response=>response.json())
-      .then(data=>{
-        if(data.status === "OK"){
-          setLocation(data.results[0].geometry.location);
-        }
-      })
+      if (key != undefined) {
+        fetch(googleapi)
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === "OK") {
+              setLocation(data.results[0].geometry.location);
+            }
+          });
+      }
     }
-    }
-      getLatlnt();
-    
+    getLatlnt();
   }, [key]);
 
-  function handleSubmit(){
+  function handleSubmit() {
     history.push("/browse/chefs");
   }
   const handleChange = name => event => {
-    if(name==="favorite"){
+    if (name === "favorite") {
       setValues({ ...values, [name]: event.target.value.split(",") });
-    }else{
+    } else {
       setValues({ ...values, [name]: event.target.value });
     }
   };
-  
+
   async function handleImageSubmit(event) {
     const fileObj = event.target.files[0];
     let formData = new FormData();
@@ -172,7 +172,7 @@ function Namecard({ customer, history, userIsOwner}) {
         body: formData,
         isForm: true
       });
-        setValues({ ...values, avatar: imgURL });
+      setValues({ ...values, avatar: imgURL });
     } catch (error) {
       console.log(error);
     }
@@ -197,39 +197,9 @@ function Namecard({ customer, history, userIsOwner}) {
       console.log(error);
     }
   }
-  const ImageUploader = ({ displayImageURL, onSubmit, promptText, children }) => {
-    return (
-      <Tooltip title={promptText}>
-        <div
-          style={{
-            position: "relative",
-            display: "inline-block",
-            cursor: "pointer",
-            width: "100%"
-          }}
-        >
-          <input
-            accept="image/*"
-            id="background-img-file"
-            multiple
-            type="file"
-            style={{
-              opacity: 0,
-              position: "absolute",
-              top: "0px",
-              left: "0px",
-              height: "100%",
-              width: "100%",
-              cursor: "pointer"
-            }}
-            onChange={onSubmit}
-          />
-          {children}
-        </div>
-      </Tooltip>
-    );
-  };
+
   const StaticCard = (
+    <div className={classes.cardContainer}>
       <Card className={classes.card}>
         <div className={classes.upper}>
           <div className={classes.leftpane}>
@@ -242,99 +212,102 @@ function Namecard({ customer, history, userIsOwner}) {
               <span className={classes.name}> {values.name} </span>
               <p className={classes.grey}> {values.strlocation} </p>
               {userIsOwner ? (
-                <RequestButton onClick={toggleEditMode}>Edit Info</RequestButton>
-                ) : (
-                  <RequestButton onClick={handleSubmit}>Browse Chef</RequestButton>
-                  )}
+                <RequestButton onClick={toggleEditMode}>
+                  Edit Info
+                </RequestButton>
+              ) : (
+                <RequestButton onClick={handleSubmit}>
+                  Browse Chef
+                </RequestButton>
+              )}
             </div>
           </div>
           <div className={classes.rightpane}>
             <div className={classes.descwrap}>
               <span className={classes.boldbig}>ABOUT ME:</span>
-              <p className={classes.grey}>{values.description}</p>
+              <p className={classes.grey}>{customer.description}</p>
               <span className={classes.boldbig}>FAVORITE CUSINE: </span>
               <CuisineList cuisineList={values.favorite} />
             </div>
           </div>
         </div>
         <div className={classes.lower}>
-          <GoogleMap  location={location} apikey = {key} zoom={13}/>
+          <GoogleMap location={location} apikey={key} zoom={13} />
         </div>
       </Card>
-
+    </div>
   );
 
   const EditModeCard = (
-    <Card className={classes.card} >
-    <div className={classes.upper}>
-      <div className={classes.leftpane}>
-        <div className={classes.wrap} >
-          <ImageUploader
-          onSubmit={handleImageSubmit}
-          promptText="Click to upload a new background"
-          >
-            <img
-              className={classes.profile}
-              alt="profile"
-              src={values.avatar}
-            />          
-          </ImageUploader>
+    <Card className={classes.card}>
+      <div className={classes.upper}>
+        <div className={classes.leftpane}>
+          <div className={classes.wrap}>
+            <ImageUploader
+              onSubmit={handleImageSubmit}
+              promptText="Click to upload a new background"
+            >
+              <img
+                className={classes.profile}
+                alt="profile"
+                src={values.avatar}
+              />
+            </ImageUploader>
 
-          <TextField
-            className="form-field"
-            label="Name"
-            value={values.name}
-            onChange={handleChange("name")}
-            margin="dense"
-            variant="outlined"
-          />
-          <TextField
-            className="form-field"
-            label="Location"
-            value={values.strlocation}
-            onChange={handleChange("strlocation")}
-            margin="dense"
-            variant="outlined"
-          />
-          <RequestButton onClick={onSubmitAttempt}>Save Profile</RequestButton>
+            <TextField
+              className="form-field"
+              label="Name"
+              value={values.name}
+              onChange={handleChange("name")}
+              margin="dense"
+              variant="outlined"
+            />
+            <TextField
+              className="form-field"
+              label="Location"
+              value={values.strlocation}
+              onChange={handleChange("strlocation")}
+              margin="dense"
+              variant="outlined"
+            />
+            <RequestButton onClick={onSubmitAttempt}>
+              Save Profile
+            </RequestButton>
+          </div>
+        </div>
+        <div className={classes.rightpane}>
+          <div className={classes.descwrap}>
+            <span className={classes.boldbig}>ABOUT ME:</span>
+            <TextField
+              className="form-field"
+              label="About Me"
+              value={values.description}
+              onChange={handleChange("description")}
+              margin="dense"
+              multiline
+              variant="outlined"
+            />
+            <span className={classes.boldbig}>FAVORITE CUSINE: </span>
+            <TextField
+              className="form-field"
+              label="Favorite Cuisines"
+              value={values.favorite}
+              onChange={handleChange("favorite")}
+              margin="dense"
+              multiline
+              variant="outlined"
+            />
+          </div>
         </div>
       </div>
-      <div className={classes.rightpane}>
-        <div className={classes.descwrap}>
-          <span className={classes.boldbig}>ABOUT ME:</span>
-          <TextField
-            className="form-field"
-            label="About Me"
-            value={values.description}
-            onChange={handleChange("description")}
-            margin="dense"
-            multiline
-            variant="outlined"
-          />
-          <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-          <TextField
-            className="form-field"
-            label="Favorite Cuisines"
-            value={values.favorite}
-            onChange={handleChange("favorite")}
-            margin="dense"
-            multiline
-            variant="outlined"
-          />
-        </div>
-      </div>
-    </div>
-    <div className={classes.lower}>
-    </div>
-
-  </Card>
-  )
+      <div className={classes.lower}></div>
+    </Card>
+  );
   return (
     <div className={classes.cardContainer}>
       {userIsOwner && isEditing ? EditModeCard : StaticCard}
     </div>
   );
 }
-
 
 export default withRouter(Namecard);

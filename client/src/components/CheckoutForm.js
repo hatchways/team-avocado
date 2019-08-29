@@ -13,12 +13,13 @@ const StyledForm = styled.form`
   display: flex;
   flex-wrap: wrap;
   & > div {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
   }
 
   #cardNumber {
     flex-basis: 100%;
   }
+
   #cardExpiry {
     display: inline-block;
     flex-basis: 40%;
@@ -56,7 +57,7 @@ class CheckoutForm extends Component {
   render() {
     return (
       <StyledForm className="checkout">
-        <p>Enter your payment details:</p>
+        <h3>Enter your payment details:</h3>
 
         <div id="cardNumber">
           <label htmlFor="cardnumber">Card Number</label>

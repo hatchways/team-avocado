@@ -8,6 +8,15 @@ const { decodeToken, userIsAuthorized } = require("../middleware/auth");
 const fileUploadService = require("../services/fileUploader");
 
 /**
+ * GET ID'd dish
+ */
+router.get("/:dish_id", async (req, res, next) => {
+  const dish = await Dish.findById(req.params.dish_id);
+
+  res.status(200).send(dish);
+});
+
+/**
  * GET all dishes
  */
 router.get("/", async (req, res, next) => {
@@ -43,7 +52,6 @@ router.post("/", decodeToken, async (req, res, next) => {
   res.status(201).send(dish);
 });
 
-
 /**
  *  Set a dish's fields
  */
@@ -53,7 +61,7 @@ router.put(
   userIsAuthorized,
   async (req, res, next) => {
     const {
-      params: { dishId,userId },
+      params: { dishId, userId },
       body
     } = req;
     const { error } = validateDish(body);
@@ -63,7 +71,7 @@ router.put(
      */
     const dish = await Dish.findByIdAndUpdate(dishId, body, {
       useFindAndModify: false,
-      new:true
+      new: true
     });
     if (!dish) {
       return next(
@@ -97,10 +105,10 @@ const dishSchema = Joi.compile({
   numPeopleServed: Joi.required(),
   price: Joi.required(),
   cuisine: Joi.string(),
-  chef:Joi.required(),
+  chef: Joi.required(),
   ingredients: Joi.required(),
   requirements: Joi.required(),
-  dishImg: Joi.string(),
+  dishImg: Joi.string()
 });
 function validateDish(dish) {
   return Joi.validate(dish, dishSchema);
