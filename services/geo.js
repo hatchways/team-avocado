@@ -1,6 +1,5 @@
 const fetch = require("node-fetch");
 const { GEO_APP_ID, GEO_APP_CODE } = process.env;
-const faker = require("faker");
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::                                                                              :::
@@ -136,6 +135,6 @@ CoordPair.prototype.getDistanceFrom = function(secondCoordPair, unit = "M") {
 
 module.exports.CoordPair = CoordPair;
 
-module.exports.getRandomCoordPair = function() {
-  return new CoordPair(faker.address.latitude(), faker.address.longitude());
-};
+// module.exports.getRandomCoordPair = function() {
+//   return new CoordPair(faker.address.latitude(), faker.address.longitude());
+// };

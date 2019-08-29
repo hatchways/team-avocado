@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/index",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "dev": "nodemon ./bin/index",
     "test": "NODE_ENV=test mocha --exit --timeout 30000"
   },
@@ -32,7 +33,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.0",
-    "faker": "^4.1.0"
+    "faker": "^4.1.0",
+    "mocha": "^6.2.0"
   }
 }

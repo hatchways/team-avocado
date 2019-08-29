@@ -32,27 +32,29 @@ function intersection(a, b) {
   return a.filter(value => b.indexOf(value) !== -1);
 }
 
-export default function TransferList({cuisines, restCuisines,setchefCuisines}) {
-  if (cuisines === undefined){
-    var cuisines = [];
-  }else{
-    var cuisines = cuisines;
-  }
+export default function TransferList({
+  cuisines = [],
+  restCuisines,
+  setchefCuisines
+}) {
   const restcuiIndex = restCuisines.length;
   const list = restCuisines.concat(cuisines);
-  
+
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([...Array(restcuiIndex).keys()]);
-  console.log("Left and list:",left, list);
-  if(list.length === restcuiIndex){
+  console.log("Left and list:", left, list);
+  if (list.length === restcuiIndex) {
     var numArray = [];
-  } else{
-    var numArray = Array.from([...Array(list.length-restcuiIndex).keys()],x=>x+restcuiIndex);
+  } else {
+    var numArray = Array.from(
+      [...Array(list.length - restcuiIndex).keys()],
+      x => x + restcuiIndex
+    );
   }
-  console.log("numArray:",numArray);
+  console.log("numArray:", numArray);
   const [right, setRight] = React.useState(numArray);
-  console.log("Right",right);
+  console.log("Right", right);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
@@ -82,15 +84,15 @@ export default function TransferList({cuisines, restCuisines,setchefCuisines}) {
     setChecked(not(checked, rightChecked));
   };
 
-  useEffect(()=>{
-    const rightArray = []
-    right.forEach((index)=>{
+  useEffect(() => {
+    const rightArray = [];
+    right.forEach(index => {
       rightArray.push(list[index]);
     });
     setchefCuisines(rightArray);
-  },[right]);
+  }, [right]);
 
-  const customList = items =>(
+  const customList = items => (
     <Paper className={classes.paper}>
       <List dense component="div" role="list">
         {items.map(value => {
