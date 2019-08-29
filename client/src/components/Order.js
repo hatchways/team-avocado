@@ -14,13 +14,16 @@ const Container = styled.div`
   margin: 15px 0px;
 `;
 
+
+
 const Order = ({ order }) => {
+  
   return (
     <Container>
       <div>
         <h1>Order</h1>
-        <h3>Customer</h3>
-        <h3>Chef</h3>
+        {/* <h3>{order.customer}</h3> */}
+        <h3>{order.chef}</h3>
       </div>
       <ul>
         <li>dish</li>

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Grid from "@material-ui/core/Grid";
 
 import Order from "../Order";
+import OrderList from "./OrderList"
 import DishCard from "../DishCard/DishCard";
 import DishCardForm from "../DishCard/DishCardForm";
 import AddDishDialog from "../AddDishDialog";
@@ -149,11 +150,7 @@ export default function ChefDashboard({ chef }) {
 
       {activeTab === ORDERS_TAB ? (
         <>
-          <Order />
-          <Order />
-          <Order />
-          <Order />
-          <Order />
+          <OrderList orderList={chef.orders}/>
         </>
       ) : (
         <>

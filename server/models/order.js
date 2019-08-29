@@ -24,8 +24,11 @@ const orderSchema = new Schema(
     dishes: [orderedItemSchema],
     price: Number,
     bookedTime: Date,
-    chef: { type: Schema.Types.ObjectId, ref: "Chef" },
-    customer: { type: Schema.Types.ObjectId, ref: "Customer" }
+    chef_id: { type: Schema.Types.ObjectId, ref: "Chef" },
+    customer_id: { type: Schema.Types.ObjectId, ref: "Customer" },
+    chef_name: String,
+    customer_name: String
+
   },
   { timestamps: true }
 );

@@ -191,7 +191,7 @@ function Namecard({ customer, history, userIsOwner}) {
         token: user.token
       });
 
-      // setUser(updatedCustomer);
+      setUser(updatedCustomer);
       toggleEditMode();
     } catch (error) {
       console.log(error);
