@@ -89,6 +89,12 @@ const FormContainer = styled.form`
 
 const cuisines = ["Chinese", "Indian", "American", "Japanese"];
 
+<<<<<<< HEAD
+=======
+
+//TODO: pass in props and get data from props
+
+>>>>>>> 22004ddcf93e39ba0470992528ef57e0713272da
 export default function Namecard({ chef, userIsOwner }) {
   const [isEditing, toggleEditMode] = useToggle(false);
   const [values, setValues] = React.useState({
