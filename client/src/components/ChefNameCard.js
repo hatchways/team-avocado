@@ -194,6 +194,7 @@ export default function Namecard({ chef, userIsOwner }) {
     <FormContainer onSubmit={onSubmitAttempt}>
       <ImageUploader
         onSubmit={handleImageSubmit}
+        imageId="background-img-file"
         promptText="Click to upload a new background"
       >
         <img src={values.background} id="cover" />
@@ -202,6 +203,7 @@ export default function Namecard({ chef, userIsOwner }) {
         <div className="content">
           <ImageUploader
             onSubmit={handleImageSubmit}
+            imageId="profile-img-file"
             promptText="Click to upload a new profile picture"
           >
             <img src={values.avatar} alt="" id="profile" />
