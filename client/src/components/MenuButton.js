@@ -24,10 +24,14 @@ import { Link, withRouter } from "react-router-dom";
     setAnchorEl(event.currentTarget);
   }
   function handleProfileClick(event) {
-    props.history.push(`${user.usertype}/${user.id}`)
+    props.history.push(`/${user.usertype}/${user.id}`)
   }
   function handleClose() {
     setAnchorEl(null);
+  }
+  function handleLogout() {
+    props.history.push(`/login`)
+
   }
   const classes = useStyles();
   return (
@@ -42,7 +46,7 @@ import { Link, withRouter } from "react-router-dom";
         onClose={handleClose}
       >
         <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
   );

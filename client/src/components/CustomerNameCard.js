@@ -199,7 +199,6 @@ function Namecard({ customer, history, userIsOwner }) {
   }
 
   const StaticCard = (
-    <div className={classes.cardContainer}>
       <Card className={classes.card}>
         <div className={classes.upper}>
           <div className={classes.leftpane}>
@@ -235,7 +234,6 @@ function Namecard({ customer, history, userIsOwner }) {
           <GoogleMap location={location} apikey={key} zoom={13} />
         </div>
       </Card>
-    </div>
   );
 
   const EditModeCard = (

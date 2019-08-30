@@ -46,15 +46,13 @@ router.get("/:user_id", async (req, res, next) => {
 router.post("/:chef_id/:customer_id", async (req, res, next) => {
   const { error } = validateOrder({
     ...req.body,
-    chef: req.params.chef_id,
-    customer: req.params.customer_id
   });
   if (error) return next(createError(400, error.details[0].message));
 
   const order = await Order.create({
     ...req.body,
-    chef: req.params.chef_id,
-    customer: req.params.customer_id
+    chef_id: req.params.chef_id,
+    customer_id: req.params.customer_id,
   });
 
   res.status(200).send(order);
@@ -72,8 +70,8 @@ router.put("/:order_id", async (req, res, next) => {
 
 const orderSchema = Joi.compile({
   price: Joi.required(),
-  chef: Joi.required(),
-  customer: Joi.required(),
+  chef_name: Joi.required(),
+  customer_name: Joi.required(),
   dishes: Joi.required(),
   bookedTime: Joi.required(),
   numPeopleServed: Joi.required()

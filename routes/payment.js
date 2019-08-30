@@ -22,11 +22,11 @@ router.post("/", async (req, res, next) => {
       description: "An example charge",
       source: req.body.tokenId
     });
-
+    console.log("Status",status);
     res.json({ status });
   } catch (err) {
     console.error(err);
-    res.status(500).end();
+    res.status(500).send();
   }
 });
 

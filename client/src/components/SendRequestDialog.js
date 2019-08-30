@@ -100,7 +100,7 @@ function SendRequestDialog({ chef, history }) {
       [dishId]: currentVal + 1
     };
 
-    setOrderState({ ...orderState, dishes: newDishes });
+    setOrderState({ ...orderState, dishes: newDishes, chef_name:chef.name,customer_name:user.name });
   };
 
   const handleRemoveDish = dishId => {
