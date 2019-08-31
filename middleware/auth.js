@@ -23,7 +23,6 @@ module.exports.userIsAuthorized = function(req, res, next) {
     params: { userId },
     decoded
   } = req;
-  // console.log(req);
   console.log("Userid and 403",userId,decoded._id);
   if (userId !== decoded._id) {
     return next(createError(403, "Unauthorized."));

@@ -40,13 +40,14 @@ export async function callAPI({
     headers: headers,
     body: body && (!isForm ?JSON.stringify(body):body)
   });
+
   if (response.status >= 400) {
     console.log("response was >= 400");
     let { message } = await response.json();
 
     throw new Error(message);
   }
-
+  console.log(response);
   const parsedResponse = await response.json();
 
   console.log("API request returned:");

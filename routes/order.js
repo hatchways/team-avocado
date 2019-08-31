@@ -21,9 +21,12 @@ router.get("/:order_id", async (req, res, next) => {
 /**
  * GET all of a chef's or customer's orders
  */
-router.get("/:user_id", async (req, res, next) => {
+router.get("/:user_id/orders", async (req, res, next) => {
   // Get list of all user's orders
-  const orders = await User.findById(req.params.user_id).orders;
+  console.log("-=-=-=-===-=---==-");
+  const user = await User.findById(req.params.user_id);
+  const orders = user.orders;
+  console.log(orders);
 
   // For each order, populate chef, customer, and dishes fields with corresponding
   // documents
@@ -35,7 +38,7 @@ router.get("/:user_id", async (req, res, next) => {
         .populate("dishes")
     )
   );
-
+  console.log("Orders from be:",populatedOrders);
   res.status(200).send(populatedOrders);
 });
 
@@ -54,7 +57,6 @@ router.post("/:chef_id/:customer_id", async (req, res, next) => {
     chef_id: req.params.chef_id,
     customer_id: req.params.customer_id,
   });
-
   res.status(200).send(order);
 });
 

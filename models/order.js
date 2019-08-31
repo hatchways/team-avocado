@@ -40,7 +40,7 @@ const orderSchema = new Schema(
 orderSchema.pre("save", async function() {
   if (this.isNew) {
     try {
-      for (let id of [this.chef, this.customer]) {
+      for (let id of [this.chef_id, this.customer_id]) {
         let user = await User.findById(id);
         user.orders.push(this._id);
         user.save();

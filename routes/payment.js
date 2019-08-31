@@ -13,7 +13,6 @@ const createError = require("http-errors");
  */
 
 router.post("/", async (req, res, next) => {
-  console.dir(req.body);
 
   try {
     let { status } = await stripe.charges.create({
@@ -22,7 +21,6 @@ router.post("/", async (req, res, next) => {
       description: "An example charge",
       source: req.body.tokenId
     });
-    console.log("Status",status);
     res.json({ status });
   } catch (err) {
     console.error(err);
