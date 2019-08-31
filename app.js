@@ -26,8 +26,8 @@ app.use(cookieParser());
 
 // app.use((req, res) => console.dir(req.body));
 
-app.use(express.static(path.join(__dirname, "client/build")));
 app.use("/api", apiRouter);
+app.use(express.static(path.join(__dirname, "client/build")));
 
 app.use("*", (req, res, next) => {
   res.sendFile(path.join(__dirname, "client/build/index.html"));

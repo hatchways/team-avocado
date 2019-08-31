@@ -40,7 +40,7 @@ const DishSchema = mongoose.Schema({
   price: {
     type: Number,
     required: true,
-    min: 10
+    min: 3
   },
 
   cuisine: {
