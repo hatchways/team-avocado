@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import NameCard from "../components/CustomerNameCard";
 import SimpleMenu from "../components/MenuButton";
@@ -12,26 +13,16 @@ import useResource from "../hooks/useResource";
 
 const PageContainer = styled.div`
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
-
-  .paneLeft {
-    position: relative;
-    top: 12%;
-    width: 24%;
-    height: 88%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .paneRight {
-    position: relative;
-    top: 12%;
-    width: 76%;
-    height: 88%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  background-color: ${colors.background};
+  transition: all 100ms;
+  .name-card-container {
+    width: 800px;
+    height: 500px;
+    text-align: center;
   }
 
   nav span {
@@ -44,7 +35,7 @@ function CustomerPage({ customerId }) {
   // profile page
   console.log(customerId);
   const { user } = useContext(AuthContext),
-  userIsOwner = user && user.id === customerId;
+    userIsOwner = user && user.id === customerId;
 
   // Get the ID'd Customer document from API
   const { resource: customer } = useResource(
@@ -55,11 +46,21 @@ function CustomerPage({ customerId }) {
   return (
     <PageContainer>
       <Navbar>
-        <Link to="/browse/chefs">Browse Chefs</Link>
+        <Link to="/browse/chefs" style={{ marginRight: 10 }}>
+          <Button outline style={{ borderRadius: 10 }}>
+            Browse Chefs
+          </Button>
+        </Link>
         <SimpleMenu />
       </Navbar>
 
-      {customer ? <NameCard customer={customer} userIsOwner={userIsOwner}/> : "Loading..."}
+      <div className="name-card-container">
+        {customer ? (
+          <NameCard customer={customer} userIsOwner={userIsOwner} />
+        ) : (
+          "Loading..."
+        )}
+      </div>
     </PageContainer>
   );
 }

@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
 import GoogleMap from "./GoogleMap";
 import { colors } from "../themes/theme";
 import CuisineList from "./CuisineList";
@@ -15,7 +14,7 @@ import TextField from "@material-ui/core/TextField";
 import useToggle from "../hooks/useToggle";
 import ImageUploader from "./ImageUploader";
 
-const { brandLight } = colors;
+const { brandLight, background } = colors;
 
 const RequestButton = styled(Button)`
   color: ${brandLight};
@@ -30,57 +29,100 @@ const RequestButton = styled(Button)`
     background: ${colors.brandTransparent};
   }
 `;
-const useStyles = makeStyles({
-  profile: {
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto"
-  },
-  cardContainer: {
-    display: "flex",
-    justifyContent: "center",
 
-    width: "100%",
-    height: "87%",
-    position: "absolute",
-    bottom: 0,
-    background: colors.background
-  },
-  upper: {
-    display: "flex",
-    height: "52%"
-  },
-  lower: {
-    height: "48%"
-  },
-  leftpane: {
-    width: "40%",
-    height: "100%"
-  },
-  rightpane: {
-    width: "60%",
-    height: "100%"
-  },
+const Card = styled.div`
+  background: white;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  transition: all 100ms;
+
+  .upper {
+    display: flex;
+    border-bottom: 2px solid ${background};
+  }
+
+  .lower {
+    height: 250px;
+  }
+
+  .leftUpper {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-basis: 40%;
+    text-align: center;
+    border-right: 2px solid ${background};
+    min-height: 300px;
+  }
+
+  .rightUpper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    padding: 1rem;
+    flex-grow: 1;
+    padding: 3rem;
+
+    /* & > div {
+      display: flex;
+      flex-direction: column;
+    } */
+  }
+
+  .form-field {
+    width: 100%;
+  }
+`;
+
+const useStyles = makeStyles({
+  // cardContainer: {
+  //   display: "flex",
+  //   justifyContent: "center",
+
+  //   width: "100%",
+  //   height: "87%",
+  //   position: "absolute",
+  //   bottom: 0,
+  //   background: colors.background
+  // },
+  // upper: {
+  //   display: "flex",
+  //   height: "52%"
+  // },
+  // lower: {
+  //   height: "48%"
+  // },
+  // leftpane: {
+  //   width: "40%",
+  //   height: "100%"
+  // },
+  // rightpane: {
+  //   width: "60%",
+  //   height: "100%"
+  // },
   card: {
-    width: "70%",
-    height: "95%",
+    width: "100%",
+    height: "100%",
     margin: 20
   },
-  wrap: {
-    height: "100%",
-    display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: 40,
-    borderRightColor: colors.background,
-    borderRightStyle: "solid",
-    borderRightWidth: "5px",
-    borderBottomColor: colors.background,
-    borderBottomStyle: "solid",
-    borderBottomWidth: "5px",
-    fontFamily: "Montserrat"
-  },
+  // wrap: {
+  //   height: "100%",
+  //   display: "flex",
+  //   justifyContent: "space-around",
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   padding: 40,
+
+  //   borderRightColor: colors.background,
+  //   borderRightStyle: "solid",
+  //   borderRightWidth: "5px",
+  //   borderBottomColor: colors.background,
+  //   borderBottomStyle: "solid",
+  //   borderBottomWidth: "5px",
+  //   fontFamily: "Montserrat"
+  // },
   name: {
     fontWeight: "bold",
     fontSize: 20
@@ -88,15 +130,24 @@ const useStyles = makeStyles({
   grey: {
     color: "grey"
   },
-  descwrap: {
-    height: "100%",
-    display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "column",
-    padding: 40
-  },
+  // descwrap: {
+  //   height: "100%",
+  //   display: "flex",
+  //   justifyContent: "space-around",
+  //   flexDirection: "column",
+  //   padding: 40
+  // },
   boldbig: {
-    fontWeight: "bold"
+    fontWeight: "bold",
+    display: "block"
+  },
+  profile: {
+    display: "block",
+    height: 100,
+    width: 100,
+    borderRadius: "50%",
+    objectFit: "cover",
+    margin: "10px auto"
   }
 });
 //TODO: pass in props and get data from props
@@ -144,8 +195,11 @@ function Namecard({ customer, history, userIsOwner }) {
           });
       }
     }
-    getLatlnt();
-  }, [key]);
+
+    if (values.strlocation) {
+      getLatlnt();
+    }
+  }, [key, values.strlocation]);
 
   function handleSubmit() {
     history.push("/browse/chefs");
@@ -199,114 +253,89 @@ function Namecard({ customer, history, userIsOwner }) {
   }
 
   const StaticCard = (
-    <div className={classes.cardContainer}>
-      <Card className={classes.card}>
-        <div className={classes.upper}>
-          <div className={classes.leftpane}>
-            <div className={classes.wrap}>
-              <img
-                className={classes.profile}
-                alt="profile"
-                src={values.avatar}
-              />
-              <span className={classes.name}> {values.name} </span>
-              <p className={classes.grey}> {values.strlocation} </p>
-              {userIsOwner ? (
-                <RequestButton onClick={toggleEditMode}>
-                  Edit Info
-                </RequestButton>
-              ) : (
-                <RequestButton onClick={handleSubmit}>
-                  Browse Chef
-                </RequestButton>
-              )}
-            </div>
-          </div>
-          <div className={classes.rightpane}>
-            <div className={classes.descwrap}>
-              <span className={classes.boldbig}>ABOUT ME:</span>
-              <p className={classes.grey}>{customer.description}</p>
-              <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-              <CuisineList cuisineList={values.favorite} />
-            </div>
-          </div>
+    <>
+      <div className="upper">
+        <div className="leftUpper">
+          <img className={classes.profile} alt="profile" src={values.avatar} />
+          <div className={classes.name}> {values.name} </div>
+          <p className={classes.grey}> {values.strlocation} </p>
+          {userIsOwner ? (
+            <RequestButton onClick={toggleEditMode}>Edit Info</RequestButton>
+          ) : (
+            <RequestButton onClick={handleSubmit}>Browse Chef</RequestButton>
+          )}
         </div>
-        <div className={classes.lower}>
-          <GoogleMap location={location} apikey={key} zoom={13} />
+        <div className="rightUpper">
+          <span className={classes.boldbig}>ABOUT ME:</span>
+          <p className={classes.grey}>{customer.description}</p>
+          <span className={classes.boldbig}>FAVORITE CUSINE: </span>
+          <CuisineList cuisineList={values.favorite} />
         </div>
-      </Card>
-    </div>
+      </div>
+      <div className="lower">
+        <GoogleMap location={location} apikey={key} zoom={13} />
+      </div>
+    </>
   );
 
   const EditModeCard = (
-    <Card className={classes.card}>
-      <div className={classes.upper}>
-        <div className={classes.leftpane}>
-          <div className={classes.wrap}>
-            <ImageUploader
-              onSubmit={handleImageSubmit}
-              promptText="Click to upload a new background"
-            >
-              <img
-                className={classes.profile}
-                alt="profile"
-                src={values.avatar}
-              />
-            </ImageUploader>
+    <div className="upper">
+      <div className="leftUpper">
+        <ImageUploader
+          onSubmit={handleImageSubmit}
+          promptText="Click to upload a new background"
+        >
+          <img className={classes.profile} alt="profile" src={values.avatar} />
+        </ImageUploader>
 
-            <TextField
-              className="form-field"
-              label="Name"
-              value={values.name}
-              onChange={handleChange("name")}
-              margin="dense"
-              variant="outlined"
-            />
-            <TextField
-              className="form-field"
-              label="Location"
-              value={values.strlocation}
-              onChange={handleChange("strlocation")}
-              margin="dense"
-              variant="outlined"
-            />
-            <RequestButton onClick={onSubmitAttempt}>
-              Save Profile
-            </RequestButton>
-          </div>
+        <TextField
+          className="form-field"
+          label="Name"
+          value={values.name}
+          onChange={handleChange("name")}
+          margin="dense"
+          variant="outlined"
+        />
+        <TextField
+          className="form-field"
+          label="Location"
+          value={values.strlocation}
+          onChange={handleChange("strlocation")}
+          margin="dense"
+          variant="outlined"
+        />
+        <RequestButton onClick={onSubmitAttempt}>Save Profile</RequestButton>
+      </div>
+      <div className="rightUpper">
+        <div>
+          <span className={classes.boldbig}>ABOUT ME:</span>
+          <TextField
+            className="form-field"
+            label="About Me"
+            value={values.description}
+            onChange={handleChange("description")}
+            margin="dense"
+            multiline
+            variant="outlined"
+          />
         </div>
-        <div className={classes.rightpane}>
-          <div className={classes.descwrap}>
-            <span className={classes.boldbig}>ABOUT ME:</span>
-            <TextField
-              className="form-field"
-              label="About Me"
-              value={values.description}
-              onChange={handleChange("description")}
-              margin="dense"
-              multiline
-              variant="outlined"
-            />
-            <span className={classes.boldbig}>FAVORITE CUSINE: </span>
-            <TextField
-              className="form-field"
-              label="Favorite Cuisines"
-              value={values.favorite}
-              onChange={handleChange("favorite")}
-              margin="dense"
-              multiline
-              variant="outlined"
-            />
-          </div>
+        <div>
+          <span className={classes.boldbig}>FAVORITE CUSINE: </span>
+          <TextField
+            className="form-field"
+            label="Favorite Cuisines"
+            value={values.favorite}
+            onChange={handleChange("favorite")}
+            margin="dense"
+            multiline
+            variant="outlined"
+          />
         </div>
       </div>
-      <div className={classes.lower}></div>
-    </Card>
+    </div>
   );
   return (
-    <div className={classes.cardContainer}>
-      {userIsOwner && isEditing ? EditModeCard : StaticCard}
-    </div>
+    <Card key="3">{userIsOwner && isEditing ? EditModeCard : StaticCard}</Card>
   );
 }
 
