@@ -24,10 +24,8 @@ const orderSchema = new Schema(
     dishes: [orderedItemSchema],
     price: Number,
     bookedTime: Date,
-    chef_id: { type: Schema.Types.ObjectId, ref: "Chef" },
-    customer_id: { type: Schema.Types.ObjectId, ref: "Customer" },
-    chef_name: String,
-    customer_name: String
+    chef: { type: Schema.Types.ObjectId, ref: "Chef" },
+    customer: { type: Schema.Types.ObjectId, ref: "Customer" },
   },
   { timestamps: true }
 );
@@ -40,7 +38,7 @@ const orderSchema = new Schema(
 orderSchema.pre("save", async function() {
   if (this.isNew) {
     try {
-      for (let id of [this.chef_id, this.customer_id]) {
+      for (let id of [this.chef, this.customer]) {
         let user = await User.findById(id);
         user.orders.push(this._id);
         user.save();

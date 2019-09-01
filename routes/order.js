@@ -23,11 +23,8 @@ router.get("/:order_id", async (req, res, next) => {
  */
 router.get("/:user_id/orders", async (req, res, next) => {
   // Get list of all user's orders
-  console.log("-=-=-=-===-=---==-");
   const user = await User.findById(req.params.user_id);
   const orders = user.orders;
-  console.log(orders);
-
   // For each order, populate chef, customer, and dishes fields with corresponding
   // documents
   const populatedOrders = await Promise.all(
@@ -35,10 +32,10 @@ router.get("/:user_id/orders", async (req, res, next) => {
       Order.findById(orderId)
         .populate("chef")
         .populate("customer")
-        .populate("dishes")
+        // .populate("dishes.dish")
     )
   );
-  console.log("Orders from be:",populatedOrders);
+    // console.log(populatedOrders);
   res.status(200).send(populatedOrders);
 });
 
@@ -49,13 +46,15 @@ router.get("/:user_id/orders", async (req, res, next) => {
 router.post("/:chef_id/:customer_id", async (req, res, next) => {
   const { error } = validateOrder({
     ...req.body,
+    chef: req.params.chef_id,
+    customer: req.params.customer_id
   });
   if (error) return next(createError(400, error.details[0].message));
 
   const order = await Order.create({
     ...req.body,
-    chef_id: req.params.chef_id,
-    customer_id: req.params.customer_id,
+    chef: req.params.chef_id,
+    customer: req.params.customer_id
   });
   res.status(200).send(order);
 });
@@ -72,8 +71,8 @@ router.put("/:order_id", async (req, res, next) => {
 
 const orderSchema = Joi.compile({
   price: Joi.required(),
-  chef_name: Joi.required(),
-  customer_name: Joi.required(),
+  chef: Joi.required(),
+  customer: Joi.required(),
   dishes: Joi.required(),
   bookedTime: Joi.required(),
   numPeopleServed: Joi.required()

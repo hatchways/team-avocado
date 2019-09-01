@@ -85,7 +85,7 @@ function SendRequestDialog({ chef, history }) {
       return accum;
     }, {}),
     numPeopleServed: 1,
-    bookedTime: new Date("2014-08-18T21:11:54")
+    bookedTime: Date.now()
   });
 
   const { user, setOrder } = useContext(AuthContext);
@@ -100,7 +100,7 @@ function SendRequestDialog({ chef, history }) {
       [dishId]: currentVal + 1
     };
 
-    setOrderState({ ...orderState, dishes: newDishes, chef_name:chef.name,customer_name:user.name });
+    setOrderState({ ...orderState, dishes: newDishes});
   };
 
   const handleRemoveDish = dishId => {
