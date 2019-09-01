@@ -15,8 +15,8 @@ const chefSchema = new Schema({
     type: String,
     default: "This Chef has not added a description yet."
   },
-
-  cuisines: [{type:String}],
+  backgroundImg: String,
+  cuisines: [{ type: String }],
   travelRadius: Number,
   //will changed as order submit.
   availability: {
@@ -48,7 +48,6 @@ const chefSchema = new Schema({
     Saturday: { type: Boolean, default: false },
     Sunday: { type: Boolean, default: false }
   }
-
 });
 
 /**
