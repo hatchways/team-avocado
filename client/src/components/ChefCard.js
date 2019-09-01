@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import Chip from "./Chip";
 import { fadeIn } from "../constants/animations";
+import { colors } from "../themes/theme";
 
 const Container = styled.li`
   display: flex;
@@ -73,7 +74,18 @@ const ChefCard = ({
         <h1>{name}</h1>
         <h3>{strlocation}</h3>
       </div>
-      <Chip style={{ margin: "0px" }}>{cuisine}</Chip>
+      {cuisine ? (
+        <Chip style={{ margin: "0px" }}>{cuisine}</Chip>
+      ) : (
+        <hr
+          style={{
+            backgroundColor: colors.brand,
+            border: "none",
+            height: 1,
+            width: "35%"
+          }}
+        ></hr>
+      )}
       <p>{description}</p>
     </Container>
   );

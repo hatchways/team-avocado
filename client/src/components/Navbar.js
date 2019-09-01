@@ -26,6 +26,11 @@ const Container = styled.nav`
     width: 200px;
     height: 20px;
   }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export default function Navbar({ children, transparent }) {
