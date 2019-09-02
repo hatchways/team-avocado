@@ -1,70 +1,45 @@
 import React, { Component } from 'react';
-import GoogleMapReact from 'google-map-react';
+import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
+ 
+function GoogleMap(props) {
 
-const K_WIDTH=80;
-const K_HEIGHT=80;
-const stylesout = {
-  position: 'absolute',
-  width: K_WIDTH,
-  height: K_HEIGHT,
-  left: -K_WIDTH / 2,
-  top: -K_HEIGHT / 2,
-
-  border: '2px solid #f44336',
-  borderRadius: K_HEIGHT,
-  backgroundColor: 'rgba(100,45,25,0.3)',
-}
-
-const stylesinner = {
-
-  position: 'absolute',
-  width: 4,
-  height: 4,
-  left: -4 / 2,
-  top: -4 / 2,
-
-  border: '4px solid #f44336',
-  borderRadius: 4,
-  backgroundColor: 'rgba(100,45,25,0.3)',
-
-}
-
-
-const AnyReactComponent = ({ text }) => 
-<div>
-  <span style={stylesout}></span>
-  <span style={stylesinner}></span>
-  </div>;
-
-//TODO use an api to get position of specified location.
-
-function SimpleMap(props){
-
-    // props.center.lat = props.location.lat;
+    const style = {
+      width: "70%",
+      height: "48%",
+      position: 'relative'
+    }
+    const coords={lat:props.location.lat,lng:props.location.lng};
     return (
-      <div style={{ height: '100%', width: '100%' }}>
-        <GoogleMapReact
-          bootstrapURLKeys={props.apikey}
-          center={props.location}
-          zoom={props.zoom}
-        >
-          <AnyReactComponent
-            lat={props.location.lat}
-            lng={props.location.lng}
-            
-          />
-        </GoogleMapReact>
+      <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+
+        <Map style={style} google={props.google} zoom={13} center={coords}>
+        <Circle
+          radius={1200}
+          center={{lat:props.location.lat,lng:props.location.lng}}
+          strokeColor='transparent'
+          strokeOpacity={0}
+          strokeWeight={5}
+          fillColor='#f44336'
+          fillOpacity={0.2}
+        />
+        <Circle
+          radius={50}
+          center={{lat:props.location.lat,lng:props.location.lng}}
+          strokeColor='transparent'
+          strokeOpacity={0}
+          strokeWeight={5}
+          fillColor='#f44336'
+          fillOpacity={0.8}
+        />
+        </Map>
       </div>
     );
   
 }
+ 
+export default GoogleApiWrapper({
+  apiKey: "AIzaSyCxK8n6vXbRPszhiEJhbo5x9tNejni4qSU",
+})(GoogleMap)
 
-// SimpleMap.defaultProps = {
-//   center: {
-//     lat: position.lat,
-//     lng: position.lng
-//   },
-//   zoom: 13
-// };
 
-export default SimpleMap;
+
