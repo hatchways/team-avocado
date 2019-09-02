@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
- 
-function GoogleMap(props) {
+import { callAPI } from "../helpers/api";
+import { useState, useEffect, useContext } from "react";
+// const config = require("config");
+require("dotenv").config();
 
+console.log(process.env.CHEF_MENU_GOOGLE_MAP);
+
+
+function GoogleMap(props) {
+  console.log(props.apikey);
     const style = {
       width: "70%",
       height: "48%",
@@ -36,10 +43,8 @@ function GoogleMap(props) {
     );
   
 }
- 
-export default GoogleApiWrapper({
-  apiKey: "AIzaSyCxK8n6vXbRPszhiEJhbo5x9tNejni4qSU",
-})(GoogleMap)
 
-
+export default GoogleApiWrapper(props=>({
+  apiKey: "AIzaSyCxK8n6vXbRPszhiEJhbo5x9tNejni4qSU"
+}))(GoogleMap);
 

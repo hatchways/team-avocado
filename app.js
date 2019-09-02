@@ -9,6 +9,7 @@ const apiRouter = require("./routes");
 const config = require("config");
 
 const app = express();
+// index.js
 
 //setup jwtprivatekey in local environment, export chefsmenujwtprivatekey=placeholderkey
 if (!config.get("jwtprivatekey")) {

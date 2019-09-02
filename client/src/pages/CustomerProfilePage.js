@@ -13,21 +13,10 @@ import useResource from "../hooks/useResource";
 
 const PageContainer = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
   height: 100vh;
   background-color: ${colors.background};
-  transition: all 100ms;
-  .name-card-container {
-    width: 800px;
-    height: 500px;
-    text-align: center;
-  }
 
-  nav span {
-    margin-right: ${layout.spacing(4)};
-  }
 `;
 
 function CustomerPage({ customerId }) {
@@ -52,7 +41,6 @@ function CustomerPage({ customerId }) {
         </Link>
         <SimpleMenu />
       </Navbar>
-
       <div className="name-card-container">
         {customer ? (
           <NameCard customer={customer} userIsOwner={userIsOwner} />
