@@ -28,7 +28,10 @@ const userSchema = new Schema({
   },
   orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
   location: pointSchema,
-  avatar: String,
+  avatar: {
+    type: String,
+    default: "/userplaceholder.png"
+  },
   background: String,
   strlocation: String,
   createdAt: {
