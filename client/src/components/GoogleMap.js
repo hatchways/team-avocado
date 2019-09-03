@@ -3,9 +3,7 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-rea
 import { callAPI } from "../helpers/api";
 import { useState, useEffect, useContext } from "react";
 // const config = require("config");
-require("dotenv").config();
 
-console.log(process.env.CHEF_MENU_GOOGLE_MAP);
 
 
 function GoogleMap(props) {
@@ -43,8 +41,7 @@ function GoogleMap(props) {
     );
   
 }
-
 export default GoogleApiWrapper(props=>({
-  apiKey: "AIzaSyCEeLU5bJBSuZn-y7IaCKUTmrofwtZniPQ"
+  apiKey: process.env.REACT_APP_GOOGLE_MAP
 }))(GoogleMap);
 

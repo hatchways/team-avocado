@@ -149,6 +149,7 @@ function Namecard({ customer, history, userIsOwner }) {
       }
     }
     getLatlnt();
+
   }, [key]);
 
   function handleSubmit() {
