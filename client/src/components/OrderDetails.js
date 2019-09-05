@@ -6,7 +6,7 @@ import priceHelpers from "../helpers/priceHelpers";
 import useResource from "../hooks/useResource";
 import Button from "./Button";
 import { colors, layout } from "../themes/theme";
-
+import OrderItem from "./OrderItem";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -107,30 +107,6 @@ const Container = styled.div`
   }
 `;
 
-const OrderItem = ({ dish: dishId, price, numDishes }) => {
-  console.log(`dishPrice: ${price}`);
-  const { resource, loading, error } = useResource(`dish/${dishId}`);
-
-  return (
-    <li className="order-item">
-      {loading ? (
-        "Loading..."
-      ) : (
-        <>
-          <img src={resource.dishImg} alt="dish" />
-          <div>
-            <h1>{resource.name}</h1>
-            <p>
-              <span>${price}</span>
-
-              <span>x{numDishes}</span>
-            </p>
-          </div>
-        </>
-      )}
-    </li>
-  );
-};
 
 const OrderDetails = ({ items, price, arrivalTime, onSubmit }) => {
   const orderItems = items.map(item => <OrderItem {...item} />);

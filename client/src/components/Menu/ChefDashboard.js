@@ -3,12 +3,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Grid from "@material-ui/core/Grid";
 
-import Order from "../Order";
+import OrderList from "../Menu/OrderList";
 import DishCard from "../DishCard/DishCard";
 import DishCardForm from "../DishCard/DishCardForm";
 import AddDishDialog from "../AddDishDialog";
 import Button from "../Button";
 import { colors } from "../../themes/theme";
+import useResource from "../../hooks/useResource";
 
 const MENU_TAB = 0,
   ORDERS_TAB = 1;
@@ -56,6 +57,8 @@ const useStyles = makeStyles({
 });
 
 export default function ChefDashboard({ chef }) {
+  const { resource, loading, error } = useResource(`order/${chef._id}/orders`);
+  
   const [dishes, setDishes] = React.useState(
     chef.dishes.map(dish => {
       return {
@@ -99,41 +102,6 @@ export default function ChefDashboard({ chef }) {
     dishes[index].data.dishImg = imgURL;
     setDishes(dishes);
   }
-
-  // let dishCards = dishes.map((dish, index) => {
-  //   if (dish.isEditing)
-  //     return (
-  //       <DishCardForm
-  //         storeUpdatedDish={storeUpdatedDish}
-  //         storeDishImg={storeDishImg}
-  //         setDishes={setDishes}
-  //         currdishes={dishes}
-  //         dish_id={dish.data._id}
-  //         name={dish.data.name}
-  //         numPeopleServed={dish.data.numPeopleServed}
-  //         price={dish.data.price}
-  //         ingredients={dish.data.ingredients}
-  //         requirements={dish.data.requirements}
-  //         dishImg={dish.data.dishImg}
-  //         key={dish.data._id}
-  //         toggleEdit={toggleDishEditing.bind(index)}
-  //       />
-  //     );
-  //   else
-  //     return (
-  //       <DishCard
-  //         name={dish.data.name}
-  //         numPeopleServed={dish.data.numPeopleServed}
-  //         price={dish.data.price}
-  //         ingredients={dish.data.ingredients}
-  //         requirements={dish.data.requirements}
-  //         dishImg={dish.data.dishImg}
-  //         key={dish.data._id}
-  //         toggleEdit={toggleDishEditing.bind(null, index)}
-  //       />
-  //     );
-  // });
-
   const classes = useStyles();
   return (
     <>
@@ -149,11 +117,7 @@ export default function ChefDashboard({ chef }) {
 
       {activeTab === ORDERS_TAB ? (
         <>
-          <Order />
-          <Order />
-          <Order />
-          <Order />
-          <Order />
+          {loading? ("Loading..."):(<OrderList orderList={resource}/>)}
         </>
       ) : (
         <>

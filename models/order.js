@@ -25,7 +25,7 @@ const orderSchema = new Schema(
     price: Number,
     bookedTime: Date,
     chef: { type: Schema.Types.ObjectId, ref: "Chef" },
-    customer: { type: Schema.Types.ObjectId, ref: "Customer" }
+    customer: { type: Schema.Types.ObjectId, ref: "Customer" },
   },
   { timestamps: true }
 );

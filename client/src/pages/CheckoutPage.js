@@ -60,7 +60,7 @@ const CheckoutPage = ({ stripe }) => {
     [paymentComplete, togglePaymentComplete] = useToggle(false),
     [error, setError] = useState(null),
     { order, user } = useContext(Context);
-
+  console.log("Order context:",order);
   async function onSubmit(e) {
     e.preventDefault();
 

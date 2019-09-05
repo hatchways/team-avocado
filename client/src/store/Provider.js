@@ -36,9 +36,16 @@ export default function Provider({ children }) {
     }, 0);
   }
 
+  function logout() {
+    setUser(null);
+    setCart(null);
+    setOrder(null);
+  }
+
   const initialState = {
     user,
     setUser,
+    logout,
     cart,
     addToCart,
     removeFromCart,

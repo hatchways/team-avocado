@@ -11,7 +11,7 @@
     "dotenv-webpack": "^1.7.0",
     "email-validator": "^2.0.4",
     "google-map-react": "^1.1.4",
-    "google-maps-react": "^2.0.2",
+    "google-maps-react": "github:fullstackreact/google-maps-react#master",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-icons": "^3.7.0",

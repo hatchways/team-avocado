@@ -37,7 +37,8 @@ router.get("/:userId", async (req, res, next) => {
    */
   const chef = await Chef.findById(userId)
     .select("-password")
-    .populate("dishes");
+    .populate("dishes")
+    .populate("orders");
 
   if (!chef) {
     return next(createError(400, `Chef with id ${userId} could not be found.`));

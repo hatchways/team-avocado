@@ -37,16 +37,13 @@ const PageContainer = styled.div`
   overflow: hidden;
   .paneLeft {
     height: calc(100vh - ${layout.navHeight});
-    flex-basis: 30%;
-    min-width: 375px;
+    width: 25%;
     padding: ${layout.spacing(3)} ${layout.spacing(5)};
-    // position: sticky;
-    // top: ${layout.navHeight};
   }
 
   .paneRight {
     height: calc(100vh - ${layout.navHeight});
-    flex-grow: 1;
+    width: 75%;
     overflow-y: scroll;
     padding: 0px ${layout.spacing(5)};
     background-color: ${colors.bgcolor};
@@ -136,7 +133,7 @@ function BrowseChefsPage({ classes, ...rest }) {
   return (
     <PageContainer className="pageContainer">
       <Navbar transparent>
-        <SimpleMenu/>
+        <SimpleMenu />
       </Navbar>
 
       <div className="paneLeft">

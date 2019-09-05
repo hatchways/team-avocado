@@ -12,7 +12,7 @@ const PositionedInput = styled.input`
   cursor: pointer;
 `;
 
-const ImageUploader = ({ onSubmit, promptText, children }) => {
+const ImageUploader = ({ onSubmit, promptText, imageId, children }) => {
   return (
     <Tooltip title={promptText} placement="top-start">
       <div
@@ -25,7 +25,7 @@ const ImageUploader = ({ onSubmit, promptText, children }) => {
       >
         <PositionedInput
           accept="image/*"
-          id="background-img-file"
+          id={imageId}
           multiple
           type="file"
           onChange={onSubmit}

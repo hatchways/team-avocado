@@ -16,6 +16,8 @@ function browserHasToken() {
 }
 
 function App() {
+  // index.js
+console.log(process.env);
   return (
     <StripeProvider apiKey="pk_test_QZuuqCt3IbDZJLInrdvBOs1u001H7Nw9LN">
       <ContextProvider>

@@ -51,7 +51,8 @@ const useStyles = makeStyles({
     height: "52%"
   },
   lower: {
-    height: "48%"
+    height: "48%",
+    width:"100%"
   },
   leftpane: {
     width: "40%",
@@ -97,7 +98,10 @@ const useStyles = makeStyles({
   },
   boldbig: {
     fontWeight: "bold"
-  }
+  },
+  // map:{
+  //   width:"100%"
+  // }
 });
 //TODO: pass in props and get data from props
 
@@ -145,6 +149,7 @@ function Namecard({ customer, history, userIsOwner }) {
       }
     }
     getLatlnt();
+
   }, [key]);
 
   function handleSubmit() {
@@ -199,7 +204,6 @@ function Namecard({ customer, history, userIsOwner }) {
   }
 
   const StaticCard = (
-    <div className={classes.cardContainer}>
       <Card className={classes.card}>
         <div className={classes.upper}>
           <div className={classes.leftpane}>
@@ -235,7 +239,6 @@ function Namecard({ customer, history, userIsOwner }) {
           <GoogleMap location={location} apikey={key} zoom={13} />
         </div>
       </Card>
-    </div>
   );
 
   const EditModeCard = (
