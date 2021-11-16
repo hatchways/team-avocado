@@ -9,7 +9,7 @@
     "test": "NODE_ENV=test mocha --exit --timeout 30000"
   },
   "dependencies": {
-    "aws-sdk": "^2.504.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^3.0.6",
     "config": "^3.2.2",
     "cookie-parser": "~1.4.4",
